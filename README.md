@@ -1,8 +1,9 @@
-*Repositório usado para as necessidades da Unidade Curricular de RCI
+# Repositório usado para as necessidades da Unidade Curricular de RCI
 
-Ano 23/24
+Ano: __23/24__
 
 Alunos:
+
     Nuno Abreu
     103416
 
