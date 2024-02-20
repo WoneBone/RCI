@@ -1,32 +1,16 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include "header.h"
+
 #define REGIP "193.136.138.142"
 #define REGUDP "59000"
 
-/*******************************************************************
- * Função de inicialização de servidor TCP
- *
- * Cria um servidor TCP com usando IP e TCP como IP e PORT, respetivamente
- * 
- * Retoma o file descriptor da socket criada
- * ****************************************************************/
-int tcp_connect(char *IP, char *TCP);
-
-/*******************************************************************
- * Função de inicialização de cliente UDP
- *
- * Cria um cliente UDP com usando regIP e regUDP como IP e PORT, respetivamente
- * 
- * Retoma o file descriptor da socket criada
- * ****************************************************************/
-int udp_connect(char *regIP, char*regUDP);
 
 int main(int argc, char *argv[]){
 	char *IP, *TCP;
 	char *regIP;
 	char *regUDP;
 	int sTCP, sUDP;
+
+	struct addrinfo *resUDP;
 
 
 	switch (argc) {
@@ -48,8 +32,8 @@ int main(int argc, char *argv[]){
 			TCP = argv[2];
 
 			//Criar sockets de servidor TCP e cliente UDP
-			sTCP = tcp_connect(IP, TCP);
-			sUDP = udp_connect(regIP, regUDP);
+			sTCP = tcp_connect(TCP);
+			sUDP = udp_connect(regIP, regUDP, &resUDP);
 			break;
 
 		case 3:
@@ -59,14 +43,14 @@ int main(int argc, char *argv[]){
 			TCP = argv[2];
 
 			//Criar sockets de servidor TCP e cliente UDP
-			sTCP = tcp_connect(IP, TCP);
-			sUDP = udp_connect(REGIP, REGUDP);
+			sTCP = tcp_connect(TCP);
+			sUDP = udp_connect(REGIP, REGUDP, &resUDP);
 			break;
 
 		default:
 			printf("The number of arguments inputed are invalid");
 			exit(1);
 			break;
-	}
+	
 }
 
