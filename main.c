@@ -8,7 +8,10 @@ int main(int argc, char *argv[]){
 	char *IP, *TCP;
 	char *regIP;
 	char *regUDP;
-	int sTCP, sUDP;
+	int sTCP, sUDP, fd_ret;
+	fd_set filhas;
+	FD_ZERO(&filhas);
+	FD_SET(0,&filhas);
 
 	struct addrinfo *resUDP;
 
@@ -34,6 +37,7 @@ int main(int argc, char *argv[]){
 			//Criar sockets de servidor TCP e cliente UDP
 			sTCP = tcp_connect(TCP);
 			sUDP = udp_connect(regIP, regUDP, &resUDP);
+			
 			break;
 
 		case 3:
@@ -52,5 +56,6 @@ int main(int argc, char *argv[]){
 			exit(1);
 			break;
 	
+}
 }
 

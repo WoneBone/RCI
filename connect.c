@@ -1,4 +1,5 @@
 #include "header.h"
+int errcode;
 
 int tcp_connect(char *TCP){
 	int fd, n;

@@ -9,8 +9,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <sys/select.h>
 
-int errcode;
+
 
 /*******************************************************************
  * Função de inicialização de servidor TCP
