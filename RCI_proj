@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net" modified="2024-02-17T15:25:19.212Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" etag="JtTJci_LkT7euL0Jd7Dv" version="23.1.2" type="onedrive">
+  <diagram name="Página-1" id="CvUkIwduunlD2sl3U6UJ">
+    <mxGraphModel dx="1114" dy="607" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PBAG0X4QNKd0Jutk8--e-1" target="PBAG0X4QNKd0Jutk8--e-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-1" value="Argumentos" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="180" y="170" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PBAG0X4QNKd0Jutk8--e-2" target="PBAG0X4QNKd0Jutk8--e-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PBAG0X4QNKd0Jutk8--e-2" target="PBAG0X4QNKd0Jutk8--e-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-2" value="4 arg" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="270" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PBAG0X4QNKd0Jutk8--e-5" target="PBAG0X4QNKd0Jutk8--e-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PBAG0X4QNKd0Jutk8--e-5" target="PBAG0X4QNKd0Jutk8--e-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-5" value="2 arg" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="270" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PBAG0X4QNKd0Jutk8--e-7" target="PBAG0X4QNKd0Jutk8--e-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-7" value="servidor tcp com arg" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="440" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="PBAG0X4QNKd0Jutk8--e-10" target="PBAG0X4QNKd0Jutk8--e-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-10" value="assumir rg ip como&amp;nbsp;&lt;br&gt;193.140.138.142&lt;br&gt;regUDP como&lt;br&gt;59000" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="440" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-13" value="interface de utilizador" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="580" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PBAG0X4QNKd0Jutk8--e-15" value="exit bad arg" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

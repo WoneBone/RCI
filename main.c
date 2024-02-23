@@ -5,15 +5,18 @@
 
 
 int main(int argc, char *argv[]){
-	char *IP, *TCP;
+	char *IP, *TCP,buffer[10000];
 	char *regIP;
 	char *regUDP;
 	int sTCP, sUDP, fd_ret;
+	ssize_t n;
+	socklen_t addrlen;
 	fd_set filhas;
 	FD_ZERO(&filhas);
 	FD_SET(0,&filhas);
 
 	struct addrinfo *resUDP;
+	struct sockaddr_in addr;
 
 
 	switch (argc) {
@@ -37,6 +40,7 @@ int main(int argc, char *argv[]){
 			//Criar sockets de servidor TCP e cliente UDP
 			sTCP = tcp_connect(TCP);
 			sUDP = udp_connect(regIP, regUDP, &resUDP);
+
 			
 			break;
 
@@ -49,6 +53,22 @@ int main(int argc, char *argv[]){
 			//Criar sockets de servidor TCP e cliente UDP
 			sTCP = tcp_connect(TCP);
 			sUDP = udp_connect(REGIP, REGUDP, &resUDP);
+
+			n=sendto(sUDP,"LST\n",4,0,resUDP->ai_addr,resUDP->ai_addrlen);
+			if(n==-1) 
+				exit(1);
+
+			addrlen=sizeof(addr);
+			n=recvfrom(sUDP,buffer,10000,0,(struct sockaddr*)&addr,&addrlen);
+			if(n==-1) 
+				exit(1);
+
+			write(1,"echo: ",6);
+			write(1,buffer,n);
+
+			freeaddrinfo(resUDP);
+			close(sUDP);
+
 			break;
 
 		default:

@@ -42,6 +42,8 @@ int udp_connect(char *regIP, char *regUDP, struct addrinfo **res){
 
 	errcode=getaddrinfo(regIP, regUDP, &hints, res);
 	if(errcode!=0) /*error*/ exit(1);
+
+
 	
 	return fd;
 	
