@@ -1,7 +1,7 @@
 #include "header.h"
 int errcode;
 
-int tcp_connect(char *TCP){
+int tcp_server(char *TCP){
 	int fd, n;
 	struct addrinfo hints,*res;	
 
@@ -27,6 +27,30 @@ int tcp_connect(char *TCP){
 	freeaddrinfo(res);
 
 	return fd;	
+}
+
+int tcp_client(char *ipTCP, char *pTCP){
+	int fd;
+	struct addrinfo hints, *res;
+
+	//criar socket
+	fd = socket(AF_INET, SOCK_STREAM, 0);
+	if(fd == -1) exit(1); //error
+				
+	//allocar e preparar tipologia de addrinfo
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family=AF_INET;
+	hints.ai_socktype=SOCK_STREAM;
+	//criar addrinfo res
+	errcode = getaddrinfo(ipTCP,pTCP, &hints, &res);
+	if(errcode != 0) exit(1); //error
+	
+	//connectar
+	errcode = connect(fd, res->ai_addr, res->ai_addrlen);
+	if(errcode == -1) exit(1); //error
+	
+	freeaddrinfo(res);
+	return fd;
 }
 
 int udp_connect(char *regIP, char *regUDP, struct addrinfo **res){

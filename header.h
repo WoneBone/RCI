@@ -20,7 +20,16 @@
  * 
  * Retoma o file descriptor da socket criada
  * ****************************************************************/
-int tcp_connect(char *TCP);
+int tcp_server(char *TCP);
+
+/******************************************************************
+ * Função de inicialização de cliente TCP
+ *
+ * Cria um cliente TCP ligado ao endereço ipTCP na port pTCP
+ * 
+ * Retoma o fd correspondente à ligação
+ * ****************************************************************/
+int tcp_client(char *ipTCP, char *pTCP);
 
 /*******************************************************************
  * Função de inicialização de cliente UDP

@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 			TCP = argv[2];
 
 			//Criar sockets de servidor TCP e cliente UDP
-			sTCP = tcp_connect(TCP);
+			sTCP = tcp_server(TCP);
 			sUDP = udp_connect(regIP, regUDP, &resUDP);
 
 			
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 			TCP = argv[2];
 
 			//Criar sockets de servidor TCP e cliente UDP
-			sTCP = tcp_connect(TCP);
+			sTCP = tcp_server(TCP);
 			sUDP = udp_connect(REGIP, REGUDP, &resUDP);
 
 			n=sendto(sUDP,"LST\n",4,0,resUDP->ai_addr,resUDP->ai_addrlen);
