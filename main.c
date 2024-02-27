@@ -3,6 +3,7 @@
 #define REGIP "193.136.138.142"
 #define REGUDP "59000"
 
+int errcode;
 
 int main(int argc, char *argv[]){
 	char *IP, *TCP,buffer[10000];
@@ -40,7 +41,7 @@ int main(int argc, char *argv[]){
 			//Criar sockets de servidor TCP e cliente UDP
 			sTCP = tcp_server(TCP);
 			sUDP = udp_connect(regIP, regUDP, &resUDP);
-
+			
 			
 			break;
 
@@ -65,7 +66,8 @@ int main(int argc, char *argv[]){
 
 			write(1,"echo: ",6);
 			write(1,buffer,n);
-
+			
+			join(1, 68, resUDP);
 			freeaddrinfo(resUDP);
 			close(sUDP);
 

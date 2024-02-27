@@ -11,8 +11,6 @@
 #include <netdb.h>
 #include <sys/select.h>
 
-
-
 /*******************************************************************
  * Função de inicialização de servidor TCP
  *
@@ -39,4 +37,6 @@ int tcp_client(char *ipTCP, char *pTCP);
  * Retoma o file descriptor da socket criada
  * ****************************************************************/
 int udp_connect(char *regIP, char *regUDP, struct addrinfo **res);
+
+int join(int ring, int id, struct addrinfo *res);
 #endif
