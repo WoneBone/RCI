@@ -1,19 +1,20 @@
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <string.h>
-#define PORT "58001"
+#define PORT "58000"
 
 int fd,errcode;
 ssize_t n;
 socklen_t addrlen;
 struct addrinfo hints,*res;
 struct sockaddr_in addr;
-char buffer[128];
+char buffer[128],mess[100];
 
 int main(){
     fd=socket(AF_INET,SOCK_STREAM,0);
@@ -21,7 +22,7 @@ int main(){
     memset(&hints,0,sizeof hints);
     hints.ai_family=AF_INET;
     hints.ai_socktype=SOCK_STREAM;
-    errcode=getaddrinfo("194.210.159.77",PORT,&hints,&res);
+    errcode=getaddrinfo("194.210.159.88",PORT,&hints,&res);
     if(errcode!=0)/*error*/
         exit(1);
     
@@ -29,6 +30,21 @@ int main(){
     if(n==-1)/*error*/
         exit(1);
     n=write(fd,"Hello!\n",7);
+    if(n==-1)/*error*/
+        exit(1);
+    
+    n=read(fd,buffer,128);
+    if(n==-1)/*error*/
+        exit(1);
+    scanf("%s",mess);
+    n=write(fd,mess,strlen(mess));
+    if(n==-1)/*error*/
+        exit(1);
+    n=read(fd,buffer,128);
+    if(n==-1)/*error*/
+        exit(1);
+    scanf("%s",mess);
+    n=write(fd,mess,strlen(mess));
     if(n==-1)/*error*/
         exit(1);
     n=read(fd,buffer,128);

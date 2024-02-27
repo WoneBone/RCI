@@ -10,7 +10,7 @@ int join(int ring, int id, struct addrinfo *res){
 	
 	if(fd == -1) exit(1); //erro
 						  //
-	sprintf(s,"NODES %d\n", ring);					  
+	sprintf(s,"NODES %03d\n", ring);					  
 	errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
 	if(errcode == -1) exit(1);//error
 							
