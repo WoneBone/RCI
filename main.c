@@ -4,9 +4,11 @@
 #define REGUDP "59000"
 
 int errcode;
+char *mIP;
+char *mTCP;
 
 int main(int argc, char *argv[]){
-	char *IP, *TCP,buffer[10000];
+	char buffer[10000];
 	char *regIP;
 	char *regUDP;
 	int sTCP, sUDP, fd_ret, cTCP;
@@ -35,11 +37,11 @@ int main(int argc, char *argv[]){
 			
 			//atribuições
 			regUDP = argv[4];
-			IP = argv[1]; 
-			TCP = argv[2];
+			mIP = argv[1]; 
+			mTCP = argv[2];
 
 			//Criar sockets de servidor TCP e cliente UDP
-			sTCP = tcp_server(TCP);
+			sTCP = tcp_server(mTCP);
 			sUDP = udp_connect(regIP, regUDP, &resUDP);
 			
 			
@@ -48,13 +50,13 @@ int main(int argc, char *argv[]){
 		case 3:
 			printf("There are 3 arguments\n");
 			//Atribuições
-			IP = argv[1]; 
-			TCP = argv[2];
+			mIP = argv[1]; 
+			mTCP = argv[2];
 
 			//Criar sockets de servidor TCP e cliente UDP
-			sTCP = tcp_server(TCP);
+			sTCP = tcp_server(mTCP);
 			sUDP = udp_connect(REGIP, REGUDP, &resUDP);
-			cTCP = tcp_client(IP,TCP);
+			cTCP = tcp_client(mIP,mTCP);
 
 
 			
