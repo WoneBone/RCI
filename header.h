@@ -11,6 +11,12 @@
 #include <netdb.h>
 #include <sys/select.h>
 
+struct node{
+	int id;
+	char ip[100];
+	char port[100];
+	int fd;	
+};
 /*******************************************************************
  * Função de inicialização de servidor TCP
  *
@@ -39,4 +45,8 @@ int tcp_client(char *ipTCP, char *pTCP);
 int udp_connect(char *regIP, char *regUDP, struct addrinfo **res);
 
 int join(int ring, int id, struct addrinfo *res);
+
+void d_join(int id,int sucid,char * sucIP, char *sucTCP);
+
+
 #endif

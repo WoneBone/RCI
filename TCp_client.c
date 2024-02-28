@@ -22,7 +22,7 @@ int main(){
     memset(&hints,0,sizeof hints);
     hints.ai_family=AF_INET;
     hints.ai_socktype=SOCK_STREAM;
-    errcode=getaddrinfo("194.210.159.88",PORT,&hints,&res);
+    errcode=getaddrinfo("194.210.221.249",PORT,&hints,&res);
     if(errcode!=0)/*error*/
         exit(1);
     

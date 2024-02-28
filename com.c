@@ -2,6 +2,7 @@
 #include "header.h"
 extern int errcode;
 extern char *mIP, *mTCP;
+extern struct node succ, sucsuc, pred;
 
 int join(int ring, int id, struct addrinfo *res){
 	int fd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -69,4 +70,25 @@ int join(int ring, int id, struct addrinfo *res){
 	//Direct join com o ultimo ip obtido
 	d_join();
 	return id;
+}
+
+void d_join(int id,int sucid,char * sucIP, char *sucTCP){
+	int fd,n;
+	char send[1000],rec[1000],trash[100];
+	strcpy(succ.ip,sucIP);
+	strcpy(succ.port,sucTCP);
+	succ.id=id;
+
+	fd=tcp_client(sucIP,sucTCP);
+    succ.fd=fd;
+	sprintf(send,"ENTRY %02d %s %s\n",id,mIP,mTCP);
+	n=write(fd,send,strlen(send));
+	if(n==-1)/*error*/ exit(1);
+    
+	/* n=read(fd,rec,strlen(rec));
+	if(n==-1)    exit(1);
+	
+	sscanf(rec,"%s %d %s %s",trash,&sucsuc.id,sucsuc.ip,sucsuc.port); */
+	return;
+
 }

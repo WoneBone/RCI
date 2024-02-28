@@ -38,6 +38,7 @@ int main(void) {
 
     while (1) {
         FD_ZERO(&rfds);
+        FD_SET(0,&rfds);
         FD_SET(listen_fd, &rfds);
         maxfd = listen_fd;
 
