@@ -12,7 +12,7 @@
 #include <sys/select.h>
 
 struct node{
-	int id;
+	int id ;
 	char ip[100];
 	char port[100];
 	int fd;	
@@ -48,5 +48,7 @@ int join(int ring, int id, struct addrinfo *res);
 
 void d_join(int id,int sucid,char * sucIP, char *sucTCP);
 
+int what_serv(int fd, char *mess);
 
+int what_std(char *std_in,struct addrinfo *res);
 #endif

@@ -1,6 +1,6 @@
 /*Este ficheiro serve para conter as funções que tratam dos comandos recebidos pelo utilizador*/
 #include "header.h"
-extern int errcode;
+extern int errcode,mid;
 extern char *mIP, *mTCP;
 extern struct node succ, sucsuc, pred;
 

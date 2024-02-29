@@ -1,5 +1,5 @@
 #include "header.h"
-extern int errcode;
+extern int errcode,mid;
 
 int tcp_server(char *TCP){
 	int fd, n;
