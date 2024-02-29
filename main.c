@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 	succ.id=-1;
 	sucsuc.id=-1;
 	pred.id=-1;
-	int sTCP, sUDP, fd_ret, cTCP,maxfd,client_fds[MAX_CLIENTS],i,newfd,k=0,m=0;
+	int sTCP, sUDP, fd_ret, cTCP,maxfd,client_fds[MAX_CLIENTS],i,newfd;
 	ssize_t n,nw;
 	socklen_t addrlen;
 	fd_set filhas;
@@ -79,13 +79,14 @@ int main(int argc, char *argv[]){
 				
 				maxfd = sTCP;
 
-				if (select(maxfd + 1, &filhas, NULL, NULL, NULL) <= 0) exit(1); // error
+				if (select(maxfd+1 , &filhas, NULL, NULL, NULL) <= 0) exit(1); // error
 				
 				
 				if (FD_ISSET(0,&filhas)){
+					printf("select worked");
 					fgets(std_in,500,stdin);
 					
-					what_std(std_in,resUDP);
+					i=what_std(std_in,resUDP);
 					
 				}
 				

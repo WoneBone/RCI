@@ -34,6 +34,7 @@ int what_std(char *std_in,struct addrinfo *res){
     if (strcmp(code_word,"join")==0 || strcmp(code_word,"j")==0){
         sscanf(std_in,"%s %d %d",code_word,&ring,&id);
         mid=join(ring,id,res);
+        
         return 0;
     }
     if (strcmp(code_word,"direct")==0 || strcmp(code_word,"dj")==0){
