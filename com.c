@@ -9,9 +9,11 @@ int join(int ring, int id, struct addrinfo *res){
 	char s[1000], *t;
 	int rID;
 	char ip[50], port[50];
+	int ids[100];
 	//verificação de socket
 	if(fd == -1) exit(1); //erro
-					
+				
+	memset(ids, 0, sizeof(ids));
 
 	ip[0] = '\0'; port[0] = '\0';
 	//Eviar NODES
@@ -45,17 +47,13 @@ int join(int ring, int id, struct addrinfo *res){
 }
 
 	while(sscanf(t, "%d %s %s", &rID, ip, port) == 3){
-		//O id existe no anel
-		if(id == rID){
-			//Chamada de join com o novo id
-			id = join(ring, (id + 1)%100, res);
-			//devolver o novo id. Ligação é orientada pelo join recursivo
-			return id;
-		}
+		ids[rID] = 1;
 		//nova linha da lista
 		t = strtok(NULL, "\n");
 		if(t == NULL) break;
 	}
+	
+	while(ids[id] == 1) id = (id+1)%100;
 	
 	//REG
 	sprintf(s,"REG %03d %02d %s %s\n", ring, id, mIP, mTCP);					  
@@ -68,7 +66,7 @@ int join(int ring, int id, struct addrinfo *res){
 	puts(s);
 	
 	//Direct join com o ultimo ip obtido
-	d_join();
+	d_join(id, rID, ip, port);
 	return id;
 }
 
