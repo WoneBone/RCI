@@ -71,7 +71,8 @@ int join(int ring, int id, struct addrinfo *res){
 }
 
 void d_join(int id,int sucid,char * sucIP, char *sucTCP){
-	int fd,n;
+	int fd;
+	ssize_t n;
 	char send[1000],rec[1000],trash[100];
 	strcpy(succ.ip,sucIP);
 	strcpy(succ.port,sucTCP);
