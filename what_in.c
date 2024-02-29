@@ -30,7 +30,6 @@ int what_serv(int fd, char *mess){
 int what_std(char *std_in,struct addrinfo *res){
     char code_word[100],succIP[100],succTCP[100],show[100];
     int ring,id,succid;
-    printf("inside what\n");
     sscanf(std_in,"%s",code_word);
     if (strcmp(code_word,"join")==0 || strcmp(code_word,"j")==0){
         sscanf(std_in,"%s %d %d",code_word,&ring,&id);
