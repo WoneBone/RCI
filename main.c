@@ -84,6 +84,7 @@ int main(int argc, char *argv[]){
 				
 				if (FD_ISSET(0,&filhas)){
 					fgets(std_in,500,stdin);
+					printf("before what\n");
 					what_std(std_in,resUDP);
 					
 				}

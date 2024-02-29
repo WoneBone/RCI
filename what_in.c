@@ -25,10 +25,12 @@ int what_serv(int fd, char *mess){
         printf("tie the knot well");
         return 0;
     }
+    return 1;
 }
 int what_std(char *std_in,struct addrinfo *res){
     char code_word[100],succIP[100],succTCP[100],show[100];
     int ring,id,succid;
+    printf("inside what\n");
     sscanf(std_in,"%s",code_word);
     if (strcmp(code_word,"join")==0 || strcmp(code_word,"j")==0){
         sscanf(std_in,"%s %d %d",code_word,&ring,&id);
@@ -48,38 +50,36 @@ int what_std(char *std_in,struct addrinfo *res){
        
         return 0;
     }
-    if (strcmp(code_word,"show")==0 || strcmp(code_word,"st")==0){
-        sscanf(std_in,"%s %s",code_word,show);
-        if (strcmp(code_word,"st")==0 || strcmp(show,"topology")){
-            printf("Estado do protocolo topologico:\n");
-            printf("Utilizador:\n");
-            if(mid!=-1){
-                printf("\tid-%d\n",mid);
-            }else{
-                printf("\tid-Não definido");
-            }
-            printf("\tIP-%s\n",mIP);
-            printf("\tPort-%s\n",mTCP);
-            if (succ.id=-1){
-                printf("Sucessor ainda não definido\n");
-            }else{
-                printf("Sucessor:\n");//conmo vou ter id dos outros 
-                printf("\tIP-%s\n",succ.ip);
-                printf("\tPort-%s\n",succ.port);
-            }
-            if (sucsuc.id=-1){
-                printf("Segundo sucessor ainda não definido\n");
-            }else{
-                printf("Segundo sucessor:\n");//conmo vou ter id dos outros 
-                printf("\tIP-%s\n",sucsuc.ip);
-                printf("\tPort-%s\n",sucsuc.port);
-            }
-            //falta corda
+    if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"topology")==0))||(strcmp(code_word,"st")==0)){
+        
+        printf("Estado do protocolo topologico:\n");
+        printf("Utilizador:\n");
+        if(mid!=-1){
+            printf("\tid-%d\n",mid);
+        }else{
+            printf("\tid-Não definido\n");
         }
-        
-        
+        printf("\tIP-%s\n",mIP);
+        printf("\tPort-%s\n",mTCP);
+        if (succ.id==-1){
+            printf("Sucessor ainda não definido\n");
+        }else{
+            printf("Sucessor:\n");//conmo vou ter id dos outros 
+            printf("\tIP-%s\n",succ.ip);
+            printf("\tPort-%s\n",succ.port);
+        }
+        if (sucsuc.id==-1){
+            printf("Segundo sucessor ainda não definido\n");
+        }else{
+            printf("Segundo sucessor:\n");//conmo vou ter id dos outros 
+            printf("\tIP-%s\n",sucsuc.ip);
+            printf("\tPort-%s\n",sucsuc.port);
+        }
+        //falta corda
         return 0;
     }
+    
+    
     if (strcmp(code_word,"show")==0 || strcmp(code_word,"sr")==0){
        
         return 0;
@@ -106,3 +106,4 @@ int what_std(char *std_in,struct addrinfo *res){
     }
     return 0;
 }
+
