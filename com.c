@@ -47,6 +47,7 @@ int join(int ring, int id, struct addrinfo *res){
 }
 
 	while(sscanf(t, "%d %s %s", &rID, ip, port) == 3){
+		printf("%d %s %s\n",rID,ip,port);
 		ids[rID] = 1;
 		//nova linha da lista
 		t = strtok(NULL, "\n");
