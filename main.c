@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
 				
 				
 				if (FD_ISSET(0,&filhas)){
-					printf("select worked");
+					
 					fgets(std_in,500,stdin);
 					
 					i=what_std(std_in,resUDP);
