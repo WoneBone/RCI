@@ -8,12 +8,12 @@ int what_serv(int fd, char *mess){
     char code_word[100];
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){
-        sscanf(mess,"%s %s %s",code_word,pred.ip,pred.port);
+        sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
         pred.fd=fd;
         return 0;
     }
     if (strcmp(code_word,"SUCC")==0){
-        sscanf(mess,"%s %s %s",code_word,sucsuc.ip,sucsuc.port);
+        sscanf(mess,"%s %d %s %s",code_word,&sucsuc.id,sucsuc.ip,sucsuc.port);
         return 0;
     }
     if (strcmp(code_word,"PRED")==0){
