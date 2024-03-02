@@ -12,7 +12,7 @@ struct node succ, sucsuc, pred;
 
 
 int main(int argc, char *argv[]){
-	char buffer[10000],std_in[500],tcp_rec[500];
+	char buffer[10000],std_in[500],tcp_rec[500],tcp_clit[500];
 	char *regIP;
 	char *regUDP;
 	succ.id=-1;
@@ -73,9 +73,6 @@ int main(int argc, char *argv[]){
 				if(succ.id!=-1){
 					FD_SET(succ.fd,&filhas);
 				}
-				if(pred.id!=-1){
-					FD_SET(pred.id,&filhas);
-				}
 				
 				maxfd = sTCP;
 
@@ -89,6 +86,17 @@ int main(int argc, char *argv[]){
 					i=what_std(std_in,resUDP);
 					
 				}
+				if (FD_ISSET(succ.fd,&filhas)){
+					printf("Message received from %s:%s\n", succ.ip, succ.port);
+					n=read(succ.fd,tcp_clit,sizeof(tcp_clit));
+					if(n==-1)/*error*/ exit(1);
+					n=what_serv(succ.fd,tcp_clit);
+					if (n==0){
+						printf("%s - message meaning identified",tcp_rec);
+					}else{
+						printf("%s - cannot identifie message meaning",tcp_rec);
+					}
+				}
 				
 				// Check for new connections
 				if (FD_ISSET(sTCP, &filhas)) {					
@@ -100,12 +108,12 @@ int main(int argc, char *argv[]){
 					char clientIP[INET_ADDRSTRLEN];
 					inet_ntop(AF_INET, &(addr.sin_addr), clientIP, INET_ADDRSTRLEN);
 					printf("Message received from %s:%d\n", clientIP, ntohs(addr.sin_port));
-					n=read(newfd,tcp_rec,strlen(tcp_rec));
+					n=read(newfd,tcp_rec,sizeof(tcp_rec));
 					if(n==-1)/*error*/ exit(1);
 
 					n=what_serv(newfd,tcp_rec);
 
-					if (n=0){
+					if (n==0){
 						printf("%s - message meaning identified",tcp_rec);
 					}else{
 						printf("%s - cannot identifie message meaning",tcp_rec);
