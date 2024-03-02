@@ -69,12 +69,13 @@ int main(int argc, char *argv[]){
         		FD_ZERO(&filhas);
 				FD_SET(0,&filhas);
 				FD_SET(sTCP, &filhas);
-				
+	
 				if(succ.id!=-1){
+
 					FD_SET(succ.fd,&filhas);
-				}
-				
-				maxfd = sTCP;
+					maxfd = succ.fd;
+				}else{
+					maxfd = sTCP;}
 
 				if (select(maxfd+1 , &filhas, NULL, NULL, NULL) <= 0) exit(1); // error
 				
@@ -86,7 +87,7 @@ int main(int argc, char *argv[]){
 					i=what_std(std_in,resUDP);
 					
 				}
-				if (FD_ISSET(succ.fd,&filhas)){
+				if ((FD_ISSET(succ.fd,&filhas))&& succ.id!=-1){
 					printf("Message received from %s:%s\n", succ.ip, succ.port);
 					n=read(succ.fd,tcp_clit,sizeof(tcp_clit));
 					if(n==-1)/*error*/ exit(1);
