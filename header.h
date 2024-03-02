@@ -51,4 +51,6 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP);
 int what_serv(int fd, char *mess);
 
 int what_std(char *std_in,struct addrinfo *res);
+
+int what_clit(int fd, char *mess);
 #endif

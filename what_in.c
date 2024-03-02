@@ -1,19 +1,36 @@
 //Este ficheiro serve para funçoes de identificação de comandos 
 #include "header.h"
-extern int errcode,mid;
+extern int errcode,mid,n;
 extern char *mIP, *mTCP;
 extern struct node succ, sucsuc, pred;
 
 int what_serv(int fd, char *mess){
-    char code_word[100];
+    char code_word[100],trash[500];
+    int n;
+    strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){
-        sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
-        pred.fd=fd;
-        return 0;
-    }
-    if (strcmp(code_word,"SUCC")==0){
-        sscanf(mess,"%s %d %s %s",code_word,&sucsuc.id,sucsuc.ip,sucsuc.port);
+        if (pred.id==-1){
+            sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
+            pred.fd=fd;
+        }else{
+            n=write(pred.fd,mess,sizeof(mess));
+            if(n==-1)/*error*/ exit(1);
+            sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
+            pred.fd=fd;
+        }
+        
+        if (succ.id==-1){
+            succ.id=pred.id;
+            succ.fd=pred.fd;
+            strcpy(succ.ip,pred.ip);
+            strcpy(succ.port,pred.port);
+        }
+        sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
+        
+        n=write(fd,trash,sizeof(trash));
+        if(n==-1)/*error*/ exit(1);
+        
         return 0;
     }
     if (strcmp(code_word,"PRED")==0){
@@ -27,6 +44,29 @@ int what_serv(int fd, char *mess){
     }
     return 1;
 }
+
+int what_clit(int fd, char *mess){
+    char code_word[100],trash[500];
+    int n;
+    strcpy(trash,mess);
+    sscanf(mess,"%s",code_word);
+    if (strcmp(code_word,"ENTRY")==0){
+        sscanf(mess,"%s %d %s %s",code_word,&succ.id,succ.ip,succ.port);
+        succ.fd=fd;
+        n=write(succ.fd,"PRED %d\n",mid);
+        if(n==-1)/*error*/ exit(1);
+        sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
+        n=write(pred.fd,trash,sizeof(trash));
+        if(n==-1)/*error*/ exit(1);
+        return 0;
+    }
+    if (strcmp(code_word,"SUCC")==0){
+        sscanf(mess,"%s %d %s %s",code_word,&sucsuc.id,sucsuc.ip,sucsuc.port);
+        return 0;
+    }
+    return 1;
+}
+
 int what_std(char *std_in,struct addrinfo *res){
     char code_word[100],succIP[100],succTCP[100],show[100];
     int ring,id,succid;

@@ -91,11 +91,11 @@ int main(int argc, char *argv[]){
 					printf("Message received from %s:%s\n", succ.ip, succ.port);
 					n=read(succ.fd,tcp_clit,sizeof(tcp_clit));
 					if(n==-1)/*error*/ exit(1);
-					n=what_serv(succ.fd,tcp_clit);
+					n=what_clit(succ.fd,tcp_clit);
 					if (n==0){
-						printf("%s - message meaning identified",tcp_rec);
+						printf("%s - message meaning identified\n",tcp_rec);
 					}else{
-						printf("%s - cannot identifie message meaning",tcp_rec);
+						printf("%s - cannot identifie message meaning\n",tcp_rec);
 					}
 				}
 				
@@ -115,9 +115,9 @@ int main(int argc, char *argv[]){
 					n=what_serv(newfd,tcp_rec);
 
 					if (n==0){
-						printf("%s - message meaning identified",tcp_rec);
+						printf("%s - message meaning identified\n",tcp_rec);
 					}else{
-						printf("%s - cannot identifie message meaning",tcp_rec);
+						printf("%s - cannot identifie message meaning\n",tcp_rec);
 					}
 				}
 			}
