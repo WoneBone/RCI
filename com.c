@@ -77,7 +77,7 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 	char send[1000],rec[1000],trash[100];
 	strcpy(succ.ip,sucIP);
 	strcpy(succ.port,sucTCP);
-	succ.id=id;
+	succ.id=sucid;
 	
 	fd=tcp_client(sucIP,sucTCP);
 

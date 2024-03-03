@@ -71,12 +71,13 @@ int main(int argc, char *argv[]){
 				FD_SET(sTCP, &filhas);
 	
 				if(succ.id!=-1){
-
+					
 					FD_SET(succ.fd,&filhas);
 					maxfd = succ.fd;
 				}else{
 					maxfd = sTCP;}
-
+				
+				
 				if (select(maxfd+1 , &filhas, NULL, NULL, NULL) <= 0) exit(1); // error
 				
 				
