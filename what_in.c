@@ -13,6 +13,9 @@ int what_serv(int fd, char *mess){
         if (pred.id==-1){
             sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
             pred.fd=fd;
+            sucsuc.id=mid;
+            strcpy(sucsuc.ip,mIP);
+            strcpy(sucsuc.port,mTCP);
         }else{
             n=write(pred.fd,mess,sizeof(mess));
             if(n==-1)/*error*/ exit(1);
@@ -22,9 +25,9 @@ int what_serv(int fd, char *mess){
         
         if (succ.id==-1){
             succ.id=pred.id;
-            succ.fd=pred.fd;
             strcpy(succ.ip,pred.ip);
             strcpy(succ.port,pred.port);
+            succ.fd = tcp_client(succ.ip, succ.port);
         }
         sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
         

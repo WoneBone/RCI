@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 	succ.id=-1;
 	sucsuc.id=-1;
 	pred.id=-1;
-	int sTCP, sUDP, fd_ret, cTCP,maxfd,client_fds[MAX_CLIENTS],i,newfd;
+	int sTCP, sUDP, fd_ret, cTCP,maxfd=0,client_fds[MAX_CLIENTS],i,newfd;
 	ssize_t n,nw;
 	socklen_t addrlen;
 	fd_set filhas;
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]){
 				if(succ.id!=-1){
 					
 					FD_SET(succ.fd,&filhas);
-					maxfd = succ.fd;
+					maxfd = MAX(maxfd,succ.fd);
 				}else{
 					maxfd = sTCP;}
 				
