@@ -88,19 +88,19 @@ int main(int argc, char *argv[]){
 					
 				}
 				if ((FD_ISSET(succ.fd,&filhas))&& succ.id!=-1){
-					printf("Message received from %s:%s\n", succ.ip, succ.port);
+					printf("Message received from server %s:%s\n", succ.ip, succ.port);
 					n=read(succ.fd,tcp_clit,sizeof(tcp_clit));
 					if(n==-1)/*error*/ exit(1);
 					n=what_clit(succ.fd,tcp_clit);
 					if (n==0){
-						printf("%s - message meaning identified\n",tcp_rec);
+						printf("%s - message meaning identified\n",tcp_clit);
 					}else{
-						printf("%s - cannot identifie message meaning\n",tcp_rec);
+						printf("%s - cannot identifie message meaning\n",tcp_clit);
 					}
 				}
 				
 				// Check for new connections
-				if (FD_ISSET(sTCP, &filhas)) {					
+				if (FD_ISSET(sTCP, &filhas) ) {					
 					
 					addrlen = sizeof(addr);
 					newfd = accept(sTCP, (struct sockaddr *)&addr, &addrlen);
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]){
 
 					char clientIP[INET_ADDRSTRLEN];
 					inet_ntop(AF_INET, &(addr.sin_addr), clientIP, INET_ADDRSTRLEN);
-					printf("Message received from %s:%d\n", clientIP, ntohs(addr.sin_port));
+					printf("Message received from client %s:%d\n", clientIP, ntohs(addr.sin_port));
 					n=read(newfd,tcp_rec,sizeof(tcp_rec));
 					if(n==-1)/*error*/ exit(1);
 

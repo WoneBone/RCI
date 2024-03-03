@@ -78,9 +78,9 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 	strcpy(succ.ip,sucIP);
 	strcpy(succ.port,sucTCP);
 	succ.id=id;
-	printf("vefore tcp client\n",send);
+	
 	fd=tcp_client(sucIP,sucTCP);
-	printf("after tcp\n");
+
     succ.fd=fd;
 	sprintf(send,"ENTRY %02d %s %s\n",id,mIP,mTCP);
 	n=write(fd,send,sizeof(send));
