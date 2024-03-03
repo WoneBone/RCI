@@ -100,7 +100,7 @@ int main(int argc, char *argv[]){
 						printf("%s - cannot identifie message meaning\n",tcp_clit);
 					}
 				}
-				if ((FD_ISSET(pred.fd,&filhas))&& succ.id!=-1){
+				if ((FD_ISSET(pred.fd,&filhas))&& pred.id!=-1){
 					printf("Message received from client %s:%s\n", pred.ip, pred.port);
 					n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
 					if(n==-1)/*error*/ exit(1);
