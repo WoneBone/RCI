@@ -82,13 +82,7 @@ int main(int argc, char *argv[]){
 				if (select(maxfd+1 , &filhas, NULL, NULL, NULL) <= 0) exit(1); // error
 				
 				
-				if (FD_ISSET(0,&filhas)){
-					
-					fgets(std_in,500,stdin);
-					
-					i=what_std(std_in,resUDP);
-					
-				}
+				
 				if ((FD_ISSET(succ.fd,&filhas))&& succ.id!=-1){
 					printf("Message received from server %s:%s\n", succ.ip, succ.port);
 					n=read(succ.fd,tcp_clit,sizeof(tcp_clit));
@@ -131,6 +125,14 @@ int main(int argc, char *argv[]){
 					}else{
 						printf("%s - cannot identifie message meaning\n",tcp_rec);
 					}
+				}
+				
+				if (FD_ISSET(0,&filhas)){
+					
+					fgets(std_in,500,stdin);
+					
+					i=what_std(std_in,resUDP);
+					
 				}
 			}
 			
