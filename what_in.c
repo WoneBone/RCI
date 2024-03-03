@@ -5,7 +5,7 @@ extern char *mIP, *mTCP;
 extern struct node succ, sucsuc, pred;
 
 int what_serv(int fd, char *mess){
-    char code_word[100],trash[500];
+    char code_word[100],trash[500],trashp[500];
     int n;
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
@@ -17,6 +17,7 @@ int what_serv(int fd, char *mess){
             strcpy(sucsuc.ip,mIP);
             strcpy(sucsuc.port,mTCP);
         }else{
+            puts(mess);
             n=write(pred.fd,mess,sizeof(mess));
             if(n==-1)/*error*/ exit(1);
             sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
@@ -28,6 +29,9 @@ int what_serv(int fd, char *mess){
             strcpy(succ.ip,pred.ip);
             strcpy(succ.port,pred.port);
             succ.fd = tcp_client(succ.ip, succ.port);
+            sprintf(trashp,"PRED %d\n",mid);
+            n=write(succ.fd,trashp,sizeof(trashp));
+            if(n==-1)/*error*/ exit(1);
         }
         sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
         
@@ -67,6 +71,12 @@ int what_clit(int fd, char *mess){
         sscanf(mess,"%s %d %s %s",code_word,&sucsuc.id,sucsuc.ip,sucsuc.port);
         return 0;
     }
+    if (strcmp(code_word,"PRED")==0){
+        sscanf(mess,"%s %d",code_word,&pred.id);
+        pred.fd=fd;
+        return 0;
+    }
+    
     return 1;
 }
 

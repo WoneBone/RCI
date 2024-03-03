@@ -71,7 +71,8 @@ int main(int argc, char *argv[]){
 				FD_SET(sTCP, &filhas);
 	
 				if(succ.id!=-1){
-					
+					FD_SET(pred.fd,&filhas);
+					maxfd = MAX(maxfd,pred.fd);
 					FD_SET(succ.fd,&filhas);
 					maxfd = MAX(maxfd,succ.fd);
 				}else{
@@ -99,7 +100,17 @@ int main(int argc, char *argv[]){
 						printf("%s - cannot identifie message meaning\n",tcp_clit);
 					}
 				}
-				
+				if ((FD_ISSET(pred.fd,&filhas))&& succ.id!=-1){
+					printf("Message received from client %s:%s\n", pred.ip, pred.port);
+					n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
+					if(n==-1)/*error*/ exit(1);
+					n=what_clit(pred.fd,tcp_rec);
+					if (n==0){
+						printf("%s - message meaning identified\n",tcp_rec);
+					}else{
+						printf("%s - cannot identifie message meaning\n",tcp_rec);
+					}
+				}
 				// Check for new connections
 				if (FD_ISSET(sTCP, &filhas) ) {					
 					
