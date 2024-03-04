@@ -12,7 +12,7 @@ struct node succ, sucsuc, pred;
 
 
 int main(int argc, char *argv[]){
-	char buffer[10000],std_in[500],tcp_rec[500],tcp_clit[500];
+	char std_in[500],tcp_rec[500],tcp_clit[500];
 	char *regIP;
 	char *regUDP;
 	succ.id=-1;
@@ -28,6 +28,9 @@ int main(int argc, char *argv[]){
 	struct addrinfo *resUDP;
 	struct sockaddr_in addr;
 
+	memset(std_in, 0, 500);
+	memset(tcp_rec, 0, 500);
+	memset(tcp_clit, 0, 500);
 
 	switch (argc) {
 		//4 argumentos

@@ -83,7 +83,7 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 
     succ.fd=fd;
 	sprintf(send,"ENTRY %02d %s %s\n",id,mIP,mTCP);
-	n=write(fd,send,sizeof(send));
+	n=write(fd,send,strlen(send)+1);
 	if(n==-1)/*error*/ exit(1);
     
 	/* n=read(fd,rec,strlen(rec));
