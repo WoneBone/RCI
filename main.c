@@ -1,7 +1,5 @@
 #include "header.h"
 
-#define REGIP "193.136.138.142"
-#define REGUDP "59000"
 #define MAX_CLIENTS 17
 #define MAX(a,b) ((a)>(b)?(a):(b))
 int errcode,mid;

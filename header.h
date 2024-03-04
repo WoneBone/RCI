@@ -10,7 +10,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/select.h>
-
+#define REGIP "193.136.138.142"
+#define REGUDP "59000"
 struct node{
 	int id ;
 	char ip[100];
@@ -47,6 +48,8 @@ int udp_connect(char *regIP, char *regUDP, struct addrinfo **res);
 int join(int ring, int id, struct addrinfo *res);
 
 void d_join(int id,int sucid,char * sucIP, char *sucTCP);
+
+void leave(int ring, int id, struct addrinfo *res);
 
 int what_serv(int fd, char *mess);
 
