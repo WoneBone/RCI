@@ -67,15 +67,15 @@ int main(int argc, char *argv[]){
 			
 			//cTCP = tcp_client(mIP,mTCP);
 			while (1) {
-        		FD_ZERO(&filhas);
+        		FD_ZERO(&filhas); //reset filhas
 				FD_SET(0,&filhas);
-				FD_SET(sTCP, &filhas);
+				FD_SET(sTCP, &filhas); //filhas inicializado com stdin e sTCP
 	
-				if(succ.id!=-1){
+				if(succ.id!=-1){ //atualizar filhas com fd's adjacentes
 					FD_SET(pred.fd,&filhas);
 					maxfd = MAX(maxfd,pred.fd);
 					FD_SET(succ.fd,&filhas);
-					maxfd = MAX(maxfd,succ.fd);
+					maxfd = MAX(maxfd,succ.fd); 
 				}else{
 					maxfd = sTCP;}
 				
@@ -84,22 +84,22 @@ int main(int argc, char *argv[]){
 				
 				
 				
-				if ((FD_ISSET(succ.fd,&filhas))&& succ.id!=-1){
+				if ((FD_ISSET(succ.fd,&filhas))&& succ.id!=-1){ //succ.fd mudou (e existe), entao read
 					printf("Message received from server %s:%s\n", succ.ip, succ.port);
-					n=read(succ.fd,tcp_clit,sizeof(tcp_clit));
+					n=read(succ.fd,tcp_clit,sizeof(tcp_clit)); //succ.fd = nossa TCP client conectada com o TCP server do succ
 					if(n==-1)/*error*/ exit(1);
-					n=what_clit(succ.fd,tcp_clit);
+					n=what_clit(succ.fd,tcp_clit); //interpreta msg recebida
 					if (n==0){
 						printf("%s - message meaning identified\n",tcp_clit);
 					}else{
 						printf("%s - cannot identifie message meaning\n",tcp_clit);
 					}
 				}
-				if ((FD_ISSET(pred.fd,&filhas))&& pred.id!=-1){
+				if ((FD_ISSET(pred.fd,&filhas))&& pred.id!=-1){ //same for pred
 					printf("Message received from client %s:%s\n", pred.ip, pred.port);
 					n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
 					if(n==-1)/*error*/ exit(1);
-					n=what_clit(pred.fd,tcp_rec);
+					n=what_clit(pred.fd,tcp_rec); //DUVIDA!! NAO E SUPOSTO ISTO SER WHAT SERV????
 					if (n==0){
 						printf("%s - message meaning identified\n",tcp_rec);
 					}else{
@@ -110,16 +110,16 @@ int main(int argc, char *argv[]){
 				if (FD_ISSET(sTCP, &filhas) ) {					
 					
 					addrlen = sizeof(addr);
-					newfd = accept(sTCP, (struct sockaddr *)&addr, &addrlen);
+					newfd = accept(sTCP, (struct sockaddr *)&addr, &addrlen); //newfd = Our TCP server socket connected to a client
 					if (newfd == -1) exit(1); // error
 
 					char clientIP[INET_ADDRSTRLEN];
-					inet_ntop(AF_INET, &(addr.sin_addr), clientIP, INET_ADDRSTRLEN);
+					inet_ntop(AF_INET, &(addr.sin_addr), clientIP, INET_ADDRSTRLEN); //where's the clit?
 					printf("Message received from client %s:%d\n", clientIP, ntohs(addr.sin_port));
 					n=read(newfd,tcp_rec,sizeof(tcp_rec));
 					if(n==-1)/*error*/ exit(1);
 
-					n=what_serv(newfd,tcp_rec);
+					n=what_serv(newfd,tcp_rec); //meu server TCP interpreta
 
 					if (n==0){
 						printf("%s - message meaning identified\n",tcp_rec);
@@ -128,11 +128,11 @@ int main(int argc, char *argv[]){
 					}
 				}
 				
-				if (FD_ISSET(0,&filhas)){
+				if (FD_ISSET(0,&filhas)){ //escrevemos algo no terminal
 					
 					fgets(std_in,500,stdin);
 					
-					i=what_std(std_in,resUDP);
+					i=what_std(std_in,resUDP);//interpreta consola
 					
 				}
 			}
