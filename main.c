@@ -94,10 +94,14 @@ int main(int argc, char *argv[]){
 					{
 						FD_CLR(succ.fd, &filhas);
 						close(succ.fd);
-						succ.id = -1;
 						if (succ.id != mid) //IF IM NOT ALONE
 						{
-						succ.fd = tcp_client(sucsuc.id, sucsuc.port);
+						succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
+						succ.id = sucsuc.id;
+						strcpy(succ.ip, sucsuc.ip);
+						strcpy(succ.port, sucsuc.port);
+						
+
 						n=write(succ.fd,"PRED %d\n",mid);//I TELL NEXT GUY IM BEHIND HIM
         				if(n==-1)/*error*/ exit(1);
 						n=write(pred.fd,"SUCC %d\n",succ.id);//I TELL MY PRED HIS NEW SUCCSUCC
