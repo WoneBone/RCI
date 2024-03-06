@@ -2,6 +2,7 @@
 #define header
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -51,7 +52,7 @@ int udp_connect(char *regIP, char *regUDP, struct addrinfo **res);
  *
  * Devolve o id efetivamente ligado
  *
- * introduz o programa no anel ring
+ * introduz o programa no anel ring e coloca a variável mRing = ring
  * ****************************************************************/
 int join(int ring, int id, struct addrinfo *res);
 
@@ -68,7 +69,7 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP);
  * Tira o nó id do anel ring registado no servidor de nós res
  * ****************************************************************/
 
-void leave(int ring, int id, struct addrinfo *res);
+void leave(int id, struct addrinfo *res);
 
 /******************************************************************
  * Função de identificação de comunicação feita a este servidor TCP
