@@ -3,6 +3,7 @@
 #define MAX_CLIENTS 17
 #define MAX(a,b) ((a)>(b)?(a):(b))
 int errcode,mid;
+int mRing;
 char *mIP;
 char *mTCP;
 struct node succ, sucsuc, pred;
@@ -79,8 +80,8 @@ int main(int argc, char *argv[]){
 				}else{
 					maxfd = sTCP;}
 				
-				
-				if (select(maxfd+1 , &filhas, NULL, NULL, NULL) <= 0) exit(1); // error
+				errcode = select(maxfd+1 , &filhas, NULL, NULL, NULL);
+				if ( errcode <= 0) exit(errno); // error
 				
 				
 				

@@ -1,6 +1,7 @@
 /*Este ficheiro serve para conter as funções que tratam dos comandos recebidos pelo utilizador*/
 #include "header.h"
 extern int errcode,mid;
+extern int mRing;
 extern char *mIP, *mTCP;
 extern struct node succ, sucsuc, pred;
 
@@ -43,6 +44,7 @@ int join(int ring, int id, struct addrinfo *res){
 		errcode = recvfrom(fd, s, 1000, 0, NULL, NULL);
 		if(errcode == -1) exit(-1); /*error*/
 		puts(s);
+		mRing = ring;
 		return id;
 }
 
@@ -68,6 +70,7 @@ int join(int ring, int id, struct addrinfo *res){
 	
 	//Direct join com o ultimo ip obtido
 	d_join(id, rID, ip, port);
+	mRing = ring;
 	return id;
 }
 
@@ -94,7 +97,7 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 
 }
 
-void leave(int ring, int id, struct addrinfo *res){
+void leave(int id, struct addrinfo *res){
 	//UDP for UNREG
 	int fd = socket(AF_INET, SOCK_DGRAM, 0);
 	char s[1000], *t;
@@ -103,7 +106,7 @@ void leave(int ring, int id, struct addrinfo *res){
 	if(fd == -1) exit(1); //erro
 
 	//UNREG
-	sprintf(s,"UNREG %03d %02d\n", ring, id);					  
+	sprintf(s,"UNREG %03d %02d\n", mRing, id);					  
 	errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
 	if(errcode == -1) exit(1);//error
 	
@@ -115,17 +118,13 @@ void leave(int ring, int id, struct addrinfo *res){
 	//close conections on adj LEMBRAR DEPOIS DAS COOOORDS AHHHHHHHHHHHHHHHHHHHHH
 	close(pred.fd);
 	close(succ.fd);
-	close(sucsuc.fd);
 
 	//reset adj? me am dumb
 
 	pred.id = -1;
-	pred.fd = -1; 
 
 	succ.id = -1; 
-	succ.fd = -1; 
 
 	sucsuc.id = -1; 
-	sucsuc.fd = -1; 
 
 }

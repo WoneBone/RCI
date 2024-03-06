@@ -151,7 +151,7 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     if (strcmp(code_word,"leave")==0 || strcmp(code_word,"l")==0){
-       leave(ring, mid, res);
+       leave(mid, res);
         return 0;
     }
     if (strcmp(code_word,"exit")==0 || strcmp(code_word,"x")==0){
