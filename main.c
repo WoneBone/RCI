@@ -95,6 +95,19 @@ int main(int argc, char *argv[]){
 						FD_CLR(succ.fd, &filhas);
 						close(succ.fd);
 						succ.id = -1;
+						if (succ.id != mid) //IF IM NOT ALONE
+						{
+						succ.fd = tcp_client(sucsuc.id, sucsuc.port);
+						n=write(succ.fd,"PRED %d\n",mid);//I TELL NEXT GUY IM BEHIND HIM
+        				if(n==-1)/*error*/ exit(1);
+						n=write(pred.fd,"SUCC %d\n",succ.id);//I TELL MY PRED HIS NEW SUCCSUCC
+        				if(n==-1)/*error*/ exit(1);
+
+						}
+						
+								
+						
+
 					
 						
 						
@@ -124,7 +137,7 @@ int main(int argc, char *argv[]){
 					}
 					else {
 					if(n==-1)/*error*/ exit(1);
-					n=what_serv(pred.fd,tcp_rec); //DUVIDA!! NAO E SUPOSTO ISTO SER WHAT SERV????
+					n=what_serv(pred.fd,tcp_rec); 
 					if (n==0){
 						printf("%s - message meaning identified\n",tcp_rec);
 					}else{

@@ -58,9 +58,15 @@ int what_clit(int fd, char *mess){
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){ //NEW GUY IN FRONT OF ME
+        sucsuc.fd = succ.fd;
+        sucsuc.id = succ.id;
+        strcpy(sucsuc.ip, succ.ip);
+        strcpy(sucsuc.port, succ.port);
+
         sscanf(mess,"%s %d %s %s",code_word,&succ.id,succ.ip,succ.port);
-        succ.fd=fd;//DUVIDA, ISTO NAO FAZ NADA, EU ESTOU RECEBER MSG DO MEU SUCC MAS O MEU SUCC VAI PASSAR A SER QUEM ENTROU,
-        //LOGO TENHO DE FAZER CONNECTION com succ.port (estou a vir para aqui com whatclit(succ.fd) logo fd = succ.fd)
+        close(succ.fd);
+        succ.fd = tcp_client(succ.ip, succ.port);
+
         n=write(succ.fd,"PRED %d\n",mid);//I TELL NEW GUY IM BEHIND HIM
         if(n==-1)/*error*/ exit(1);
         sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port); //aviso o meu pred do seu novo SUCSUC
