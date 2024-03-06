@@ -4,27 +4,27 @@ extern int errcode,mid,n;
 extern char *mIP, *mTCP;
 extern struct node succ, sucsuc, pred;
 
-int what_serv(int fd, char *mess){
+int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     char code_word[100],trash[500],trashp[500];
     int n;
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
-    if (strcmp(code_word,"ENTRY")==0){
-        if (pred.id==-1){
+    if (strcmp(code_word,"ENTRY")==0){ //ENTRY RECEIVED FROM OUTSIDE
+        if (pred.id==-1){ //ME ALONE
             sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
-            pred.fd=fd;
-            sucsuc.id=mid;
+            pred.fd=fd; //U MY PRED NOW
+            sucsuc.id=mid; // ME SUCSUC ME CAUSE ME WAS ALONE :'(
             strcpy(sucsuc.ip,mIP);
             strcpy(sucsuc.port,mTCP);
-        }else{
+        }else{ //NOT ALONE! :D life is good...
             puts(mess);
-            n=write(pred.fd,mess,strlen(mess) + 1);
+            n=write(pred.fd,mess,strlen(mess) + 1); //REPLAY ENTRY MSG TO MY PRED
             if(n==-1)/*error*/ exit(1);
             sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
             pred.fd=fd;
         }
         
-        if (succ.id==-1){
+        if (succ.id==-1){ //IF ALONE, NEW SUC IS NEW PRED and I TCP conect to his server as a client
             succ.id=pred.id;
             strcpy(succ.ip,pred.ip);
             strcpy(succ.port,pred.port);
@@ -33,14 +33,14 @@ int what_serv(int fd, char *mess){
             n=write(succ.fd,trashp,strlen(trashp)+1);
             if(n==-1)/*error*/ exit(1);
         }
-        sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
+        sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port); // I TELL NEW GUY WHO IS HIS SUCSUC
         
         n=write(fd,trash,strlen(trash)+1);
         if(n==-1)/*error*/ exit(1);
         
         return 0;
     }
-    if (strcmp(code_word,"PRED")==0){
+    if (strcmp(code_word,"PRED")==0){ //SOMEONE TOLD ME THEY ARE MY PRED
         sscanf(mess,"%s %d",code_word,&pred.id);
         pred.fd=fd;
         return 0;
@@ -57,12 +57,13 @@ int what_clit(int fd, char *mess){
     int n;
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
-    if (strcmp(code_word,"ENTRY")==0){
+    if (strcmp(code_word,"ENTRY")==0){ //NEW GUY IN FRONT OF ME
         sscanf(mess,"%s %d %s %s",code_word,&succ.id,succ.ip,succ.port);
-        succ.fd=fd;
-        n=write(succ.fd,"PRED %d\n",mid);
+        succ.fd=fd;//DUVIDA, ISTO NAO FAZ NADA, EU ESTOU RECEBER MSG DO MEU SUCC MAS O MEU SUCC VAI PASSAR A SER QUEM ENTROU,
+        //LOGO TENHO DE FAZER CONNECTION com succ.port (estou a vir para aqui com whatclit(succ.fd) logo fd = succ.fd)
+        n=write(succ.fd,"PRED %d\n",mid);//I TELL NEW GUY IM BEHIND HIM
         if(n==-1)/*error*/ exit(1);
-        sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
+        sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port); //aviso o meu pred do seu novo SUCSUC
         n=write(pred.fd,trash,sizeof(trash));
         if(n==-1)/*error*/ exit(1);
         return 0;
@@ -72,7 +73,7 @@ int what_clit(int fd, char *mess){
         return 0;
     }
     if (strcmp(code_word,"PRED")==0){
-        sscanf(mess,"%s %d",code_word,&pred.id);
+        sscanf(mess,"%s %d",code_word,&pred.id); //duvida como client nunca recebo um PRED right?
         pred.fd=fd;
         return 0;
     }
