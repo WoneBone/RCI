@@ -75,13 +75,13 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 	int fd;
 	ssize_t n;
 	char send[1000],rec[1000],trash[100];
+	//Atribição dos valores de succ
 	strcpy(succ.ip,sucIP);
 	strcpy(succ.port,sucTCP);
 	succ.id=sucid;
-	
-	fd=tcp_client(sucIP,sucTCP);
+	succ.fd=tcp_client(sucIP,sucTCP);
 
-    succ.fd=fd;
+	//Envio de entry
 	sprintf(send,"ENTRY %02d %s %s\n",id,mIP,mTCP);
 	n=write(fd,send,strlen(send)+1);
 	if(n==-1)/*error*/ exit(1);
