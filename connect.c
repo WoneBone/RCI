@@ -21,7 +21,7 @@ int tcp_server(char *TCP){
 	n=bind(fd,res->ai_addr,res->ai_addrlen);
 	if(n==-1) /*error*/ 
 		exit(2);
-	if(listen(fd,5)==-1)/*error*/
+	if(listen(fd,15)==-1)/*error*/
 		exit(3);
 	
 	freeaddrinfo(res);

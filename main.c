@@ -88,17 +88,39 @@ int main(int argc, char *argv[]){
 				if ((FD_ISSET(succ.fd,&filhas))&& succ.id!=-1){ //succ.fd mudou (e existe), entao read
 					printf("Message received from server %s:%s\n", succ.ip, succ.port);
 					n=read(succ.fd,tcp_clit,sizeof(tcp_clit)); //succ.fd = nossa TCP client conectada com o TCP server do succ
-					if(n==-1)/*error*/ exit(1);
-					n=what_clit(succ.fd,tcp_clit); //interpreta msg recebida
-					if (n==0){
-						printf("%s - message meaning identified\n",tcp_clit);
-					}else{
-						printf("%s - cannot identifie message meaning\n",tcp_clit);
+					if (n==0) //if conection with succ broken (succ left)
+					{
+						FD_CLR(succ.fd, &filhas);
+						close(succ.fd);
+						succ.id = -1;
+					
+						
+						
+					}
+					else{
+						if(n==-1)/*error*/ exit(1);
+						n=what_clit(succ.fd,tcp_clit); //interpreta msg recebida
+						if (n==0){
+							printf("%s - message meaning identified\n",tcp_clit);
+						}
+						else{
+							printf("%s - cannot identifie message meaning\n",tcp_clit);
+						}
 					}
 				}
 				if ((FD_ISSET(pred.fd,&filhas))&& pred.id!=-1){ //same for pred
 					printf("Message received from client %s:%s\n", pred.ip, pred.port);
 					n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
+					if (n==0) //if conection with succ broken (succ left)
+					{
+						FD_CLR(pred.fd, &filhas);
+						close(pred.fd);
+						pred.id = -1;
+					
+						
+						
+					}
+					else {
 					if(n==-1)/*error*/ exit(1);
 					n=what_clit(pred.fd,tcp_rec); //DUVIDA!! NAO E SUPOSTO ISTO SER WHAT SERV????
 					if (n==0){
@@ -106,7 +128,7 @@ int main(int argc, char *argv[]){
 					}else{
 						printf("%s - cannot identifie message meaning\n",tcp_rec);
 					}
-				}
+				} }
 				// Check for new connections
 				if (FD_ISSET(sTCP, &filhas) ) {					
 					
