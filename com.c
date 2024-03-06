@@ -113,17 +113,17 @@ void leave(int id, struct addrinfo *res){
 	errcode = recvfrom(fd, s, 1000, 0, NULL, NULL);
 	if(errcode == -1) exit(-1); /*error*/
 	puts(s);
-
-	//close conections on adj LEMBRAR DEPOIS DAS COOOORDS AHHHHHHHHHHHHHHHHHHHHH
-	close(pred.fd);
-	close(succ.fd);
-
-	//reset adj? me am dumb
-
-	pred.id = -1;
-
-	succ.id = -1; 
-
+	
+	//close succ
+	if(succ.id != -1){
+		close(succ.fd);
+		succ.id = -1;
+	}
+	//close pred
+	if(pred.id != -1){
+		close(pred.fd);
+		pred.id = -1;
+	}
 	sucsuc.id = -1; 
 
 }
