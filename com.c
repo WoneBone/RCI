@@ -15,7 +15,7 @@ int join(int ring, int id, struct addrinfo *res){
 	if(fd == -1) exit(1); //erro
 				
 	memset(ids, 0, sizeof(ids));
-
+	memset(s, '\0', sizeof(s));
 	ip[0] = '\0'; port[0] = '\0';
 	//Eviar NODES
 	sprintf(s,"NODES %03d\n", ring);					  
@@ -75,7 +75,6 @@ int join(int ring, int id, struct addrinfo *res){
 }
 
 void d_join(int id,int sucid,char * sucIP, char *sucTCP){
-	int fd;
 	ssize_t n;
 	char send[1000],rec[1000],trash[100];
 	//Atribição dos valores de succ
@@ -86,7 +85,7 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 
 	//Envio de entry
 	sprintf(send,"ENTRY %02d %s %s\n",id,mIP,mTCP);
-	n=write(fd,send,strlen(send)+1);
+	n=write(succ.fd,send,strlen(send)+1);
 	if(n==-1)/*error*/ exit(1);
     
 	/* n=read(fd,rec,strlen(rec));
