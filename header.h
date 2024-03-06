@@ -44,16 +44,44 @@ int tcp_client(char *ipTCP, char *pTCP);
  * Retoma o file descriptor da socket criada
  * ****************************************************************/
 int udp_connect(char *regIP, char *regUDP, struct addrinfo **res);
-
+/******************************************************************
+ * Função que trata da rotina join
+ *
+ * Comunica com o servidor UDP identificado por res e tenta ligar-se ao anel ring com o id id
+ *
+ * Devolve o id efetivamente ligado
+ *
+ * introduz o programa no anel ring
+ * ****************************************************************/
 int join(int ring, int id, struct addrinfo *res);
 
+/******************************************************************
+ * Função que trata da rotina direct join
+ *
+ * Liga-se ao nó identificado por succid, localizado em succIP e succTCP
+ * Não retoma nada mas define a variável global succ
+ * ****************************************************************/
 void d_join(int id,int sucid,char * sucIP, char *sucTCP);
+/******************************************************************
+ * Função que trata da rotina leave
+ *
+ * Tira o nó id do anel ring registado no servidor de nós res
+ * ****************************************************************/
 
 void leave(int ring, int id, struct addrinfo *res);
 
+/******************************************************************
+ * Função de identificação de comunicação feita a este servidor TCP
+ * ****************************************************************/
 int what_serv(int fd, char *mess);
 
+/******************************************************************
+ * Função de identificação de comunicação feita pelo utilizador pelo std in
+ * ****************************************************************/
 int what_std(char *std_in,struct addrinfo *res);
 
+/******************************************************************
+ * Função de identificação de comunicação feita por um servidor a que este cliente está ligado
+ * ****************************************************************/
 int what_clit(int fd, char *mess);
 #endif
