@@ -73,10 +73,12 @@ int main(int argc, char *argv[]){
 				FD_SET(sTCP, &filhas); //filhas inicializado com stdin e sTCP
 	
 				if(succ.id!=-1){ //atualizar filhas com fd's adjacentes
-					FD_SET(pred.fd,&filhas);
-					maxfd = MAX(maxfd,pred.fd);
 					FD_SET(succ.fd,&filhas);
 					maxfd = MAX(maxfd,succ.fd); 
+				}
+				if (pred.id != -1){
+					FD_SET(pred.fd,&filhas);
+					maxfd = MAX(maxfd,pred.fd);
 				}else{
 					maxfd = sTCP;}
 				
@@ -100,7 +102,7 @@ int main(int argc, char *argv[]){
 					printf("Message received from client %s:%s\n", pred.ip, pred.port);
 					n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
 					if(n==-1)/*error*/ exit(1);
-					n=what_clit(pred.fd,tcp_rec); //DUVIDA!! NAO E SUPOSTO ISTO SER WHAT SERV????
+					n=what_serv(pred.fd,tcp_rec); //DUVIDA!! NAO E SUPOSTO ISTO SER WHAT SERV????
 					if (n==0){
 						printf("%s - message meaning identified\n",tcp_rec);
 					}else{
