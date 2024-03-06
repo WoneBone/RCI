@@ -107,7 +107,10 @@ int main(int argc, char *argv[]){
 						n=write(pred.fd,"SUCC %d\n",succ.id);//I TELL MY PRED HIS NEW SUCCSUCC
         				if(n==-1)/*error*/ exit(1);
 
+						}else{
+							succ.id=-1;
 						}
+
 						
 								
 						

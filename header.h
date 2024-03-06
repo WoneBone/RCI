@@ -11,8 +11,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/select.h>
-#define REGIP "193.136.138.142"
-#define REGUDP "59000"
+#define REGIP "192.168.1.1"
+#define REGUDP "58000"
 struct node{
 	int id ;
 	char ip[100];

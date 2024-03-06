@@ -18,7 +18,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
             strcpy(sucsuc.port,mTCP);
         }else{ //NOT ALONE! :D life is good...
             puts(mess);
-            n=write(pred.fd,mess,strlen(mess) + 1); //REPLAY ENTRY MSG TO MY PRED
+            n=write(pred.fd,mess,strlen(mess) ); //REPLAY ENTRY MSG TO MY PRED
             if(n==-1)/*error*/ exit(1);
             sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
             pred.fd=fd;
@@ -30,12 +30,12 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
             strcpy(succ.port,pred.port);
             succ.fd = tcp_client(succ.ip, succ.port);
             sprintf(trashp,"PRED %d\n",mid);
-            n=write(succ.fd,trashp,strlen(trashp)+1);
+            n=write(succ.fd,trashp,strlen(trashp));
             if(n==-1)/*error*/ exit(1);
         }
         sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port); // I TELL NEW GUY WHO IS HIS SUCSUC
         
-        n=write(fd,trash,strlen(trash)+1);
+        n=write(fd,trash,strlen(trash));
         if(n==-1)/*error*/ exit(1);
         
         return 0;
@@ -125,6 +125,7 @@ int what_std(char *std_in,struct addrinfo *res){
             printf("Sucessor ainda não definido\n");
         }else{
             printf("Sucessor:\n");//conmo vou ter id dos outros 
+            printf("\tId: %d\n",succ.id);
             printf("\tIP-%s\n",succ.ip);
             printf("\tPort-%s\n",succ.port);
         }
@@ -132,6 +133,7 @@ int what_std(char *std_in,struct addrinfo *res){
             printf("Segundo sucessor ainda não definido\n");
         }else{
             printf("Segundo sucessor:\n");//conmo vou ter id dos outros 
+            printf("\tId: %d\n",sucsuc.id);
             printf("\tIP-%s\n",sucsuc.ip);
             printf("\tPort-%s\n",sucsuc.port);
         }
