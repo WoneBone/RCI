@@ -43,6 +43,13 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     if (strcmp(code_word,"PRED")==0){ //SOMEONE TOLD ME THEY ARE MY PRED
         sscanf(mess,"%s %d",code_word,&pred.id);
         pred.fd=fd;
+        if (sucsuc.fd != 1){
+             sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port); // I TELL my new pred his new sucsuc
+        
+            n=write(fd,trash,strlen(trash));
+            if(n==-1)/*error*/ exit(1);
+
+        }
         return 0;
     }
     if (strcmp(code_word,"CHORD")==0){
