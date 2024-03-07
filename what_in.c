@@ -53,7 +53,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
 }
 
 int what_clit(int fd, char *mess){
-    char code_word[100],trash[500];
+    char code_word[100],trash[500],pred_mess[500];
     int n;
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
@@ -67,7 +67,8 @@ int what_clit(int fd, char *mess){
         close(succ.fd);
         succ.fd = tcp_client(succ.ip, succ.port);
 
-        n=write(succ.fd,"PRED %d\n",mid);//I TELL NEW GUY IM BEHIND HIM
+        sprintf(pred_mess,"PRED %d\n",mid);
+        n=write(succ.fd,pred_mess,strlen(pred_mess));//I TELL NEW GUY IM BEHIND HIM
         if(n==-1)/*error*/ exit(1);
         sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port); //aviso o meu pred do seu novo SUCSUC
         n=write(pred.fd,trash,sizeof(trash));

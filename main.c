@@ -11,7 +11,7 @@ struct node succ, sucsuc, pred;
 
 
 int main(int argc, char *argv[]){
-	char std_in[500],tcp_rec[500],tcp_clit[500];
+	char std_in[500],tcp_rec[500],tcp_clit[500],trash[500];
 	char *regIP;
 	char *regUDP;
 	succ.id=-1;
@@ -101,10 +101,11 @@ int main(int argc, char *argv[]){
 						strcpy(succ.ip, sucsuc.ip);
 						strcpy(succ.port, sucsuc.port);
 						
-
-						n=write(succ.fd,"PRED %d\n",mid);//I TELL NEXT GUY IM BEHIND HIM
+						sprintf(trash,"PRED %d\n",mid);
+						n=write(succ.fd,trash,strlen(trash));//I TELL NEXT GUY IM BEHIND HIM
         				if(n==-1)/*error*/ exit(1);
-						n=write(pred.fd,"SUCC %d\n",succ.id);//I TELL MY PRED HIS NEW SUCCSUCC
+						sprintf(trash,"SUCC %d\n",succ.id);
+						n=write(pred.fd,trash,strlen(trash));//I TELL MY PRED HIS NEW SUCCSUCC
         				if(n==-1)/*error*/ exit(1);
 
 						}else{
