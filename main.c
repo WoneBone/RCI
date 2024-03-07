@@ -104,7 +104,7 @@ int main(int argc, char *argv[]){
 						sprintf(trash,"PRED %d\n",mid);
 						n=write(succ.fd,trash,strlen(trash));//I TELL NEXT GUY IM BEHIND HIM
         				if(n==-1)/*error*/ exit(1);
-						sprintf(trash,"SUCC %d\n",succ.id);
+						sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
 						n=write(pred.fd,trash,strlen(trash));//I TELL MY PRED HIS NEW SUCCSUCC
         				if(n==-1)/*error*/ exit(1);
 
