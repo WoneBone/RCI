@@ -66,6 +66,14 @@ int main(int argc, char *argv[]){
 			sTCP = tcp_server(mTCP);
 			sUDP = udp_connect(REGIP, REGUDP, &resUDP);
 			
+			break;
+
+		default:
+			printf("The number of arguments inputed are invalid");
+			exit(1);
+			break;
+	
+}
 			//cTCP = tcp_client(mIP,mTCP);
 			while (1) {
         		FD_ZERO(&filhas); //reset filhas
@@ -190,13 +198,6 @@ int main(int argc, char *argv[]){
 			freeaddrinfo(resUDP);
 			close(sUDP);
 
-			break;
 
-		default:
-			printf("The number of arguments inputed are invalid");
-			exit(1);
-			break;
-	
-}
 }
 
