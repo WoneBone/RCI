@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/select.h>
+#define MAX_CLIENTS 17
 #define REGIP "193.136.138.142"
 #define REGUDP "59000"
 struct node{
@@ -19,6 +20,12 @@ struct node{
 	char port[100];
 	int fd;	
 };
+struct Path {                        
+    int route[MAX_CLIENTS];         // The list of node IDs representing the path
+    int size;                       // The current number of nodes in the route
+};
+
+
 /*******************************************************************
  * Função de inicialização de servidor TCP
  *
