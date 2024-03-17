@@ -29,11 +29,11 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
             strcpy(succ.ip,pred.ip);
             strcpy(succ.port,pred.port);
             succ.fd = tcp_client(succ.ip, succ.port);
-            sprintf(trashp,"PRED %d\n",mid);
+            sprintf(trashp,"PRED %02d\n",mid);
             n=write(succ.fd,trashp,strlen(trashp));
             if(n==-1)/*error*/ exit(1);
         }
-        sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port); // I TELL NEW GUY WHO IS HIS SUCSUC
+        sprintf(trash,"SUCC %02d %s %s\n",succ.id,succ.ip,succ.port); // I TELL NEW GUY WHO IS HIS SUCSUC
         
         n=write(fd,trash,strlen(trash));
         if(n==-1)/*error*/ exit(1);
@@ -44,7 +44,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         sscanf(mess,"%s %d",code_word,&pred.id);
         pred.fd=fd;
         if (sucsuc.fd != -1){
-             sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port); // I TELL my new pred his new sucsuc
+             sprintf(trash,"SUCC %02d %s %s\n",succ.id,succ.ip,succ.port); // I TELL my new pred his new sucsuc
         
             n=write(fd,trash,strlen(trash));
             if(n==-1)/*error*/ exit(1);
@@ -54,6 +54,31 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     }
     if (strcmp(code_word,"CHORD")==0){
         printf("tie the knot well");
+        return 0;
+    }
+    if(strcmp(code_word,"ROUTE")==0){
+        int dst,org,i=0,j=0;
+        char caminho[500],t[2]="-";
+        char *token;
+        struct Path new_path;
+        
+        sscanf(mess,"%s %d %d %s",code_word,org,dst,caminho);
+        token=strtok(caminho,t);
+        if (token==NULL){
+           new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
+        }else{
+            while (token!=NULL){
+                new_path.route[i]=((token[0]-'0')*10)+(token[1]-'0');
+                if (new_path.route[i] == mid){
+                    printf("Caminho ciclico\n");
+                    return 0;
+                } 
+                token=strtok(NULL,t);
+                i++;
+            }
+        }
+        new_path.size=i;
+        updateRT(new_path);
         return 0;
     }
     return 1;
@@ -89,6 +114,31 @@ int what_clit(int fd, char *mess){
     if (strcmp(code_word,"PRED")==0){
         sscanf(mess,"%s %d",code_word,&pred.id); //duvida como client nunca recebo um PRED right?
         pred.fd=fd;
+        return 0;
+    }
+    if(strcmp(code_word,"ROUTE")==0){
+        int dst,org,i=0,j=0;
+        char caminho[500],t[2]="-";
+        char *token;
+        struct Path new_path;
+        
+        sscanf(mess,"%s %d %d %s",code_word,org,dst,caminho);
+        token=strtok(caminho,t);
+        if (token==NULL){
+           new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
+        }else{
+            while (token!=NULL){
+                new_path.route[i]=((token[0]-'0')*10)+(token[1]-'0');
+                if (new_path.route[i] == mid){
+                    printf("Caminho ciclico\n");
+                    return 0;
+                } 
+                token=strtok(NULL,t);
+                i++;
+            }
+        }
+        new_path.size=i+1;
+        updateRT(new_path);
         return 0;
     }
     
