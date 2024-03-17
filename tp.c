@@ -26,7 +26,7 @@ int dest(struct Path path) {
 
 int source(struct Path path) {
     if (path.size > 1) {
-        return path.route[1]; 
+        return path.route[0]; 
     }
     return -1;
 }
