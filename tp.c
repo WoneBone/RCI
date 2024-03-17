@@ -3,8 +3,8 @@
 
 //tabelas e 2 listas globais? xd
 struct Path routingTable[MAX_CLIENTS-1][MAX_CLIENTS-1]; 
-int rowIndices[MAX_CLIENTS];     // List that maps rows to destination IDs
-int columnIndices[MAX_CLIENTS];  // List that maps columns to source IDs
+int mapIndices[100];     // List that maps node id to RT id ex: mapIndices(70) = 3
+int invIndices[MAX_CLIENTS]; //list that maps RT id to node id ex: invIndices(3) = 70
 struct Path sptable[MAX_CLIENTS];                   
 int expeditionTable[MAX_CLIENTS];    
 
@@ -64,26 +64,52 @@ void initEXP() {
 }
 
 
-void initIndexLists() {
-    for (int i = 0; i < MAX_CLIENTS; i++) {
-        rowIndices[i] = -1;
-        columnIndices[i] = -1;
+void initmapIndices() {
+    for (int i = 0; i < 99; i++) {
+        mapIndices[i] = -1;
     }
 }
 
-int findOrAssignIndex(int list[], int nodeId) { // Find or assign the next free index for a given node ID in a specified list
-    for (int i = 0; i < MAX_CLIENTS; i++) {
-        if (list[i] == nodeId) {
-            return i;  
+int getOrAssignIndex(int nodeID) {
+    
+    if (nodeID < 0 || nodeID >= 99) {
+        printf("Error: Node ID %d is out of range.\n", nodeID);
+        return -1;
+    }
+
+    if (mapIndices[nodeID] != -1) { // If already assigned, return the existing index
+        return mapIndices[nodeID];
+    } else {
+        int tfull = 1;
+        for (int i = 0; i < MAX_CLIENTS; i++) {
+            if (invIndices[i] == -1) {
+                invIndices[i] = nodeID;
+                mapIndices[nodeID] = i;
+                tfull = 0;
+                return i;
+            }
+        if (tfull == 1){
+            printf("Error: No available index to assign for Node ID %d.\n", nodeID);
+            return -1;
+
         }
-        if (list[i] == -1) {
-            list[i] = nodeId;  
-            return i;
+
+
         }
     }
-    return -1;  // List is full or Node ID already exists
+
+   
 }
 
+// Remove index from mapIndices
+void removeIndex(int nodeID) {
+    if (nodeID >= 0 && nodeID < MAX_NODES) {
+        invIndices[mapIndices[nodeID]] = -1;
+        mapIndices[nodeID] = -1;
+    } else {
+        printf("Error: Node ID %d is out of range.\n", nodeID);
+    }
+}
 void updateRT(struct Path path) { //update routing table after receiving ROUTE INFO
     destinationId = dest(path);
     sourceId = source(path);
