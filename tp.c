@@ -71,6 +71,12 @@ void initmapIndices() {
     }
 }
 
+void initinvIndices() {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        invIndices[i] = -1;
+    }
+}
+
 int getOrAssignIndex(int nodeID) {
     
     if (nodeID < 0 || nodeID >= 99) {
