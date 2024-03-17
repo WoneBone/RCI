@@ -46,14 +46,14 @@ struct Path addNode(struct Path path, int nodeId) {
 void initRT() {
     for (int i = 0; i < MAX_CLIENTS - 1; i++) {
         for (int j = 0; j < MAX_CLIENTS - 1; j++) {
-            routingTable[i][j] = initPath();
+            routingTable[i][j].size = 0;
         }
     }
 }
 
 void initSPT() {
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        sptable[i] = initPath();
+        sptable[i].size = 0;
     }
 }
 
@@ -114,8 +114,8 @@ void updateRT(struct Path path) { //update routing table after receiving ROUTE I
     destinationId = dest(path);
     sourceId = source(path);
     
-    int rowIndex = findOrAssignIndex(rowIndices, destinationId);
-    int columnIndex = findOrAssignIndex(columnIndices, sourceId);
+    int rowIndex = getOrAssignIndex(rowIndices, destinationId);
+    int columnIndex = getOrAssignIndex(columnIndices, sourceId);
 
     if (rowIndex != -1 && columnIndex != -1) {
         routingTable[rowIndex][columnIndex] = path;

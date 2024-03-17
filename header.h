@@ -92,4 +92,22 @@ int what_std(char *std_in,struct addrinfo *res);
  * Função de identificação de comunicação feita por um servidor a que este cliente está ligado
  * ****************************************************************/
 int what_clit(int fd, char *mess);
+
+
+/*Useless struct Path initPath();*/
+
+int dest(struct Path path);
+
+int source(struct Path path);
+
+/* WHAT THIS DO struct Path addNode*/
+
+void initRT();
+void initSPT();
+void initEXP();
+void getIndexLists();
+int findOrAssignIndex(int nodeID);
+void updateRT(struct Path path);
+void updateSPT();
+void updateEXP();
 #endif
