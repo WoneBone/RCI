@@ -140,6 +140,7 @@ void updateRT(struct Path path) {
     if (sptable[rowIndex].size == 0 || path.size < sptable[rowIndex].size) {
         sptable[rowIndex] = path; // Update the SPT with the new shorter path
         expeditiontable[rowIndex] = sourceID; //update EXP
+		adj_route(path);
      }
 }
 void send_route(struct Path path, int fd){
@@ -184,4 +185,17 @@ void adj_route(struct Path path){
 		send_route(path, succ.fd);
 	if(pred.fd > 0)
 		send_route(path, pred.fd);
+}
+
+void prtRoute(){
+	for(int i = 0; i < (MAX_CLIENTS-1); i ++){
+		for (int j = 0; j < (MAX_CLIENTS -1); i++){
+			if(routingTable[i][j].size == 0) continue;
+			printf("dest:%d pass-through:%d", source(routingTable[i][j]),dest(routingTable[i][j]));
+			for(int k = 0; k < routingTable[i][j].size; k++)
+				printf("%d - ", routingTable[i][j].route[k]);
+			printf("\n");
+		}
+		printf("\n");
+	}
 }

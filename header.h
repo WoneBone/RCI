@@ -122,5 +122,6 @@ void updateEXP();
 
 void send_route(struct Path path, int fd);
 void routall(int fd);
-void adj_rout(struct Path path);
+void adj_route(struct Path path);
+void prtRoute();
 #endif
