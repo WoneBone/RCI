@@ -7,6 +7,7 @@ int mapIndices[100];     // List that maps node id to RT id ex: mapIndices(70) =
 int invIndices[MAX_CLIENTS]; //list that maps RT id to node id ex: invIndices(3) = 70
 struct Path sptable[MAX_CLIENTS];                   
 int expeditiontable[MAX_CLIENTS];    
+extern int mid;
 
 struct Path initPath() {
     struct Path path;
@@ -59,7 +60,7 @@ void initSPT() {
 
 void initEXP() {
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        expeditionTable[i] = -1;
+        expeditiontable[i] = -1;
     }
 }
 
@@ -138,10 +139,13 @@ void updateRT(struct Path path) {
 void send_route(struct Path path, int fd){
     int dst=dest(path),i,n;
     char send[500];
-    sprintf(send,"ROUTE %d %d %d",mid,dst,mid);
+
+	if(dst == -1) dst = mid;
+
+    sprintf(send,"ROUTE %d %d %d", mid, dst, mid);
     for ( i = 0; i <= path.size; i++){
         n=strlen(send);
-        if (i=path.size){
+        if (i==path.size){
            send[n]='\n';
            send[n+1]='\0';
         }else{

@@ -25,6 +25,7 @@ struct Path {
     int size;                       // The current number of nodes in the route
 };
 
+extern struct Path routingTable[MAX_CLIENTS-1][MAX_CLIENTS-1];
 
 /*******************************************************************
  * Função de inicialização de servidor TCP
@@ -105,9 +106,12 @@ int source(struct Path path);
 void initRT();
 void initSPT();
 void initEXP();
+void initmapIndices();
 void getIndexLists();
 int findOrAssignIndex(int nodeID);
 void updateRT(struct Path path);
 void updateSPT();
 void updateEXP();
+
+void send_route(struct Path path, int fd);
 #endif

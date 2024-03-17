@@ -7,7 +7,10 @@ int mRing;
 char *mIP;
 char *mTCP;
 struct node succ, sucsuc, pred;
-
+extern struct Path sptable[MAX_CLIENTS];
+extern int expeditiontable[MAX_CLIENTS];
+extern int mapIndices[100];
+extern int invIndices[MAX_CLIENTS];
 
 
 int main(int argc, char *argv[]){
@@ -30,6 +33,12 @@ int main(int argc, char *argv[]){
 	memset(std_in, 0, 500);
 	memset(tcp_rec, 0, 500);
 	memset(tcp_clit, 0, 500);
+
+	initEXP();
+	initRT();
+	initSPT();
+	initmapIndices();
+
 
 	switch (argc) {
 		//4 argumentos
@@ -72,132 +81,117 @@ int main(int argc, char *argv[]){
 			printf("The number of arguments inputed are invalid");
 			exit(1);
 			break;
-	
 }
-			//cTCP = tcp_client(mIP,mTCP);
-			while (1) {
-        		FD_ZERO(&filhas); //reset filhas
-				FD_SET(0,&filhas);
-				FD_SET(sTCP, &filhas); //filhas inicializado com stdin e sTCP
-	
-				if(succ.id!=-1){ //atualizar filhas com fd's adjacentes
-					FD_SET(succ.fd,&filhas);
-					maxfd = MAX(maxfd,succ.fd); 
-				}
-				if (pred.id != -1){
-					FD_SET(pred.fd,&filhas);
-					maxfd = MAX(maxfd,pred.fd);
+	//cTCP = tcp_client(mIP,mTCP);
+	while (1) {
+		FD_ZERO(&filhas); //reset filhas
+		FD_SET(0,&filhas);
+		FD_SET(sTCP, &filhas); //filhas inicializado com stdin e sTCP
+
+		if(succ.id!=-1){ //atualizar filhas com fd's adjacentes
+			FD_SET(succ.fd,&filhas);
+			maxfd = MAX(maxfd,succ.fd); 
+		}
+		if (pred.id != -1){
+			FD_SET(pred.fd,&filhas);
+			maxfd = MAX(maxfd,pred.fd);
+		}else{
+			maxfd = sTCP;}
+		
+		errcode = select(maxfd+1 , &filhas, NULL, NULL, NULL);
+		if ( errcode <= 0) exit(errno); // error
+		
+		
+		
+		if ((FD_ISSET(succ.fd,&filhas))&& succ.id!=-1){ //succ.fd mudou (e existe), entao read
+			printf("Message received from server %s:%s\n", succ.ip, succ.port);
+			n=read(succ.fd,tcp_clit,sizeof(tcp_clit)); //succ.fd = nossa TCP client conectada com o TCP server do succ
+			if (n==0) //if conection with succ broken (succ left)
+			{
+				FD_CLR(succ.fd, &filhas);
+				close(succ.fd);
+				if (succ.id != mid) //IF IM NOT ALONE
+				{
+				succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
+				succ.id = sucsuc.id;
+				strcpy(succ.ip, sucsuc.ip);
+				strcpy(succ.port, sucsuc.port);
+				
+				sprintf(trash,"PRED %d\n",mid);
+				n=write(succ.fd,trash,strlen(trash));//I TELL NEXT GUY IM BEHIND HIM
+				if(n==-1)/*error*/ exit(1);
+				sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
+				n=write(pred.fd,trash,strlen(trash));//I TELL MY PRED HIS NEW SUCCSUCC
+				if(n==-1)/*error*/ exit(1);
+
 				}else{
-					maxfd = sTCP;}
-				
-				errcode = select(maxfd+1 , &filhas, NULL, NULL, NULL);
-				if ( errcode <= 0) exit(errno); // error
-				
-				
-				
-				if ((FD_ISSET(succ.fd,&filhas))&& succ.id!=-1){ //succ.fd mudou (e existe), entao read
-					printf("Message received from server %s:%s\n", succ.ip, succ.port);
-					n=read(succ.fd,tcp_clit,sizeof(tcp_clit)); //succ.fd = nossa TCP client conectada com o TCP server do succ
-					if (n==0) //if conection with succ broken (succ left)
-					{
-						FD_CLR(succ.fd, &filhas);
-						close(succ.fd);
-						if (succ.id != mid) //IF IM NOT ALONE
-						{
-						succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
-						succ.id = sucsuc.id;
-						strcpy(succ.ip, sucsuc.ip);
-						strcpy(succ.port, sucsuc.port);
-						
-						sprintf(trash,"PRED %d\n",mid);
-						n=write(succ.fd,trash,strlen(trash));//I TELL NEXT GUY IM BEHIND HIM
-        				if(n==-1)/*error*/ exit(1);
-						sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
-						n=write(pred.fd,trash,strlen(trash));//I TELL MY PRED HIS NEW SUCCSUCC
-        				if(n==-1)/*error*/ exit(1);
-
-						}else{
-							succ.id=-1;
-						}
-
-						
-								
-						
-
-					
-						
-						
-					}
-					else{
-						if(n==-1)/*error*/ exit(1);
-						n=what_clit(succ.fd,tcp_clit); //interpreta msg recebida
-						if (n==0){
-							printf("%s - message meaning identified\n",tcp_clit);
-						}
-						else{
-							printf("%s - cannot identifie message meaning\n",tcp_clit);
-						}
-					}
+					succ.id=-1;
 				}
-				if ((FD_ISSET(pred.fd,&filhas))&& pred.id!=-1){ //same for pred
-					printf("Message received from client %s:%s\n", pred.ip, pred.port);
-					n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
-					if (n==0) //if conection with succ broken (succ left)
-					{
-						FD_CLR(pred.fd, &filhas);
-						close(pred.fd);
-						pred.id = -1;
-					
-						
-						
-					}
-					else {
-					if(n==-1)/*error*/ exit(1);
-					n=what_serv(pred.fd,tcp_rec); 
-					if (n==0){
-						printf("%s - message meaning identified\n",tcp_rec);
-					}else{
-						printf("%s - cannot identifie message meaning\n",tcp_rec);
-					}
-				} }
-				// Check for new connections
-				if (FD_ISSET(sTCP, &filhas) ) {					
-					
-					addrlen = sizeof(addr);
-					newfd = accept(sTCP, (struct sockaddr *)&addr, &addrlen); //newfd = Our TCP server socket connected to a client
-					if (newfd == -1) exit(1); // error
-
-					char clientIP[INET_ADDRSTRLEN];
-					inet_ntop(AF_INET, &(addr.sin_addr), clientIP, INET_ADDRSTRLEN); //where's the clit?
-					printf("Message received from client %s:%d\n", clientIP, ntohs(addr.sin_port));
-					n=read(newfd,tcp_rec,sizeof(tcp_rec));
-					if(n==-1)/*error*/ exit(1);
-
-					n=what_serv(newfd,tcp_rec); //meu server TCP interpreta
-
-					if (n==0){
-						printf("%s - message meaning identified\n",tcp_rec);
-					}else{
-						printf("%s - cannot identifie message meaning\n",tcp_rec);
-					}
+			
+			}
+			else{
+				if(n==-1)/*error*/ exit(1);
+				n=what_clit(succ.fd,tcp_clit); //interpreta msg recebida
+				if (n==0){
+					printf("%s - message meaning identified\n",tcp_clit);
 				}
-				
-				if (FD_ISSET(0,&filhas)){ //escrevemos algo no terminal
-					
-					fgets(std_in,500,stdin);
-					
-					i=what_std(std_in,resUDP);//interpreta consola
-					
+				else{
+					printf("%s - cannot identifie message meaning\n",tcp_clit);
 				}
 			}
+		}
+		if ((FD_ISSET(pred.fd,&filhas))&& pred.id!=-1){ //same for pred
+			printf("Message received from client %s:%s\n", pred.ip, pred.port);
+			n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
+			if (n==0) //if conection with succ broken (succ left)
+			{
+				FD_CLR(pred.fd, &filhas);
+				close(pred.fd);
+				pred.id = -1;
 			
+				
+				
+			}
+			else {
+			if(n==-1)/*error*/ exit(1);
+			n=what_serv(pred.fd,tcp_rec); 
+			if (n==0){
+				printf("%s - message meaning identified\n",tcp_rec);
+			}else{
+				printf("%s - cannot identifie message meaning\n",tcp_rec);
+			}
+		} }
+		// Check for new connections
+		if (FD_ISSET(sTCP, &filhas) ) {					
+			
+			addrlen = sizeof(addr);
+			newfd = accept(sTCP, (struct sockaddr *)&addr, &addrlen); //newfd = Our TCP server socket connected to a client
+			if (newfd == -1) exit(1); // error
+
+			char clientIP[INET_ADDRSTRLEN];
+			inet_ntop(AF_INET, &(addr.sin_addr), clientIP, INET_ADDRSTRLEN); //where's the clit?
+			printf("Message received from client %s:%d\n", clientIP, ntohs(addr.sin_port));
+			n=read(newfd,tcp_rec,sizeof(tcp_rec));
+			if(n==-1)/*error*/ exit(1);
+
+			n=what_serv(newfd,tcp_rec); //meu server TCP interpreta
+
+			if (n==0){
+				printf("%s - message meaning identified\n",tcp_rec);
+			}else{
+				printf("%s - cannot identifie message meaning\n",tcp_rec);
+			}
+		}
 		
-
+		if (FD_ISSET(0,&filhas)){ //escrevemos algo no terminal
 			
-			join(1, 68, resUDP);
-			freeaddrinfo(resUDP);
-			close(sUDP);
-
-
+			fgets(std_in,500,stdin);
+			
+			i=what_std(std_in,resUDP);//interpreta consola
+			
+		}
+	}			
+	freeaddrinfo(resUDP);
+	close(sUDP);
 }
 
