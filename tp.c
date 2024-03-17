@@ -6,7 +6,7 @@ struct Path routingTable[MAX_CLIENTS-1][MAX_CLIENTS-1];
 int mapIndices[100];     // List that maps node id to RT id ex: mapIndices(70) = 3
 int invIndices[MAX_CLIENTS]; //list that maps RT id to node id ex: invIndices(3) = 70
 struct Path sptable[MAX_CLIENTS];                   
-int expeditionTable[MAX_CLIENTS];    
+int expeditiontable[MAX_CLIENTS];    
 
 struct Path initPath() {
     struct Path path;
@@ -103,44 +103,38 @@ int getOrAssignIndex(int nodeID) {
 
 // Remove index from mapIndices
 void removeIndex(int nodeID) {
-    if (nodeID >= 0 && nodeID < MAX_NODES) {
+    if (nodeID >= 0 && nodeID < 100) {
         invIndices[mapIndices[nodeID]] = -1;
         mapIndices[nodeID] = -1;
     } else {
         printf("Error: Node ID %d is out of range.\n", nodeID);
     }
 }
-void updateRT(struct Path path) { //update routing table after receiving ROUTE INFO
-    destinationId = dest(path);
-    sourceId = source(path);
-    
-    int rowIndex = getOrAssignIndex(rowIndices, destinationId);
-    int columnIndex = getOrAssignIndex(columnIndices, sourceId);
-
-    if (rowIndex != -1 && columnIndex != -1) {
-        routingTable[rowIndex][columnIndex] = path;
-    } else {
-        printf("Error: Unable to assign a new route in the routing table.\n");
+void updateRT(struct Path path) { 
+    int sourceID = source(path);  // Get the source ID from the path
+    int destinationID = dest(path);  // Get the destination ID from the path
+    if (sourceID == -1 || destinationID == -1) {
+        printf("Error: Invalid path source or destination.\n");
+        return;
     }
+
+    // Find or assign indices in the RT
+    int rowIndex = getOrAssignIndex(destinationID);
+    int colIndex = getOrAssignIndex(sourceID);
+
+    if (rowIndex == -1 || colIndex == -1) {
+        printf("Error: Unable to find or assign RT index for Node IDs %d -> %d.\n", sourceID, destinationID);
+        return;
+    }
+
+    routingTable[rowIndex][colIndex] = path;
+        
+    // Check if the SPT needs updating
+    if (sptable[rowIndex].size == 0 || path.size < sptable[rowIndex].size) {
+        sptable[rowIndex] = path; // Update the SPT with the new shorter path
+        expeditiontable[rowIndex] = sourceID; //update EXP
+     }
 }
 
 
-void updateSPT() { //after updateRT after receiving ROUTE INFO
-    for (int i = 0; i < MAX_CLIENTS - 1; i++) {
-        sptable[i] = initPath();
-        for (int j = 0; j < MAX_CLIENTS - 1; j++) {
-            struct Path currentPath = routingTable[i][j];
-            if (currentPath.size > 0 && (sptable[i].size == 0 || currentPath.size < sptable[i].size)) {
-                sptable[i] = currentPath;
-            }
-        }
-    }
-}
 
-void updateEXP() {
-    for (int i = 0; i < MAX_CLIENTS; i++) {
-        if (sptable[i].size > 1) {
-            expeditionTable[i] = sptable[i].route[1]; 
-        }
-    }
-}
