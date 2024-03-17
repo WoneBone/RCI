@@ -160,3 +160,22 @@ void send_route(struct Path path, int fd){
     
     return;   
 }
+
+void routall(int fd){
+	struct Path empty;
+	empty.size = 0;
+	send_route(empty, fd); //Route mid mid mid
+
+	for(int i = 0; i < MAX_CLIENTS; i++){
+		if(sptable[i].size == 0)
+			continue;//If not path die
+		else send_route(sptable[i], fd);//send path
+	}
+}
+
+void adj_route(struct Path path){
+	if (succ.fd > 0)
+		send_route(path, succ.fd);
+	if(pred.fd > 0)
+		send_route(path, pred.fd);
+}

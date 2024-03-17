@@ -7,11 +7,6 @@ int mRing;
 char *mIP;
 char *mTCP;
 struct node succ, sucsuc, pred;
-extern struct Path sptable[MAX_CLIENTS];
-extern int expeditiontable[MAX_CLIENTS];
-extern int mapIndices[100];
-extern int invIndices[MAX_CLIENTS];
-
 
 int main(int argc, char *argv[]){
 	char std_in[500],tcp_rec[500],tcp_clit[500],trash[500];

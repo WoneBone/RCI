@@ -24,8 +24,15 @@ struct Path {
     int route[MAX_CLIENTS];         // The list of node IDs representing the path
     int size;                       // The current number of nodes in the route
 };
-
+extern struct Path sptable[MAX_CLIENTS];
+extern int expeditiontable[MAX_CLIENTS];
+extern int mapIndices[100];
+extern int invIndices[MAX_CLIENTS];
 extern struct Path routingTable[MAX_CLIENTS-1][MAX_CLIENTS-1];
+extern int errcode,mid;
+extern int mRing;
+extern char *mIP, *mTCP;
+extern struct node succ, sucsuc, pred;
 
 /*******************************************************************
  * Função de inicialização de servidor TCP
@@ -114,4 +121,6 @@ void updateSPT();
 void updateEXP();
 
 void send_route(struct Path path, int fd);
+void routall(int fd);
+void adj_rout(struct Path path);
 #endif

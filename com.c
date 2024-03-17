@@ -1,10 +1,5 @@
 /*Este ficheiro serve para conter as funções que tratam dos comandos recebidos pelo utilizador*/
 #include "header.h"
-extern int errcode,mid;
-extern int mRing;
-extern char *mIP, *mTCP;
-extern struct node succ, sucsuc, pred;
-
 int join(int ring, int id, struct addrinfo *res){
 	int fd = socket(AF_INET, SOCK_DGRAM, 0);
 	char s[1000], *t;
