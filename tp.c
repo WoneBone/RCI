@@ -103,7 +103,7 @@ int getOrAssignIndex(int nodeID) {
 
 // Remove index from mapIndices
 void removeIndex(int nodeID) {
-    if (nodeID >= 0 && nodeID < MAX_NODES) {
+    if (nodeID >= 0 && nodeID < 100) {
         invIndices[mapIndices[nodeID]] = -1;
         mapIndices[nodeID] = -1;
     } else {
@@ -125,7 +125,7 @@ void updateRT(struct Path path) { //update routing table after receiving ROUTE I
 }
 
 
-void updateSPT() { //after updateRT after receiving ROUTE INFO
+void updateSPT(struct Path path) { //after updateRT after receiving ROUTE INFO
     for (int i = 0; i < MAX_CLIENTS - 1; i++) {
         sptable[i] = initPath();
         for (int j = 0; j < MAX_CLIENTS - 1; j++) {
@@ -143,4 +143,25 @@ void updateEXP() {
             expeditionTable[i] = sptable[i].route[1]; 
         }
     }
+}
+void send_route(struct Path path, int fd){
+    int dst=dest(path),i,n;
+    char send[500];
+    sprintf(send,"ROUTE %d %d %d",mid,dst,mid);
+    for ( i = 0; i <= path.size; i++){
+        n=strlen(send);
+        if (i=path.size){
+           send[n]='\n';
+           send[n+1]='\0';
+        }else{
+            send[n]= '-';
+            send[n+1]=(path.route[i]/10)+'0';
+            send[n+2]=(path.route[i]%10)+'0';
+            send[n+3]='\0';
+        }
+    }
+    n=write(fd,send,strlen(send));
+    if(n==-1)/*error*/ exit(1);
+    
+    return;   
 }
