@@ -109,15 +109,15 @@ int source(struct Path path);
 
 /* WHAT THIS DO struct Path addNode*/
 
-void initRT();
-void initSPT();
-void initEXP();
-void initmapIndices();
-void initinvIndices();
+void initRT(); //init RT with paths of size 0
+void initSPT(); //init SPT same way as RT
+void initEXP(); //init Expedition table with -1
+void initmapIndices(); //vetor of size 100 which maps all 100 possible NODE ids to their RT index value ex: mapIndices(70) = 3
+void initinvIndices(); //inverse vetor of the above: maps RT index value to its respective NODE ID x: invIndices(3) = 70
 
 void getIndexLists();
-int findOrAssignIndex(int nodeID);
-void updateRT(struct Path path);
+int findOrAssignIndex(int nodeID);//given a nodeID returns its RT index if it exists. If it doesnt, creates one from the first avaible one in invIndices, updates mapIndices vetor with it and returns it.
+void updateRT(struct Path path);//given a path, puts it in the correct place of the RT and if shorter than the one on SPT, puts it on SPT
 void updateSPT();
 void updateEXP();
 
