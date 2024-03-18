@@ -152,7 +152,7 @@ int what_std(char *std_in,struct addrinfo *res){
     if (strcmp(code_word,"join")==0 || strcmp(code_word,"j")==0){
         sscanf(std_in,"%s %d %d",code_word,&ring,&id);
         mid=join(ring,id,res);
-		if(succ.fd > 0)
+		if(succ.id > 0)
         	send_route(routingTable[0][0], succ.fd);
 
         return 0;

@@ -11,7 +11,7 @@ struct node succ, sucsuc, pred;
 int main(int argc, char *argv[]){
 	char std_in[500],tcp_rec[500],tcp_clit[500],trash[500];
 	char *regIP, *regUDP;
-	char *tok;
+	char *tok, *aux;
 	succ.id=-1;
 	sucsuc.id=-1;
 	pred.id=-1;
@@ -126,18 +126,25 @@ int main(int argc, char *argv[]){
 			}
 			else{
 				if(n==-1)/*error*/ exit(1);
-				if((tok = strtok(tcp_clit, "\n")) == NULL){
+				if((tok = strchr(tcp_clit, '\n')) == NULL){
 					printf("%s - Message does not include <LF>\n",tcp_clit);
 				}
-				while(tok != NULL){
-					n=what_clit(succ.fd,tok); //interpreta msg recebida
-					if (n==0){
-						printf("%s - message meaning identified\n",tok);
-					}
-					else{
-						printf("%s - cannot identifie message meaning\n",tok);
-					}
-					tok = strtok(NULL, "\n");
+				else{
+					aux = tcp_clit;
+				 	do{
+						*(tok++) = '\0';
+
+						n=what_clit(succ.fd,aux); //interpreta msg recebida
+						if (n==0){
+							printf("%s - message meaning identified\n",aux);
+						}
+						else{
+							printf("%s - cannot identifie message meaning\n",aux);
+						}
+
+						aux = tok;
+						tok = strchr(aux, '\n');
+					}while(tok != NULL);
 				}
 			}
 		}
@@ -152,18 +159,23 @@ int main(int argc, char *argv[]){
 			}
 			else {
 				if(n==-1)/*error*/ exit(1);
-				if((tok = strtok(tcp_rec, "\n")) == NULL){
+				if((tok = strchr(tcp_rec, '\n')) == NULL){
 						printf("%s - Message does not include <LF>\n",tcp_rec);
 					}
-				while(tok != NULL){
+				else{
+					aux = tcp_rec;
+					do{
+						*(tok++) = '\0';
+						n=what_serv(pred.fd,aux); 
+						if (n==0){
+							printf("%s - message meaning identified\n",aux);
+						}else{
+							printf("%s - cannot identifie message meaning\n",aux);
+						}
+						aux = tok;
+						tok = strchr(aux , '\n');
 
-					n=what_serv(pred.fd,tok); 
-					if (n==0){
-						printf("%s - message meaning identified\n",tok);
-					}else{
-						printf("%s - cannot identifie message meaning\n",tok);
-					}
-					tok = strtok(NULL, "\n");
+					}while(tok != NULL);
 				}
 		} }
 		// Check for new connections
@@ -178,18 +190,24 @@ int main(int argc, char *argv[]){
 			printf("Message received from client %s:%d\n", clientIP, ntohs(addr.sin_port));
 			n=read(newfd,tcp_rec,sizeof(tcp_rec));
 			if(n==-1)/*error*/ exit(1);
-			if((tok = strtok(tcp_rec, "\n")) == NULL){
+			if((tok = strchr(tcp_rec, '\n')) == NULL){
 				printf("%s - Message does not include <LF>\n",tcp_rec);
 			}
-			while(tok != NULL){
-				n=what_serv(newfd, tok); //meu server TCP interpreta
+			else{
+				aux = tcp_rec;
+				do{
+					*(tok++) = '\0';
 
-				if (n==0){
-					printf("%s - message meaning identified\n",tok);
-				}else{
-					printf("%s - cannot identifie message meaning\n",tok);
-				}
-				tok = strtok(NULL, "\n");
+					n=what_serv(newfd, aux); //meu server TCP interpreta
+					if (n==0){
+						printf("%s - message meaning identified\n",aux);
+					}else{
+						printf("%s - cannot identifie message meaning\n",aux);
+					}
+					aux = tok;
+					tok = strchr(aux, '\n');
+
+				}while(tok!= NULL);
 			}
 		}
 		
