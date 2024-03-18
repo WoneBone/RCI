@@ -62,7 +62,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         char *token;
         struct Path new_path;
         
-        sscanf(mess,"%s %d %d %s",code_word,org,dst,caminho);
+        sscanf(mess,"%s %d %d %s",code_word,&org, &dst,caminho);
         token=strtok(caminho,t);
         if (token==NULL){
            new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
@@ -122,7 +122,7 @@ int what_clit(int fd, char *mess){
         char *token;
         struct Path new_path;
         
-        sscanf(mess,"%s %d %d %s",code_word,org,dst,caminho);
+        sscanf(mess,"%s %d %d %s",code_word,&org,&dst,caminho);
         token=strtok(caminho,t);
         if (token==NULL){
            new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
@@ -225,6 +225,10 @@ int what_std(char *std_in,struct addrinfo *res){
     }
     if (strcmp(code_word,"exit")==0 || strcmp(code_word,"x")==0){
        
+        return 0;
+    }
+	if (strcmp(code_word,"print")==0 || strcmp(code_word,"p")==0){
+       	prtRoute();
         return 0;
     }
     return 0;

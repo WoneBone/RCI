@@ -33,7 +33,6 @@ extern int errcode,mid;
 extern int mRing;
 extern char *mIP, *mTCP;
 extern struct node succ, sucsuc, pred;
-
 /*******************************************************************
  * Função de inicialização de servidor TCP
  *
@@ -114,6 +113,8 @@ void initRT();
 void initSPT();
 void initEXP();
 void initmapIndices();
+void initinvIndices();
+
 void getIndexLists();
 int findOrAssignIndex(int nodeID);
 void updateRT(struct Path path);

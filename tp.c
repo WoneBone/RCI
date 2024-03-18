@@ -26,7 +26,7 @@ int dest(struct Path path) {
 }
 
 int source(struct Path path) {
-    if (path.size > 1) {
+    if (path.size > 0) {
         return path.route[0]; 
     }
     return -1;
@@ -95,14 +95,13 @@ int getOrAssignIndex(int nodeID) {
                 tfull = 0;
                 return i;
             }
+		}
         if (tfull == 1){
             printf("Error: No available index to assign for Node ID %d.\n", nodeID);
             return -1;
 
         }
 
-
-        }
     }
 
    
@@ -188,9 +187,9 @@ void adj_route(struct Path path){
 }
 
 void prtRoute(){
-	for(int i = 0; i < (MAX_CLIENTS-1); i ++){
-		for (int j = 0; j < (MAX_CLIENTS -1); i++){
-			if(routingTable[i][j].size == 0) continue;
+	for(int i = 0; i < (MAX_CLIENTS-1); i++){
+		for (int j = 0; j < (MAX_CLIENTS -1); j++){
+			if((routingTable[i][j].size == -1) || (routingTable[i][j].size == 0)) continue;
 			printf("dest:%d pass-through:%d", source(routingTable[i][j]),dest(routingTable[i][j]));
 			for(int k = 0; k < routingTable[i][j].size; k++)
 				printf("%d - ", routingTable[i][j].route[k]);

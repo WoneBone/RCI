@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
 	initRT();
 	initSPT();
 	initmapIndices();
-
+	initinvIndices();
 
 	switch (argc) {
 		//4 argumentos
