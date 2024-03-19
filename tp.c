@@ -24,6 +24,8 @@ int dest(struct Path path) {
     if (path.size > 0) {
         return path.route[path.size - 1]; 
     }
+	else if(path.size == 0)
+		return path.route[1];
     return -1; 
 }
 
@@ -31,6 +33,8 @@ int source(struct Path path) {
     if (path.size > 0) {
         return path.route[0]; 
     }
+	else if(path.size == 0)
+		return path.route[0];
     return -1;
 }
 
