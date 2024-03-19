@@ -17,8 +17,9 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
             strcpy(sucsuc.ip,mIP);
             strcpy(sucsuc.port,mTCP);
         }else{ //NOT ALONE! :D life is good...
-            puts(mess);
-            n=write(pred.fd,mess,strlen(mess) ); //REPLAY ENTRY MSG TO MY PRED
+			trash[strlen(trash)+1]='\0';
+			trash[strlen(trash)]='\n';
+            n=write(pred.fd,trash,strlen(trash) ); //REPLAY ENTRY MSG TO MY PRED
             if(n==-1)/*error*/ exit(1);
             sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
             pred.fd=fd;
@@ -153,8 +154,9 @@ int what_std(char *std_in,struct addrinfo *res){
         sscanf(std_in,"%s %d %d",code_word,&ring,&id);
         mid=join(ring,id,res);
 		if(succ.id > 0)
-        	send_route(routingTable[0][0], succ.fd);
-
+			sprintf(code_word, "ROUTE %d %d %d\n", mid, mid, mid);
+			n=write(succ.fd, code_word, strlen(code_word));
+			if(n < 0) exit(-1);
         return 0;
     }
     if (strcmp(code_word,"direct")==0 || strcmp(code_word,"dj")==0){
