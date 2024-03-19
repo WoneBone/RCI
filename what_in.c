@@ -58,28 +58,34 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         return 0;
     }
     if(strcmp(code_word,"ROUTE")==0){
-        int dst,org,i=0,j=0;
+       int dst,org,i=0,j=0,sscan=0;
         char caminho[500],t[2]="-";
         char *token;
         struct Path new_path;
         
-        sscanf(mess,"%s %d %d %s",code_word,&org, &dst,caminho);
-        token=strtok(caminho,t);
-        if (token==NULL){
-           new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
-        }else{
-            while (token!=NULL){
-                new_path.route[i]=((token[0]-'0')*10)+(token[1]-'0');
-                if (new_path.route[i] == mid){
-                    printf("Caminho ciclico\n");
-                    return 0;
-                } 
-                token=strtok(NULL,t);
-                i++;
+        sscan=sscanf(mess,"%s %d %d %s",code_word,&org,&dst,caminho);
+        if (sscan==4){
+            token=strtok(caminho,t);
+            if (token==NULL){
+                new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
+            }else{
+                while (token!=NULL){
+                    new_path.route[i]=((token[0]-'0')*10)+(token[1]-'0');
+                    if (new_path.route[i] == mid){
+                         printf("Caminho ciclico\n");
+                        return 0;
+                    } 
+                    token=strtok(NULL,t);
+                    i++;
+                }
             }
+            new_path.size=i+1;
+        }else if (sscan==3){
+            new_path.size=0;
+            new_path.route[0]=org;
+            new_path.route[1]=dst;
         }
-        new_path.size=i;
-        updateRT(new_path);//possivelmente manda routes updated a adjacentes
+        updateRT(new_path);
         return 0;
     }
     return 1;
@@ -117,28 +123,34 @@ int what_clit(int fd, char *mess){
         pred.fd=fd;
         return 0;
     }
-    if(strcmp(code_word,"ROUTE")==0){
-        int dst,org,i=0,j=0;
+    if(strcmp(code_word,"ROUTE")==0 ){
+        int dst,org,i=0,j=0,sscan=0;
         char caminho[500],t[2]="-";
         char *token;
         struct Path new_path;
         
-        sscanf(mess,"%s %d %d %s",code_word,&org,&dst,caminho);
-        token=strtok(caminho,t);
-        if (token==NULL){
-           new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
-        }else{
-            while (token!=NULL){
-                new_path.route[i]=((token[0]-'0')*10)+(token[1]-'0');
-                if (new_path.route[i] == mid){
-                    printf("Caminho ciclico\n");
-                    return 0;
-                } 
-                token=strtok(NULL,t);
-                i++;
+        sscan=sscanf(mess,"%s %d %d %s",code_word,&org,&dst,caminho);
+        if (sscan==4){
+            token=strtok(caminho,t);
+            if (token==NULL){
+                new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
+            }else{
+                while (token!=NULL){
+                    new_path.route[i]=((token[0]-'0')*10)+(token[1]-'0');
+                    if (new_path.route[i] == mid){
+                         printf("Caminho ciclico\n");
+                        return 0;
+                    } 
+                    token=strtok(NULL,t);
+                    i++;
+                }
             }
+            new_path.size=i+1;
+        }else if (sscan==3){
+            new_path.size=0;
+            new_path.route[0]=org;
+            new_path.route[1]=dst;
         }
-        new_path.size=i+1;
         updateRT(new_path);
         return 0;
     }
