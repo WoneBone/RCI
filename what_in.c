@@ -78,7 +78,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
             }
         }
         new_path.size=i;
-        updateRT(new_path);
+        updateRT(new_path);//possivelmente manda routes updated a adjacentes
         return 0;
     }
     return 1;

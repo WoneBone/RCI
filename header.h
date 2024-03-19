@@ -112,11 +112,14 @@ int source(struct Path path);
 void initRT(); //init RT with paths of size 0
 void initSPT(); //init SPT same way as RT
 void initEXP(); //init Expedition table with -1
-void initmapIndices(); //vetor of size 100 which maps all 100 possible NODE ids to their RT index value ex: mapIndices(70) = 3
-void initinvIndices(); //inverse vetor of the above: maps RT index value to its respective NODE ID x: invIndices(3) = 70
+void initmapIndices(); //vetors of size 100 which maps all 100 possible NODE ids to their RT index value (Row or Col) ex: mapRows(70) = 3
+void initinvIndices(); //inverse vetors of the above: maps RT index value(Row or Col) to its respective NODE ID x: invRows(3) = 70
 
 void getIndexLists();
-int findOrAssignIndex(int nodeID);//given a nodeID returns its RT index if it exists. If it doesnt, creates one from the first avaible one in invIndices, updates mapIndices vetor with it and returns it.
+int getOrAssignRowId(int nodeID);//given a nodeID returns its RT  Row index if it exists. If it doesnt, creates one from the first avaible one in invRows, updates mapRows vetor with it and returns the index.
+int getOrAssignColId(int nodeID);//given a nodeID returns its RT  Col index if it exists. If it doesnt, creates one from the first avaible one in invCols, updates mapCols vetor with it and returns the index.
+void removeNodeCol(int nodeID);// Remove Collumn of a NODE from RT and Cols lists
+void removeNodeRow(int nodeID);// Remove Row of a NODE from RT and Rows lists
 void updateRT(struct Path path);//given a path, puts it in the correct place of the RT and if shorter than the one on SPT, puts it on SPT
 void updateSPT();
 void updateEXP();

@@ -3,8 +3,10 @@
 
 //tabelas e 2 listas globais? xd
 struct Path routingTable[MAX_CLIENTS-1][MAX_CLIENTS-1]; 
-int mapIndices[100];     // List that maps node id to RT id ex: mapIndices(70) = 3
-int invIndices[MAX_CLIENTS]; //list that maps RT id to node id ex: invIndices(3) = 70
+int mapRows[100];     // List that maps node id to RT row id ex: mapIndices(70) = 3
+int invRows[MAX_CLIENTS]; //list that maps RT row id to node id ex: invIndices(3) = 70
+int mapCols[100];     // List that maps node id to RT col id ex: mapIndices(70) = 3
+int invCols[MAX_CLIENTS]; //list that maps RT col id to node id ex: invIndices(3) = 70
 struct Path sptable[MAX_CLIENTS];                   
 int expeditiontable[MAX_CLIENTS];    
 extern int mid;
@@ -67,31 +69,33 @@ void initEXP() {
 
 void initmapIndices() {
     for (int i = 0; i < 99; i++) {
-        mapIndices[i] = -1;
+        mapRows[i] = -1;
+        mapCols[i] = -1;
     }
 }
 
 void initinvIndices() {
     for (int i = 0; i < MAX_CLIENTS; i++) {
-        invIndices[i] = -1;
+        invRows[i] = -1;
+        invCols[i] = -1;
     }
 }
 
-int getOrAssignIndex(int nodeID) {
+int getOrAssignRowId(int nodeID) {
     
     if (nodeID < 0 || nodeID >= 99) {
         printf("Error: Node ID %d is out of range.\n", nodeID);
         return -1;
     }
 
-    if (mapIndices[nodeID] != -1) { // If already assigned, return the existing index
-        return mapIndices[nodeID];
+    if (mapRows[nodeID] != -1) { // If already assigned, return the existing index
+        return mapRows[nodeID];
     } else {
         int tfull = 1;
         for (int i = 0; i < MAX_CLIENTS; i++) {
-            if (invIndices[i] == -1) {
-                invIndices[i] = nodeID;
-                mapIndices[nodeID] = i;
+            if (invRows[i] == -1) {
+                invRows[i] = nodeID;
+                mapRows[nodeID] = i;
                 tfull = 0;
                 return i;
             }
@@ -102,20 +106,86 @@ int getOrAssignIndex(int nodeID) {
 
         }
 
-    }
-
-   
+    }  
 }
 
-// Remove index from mapIndices
-void removeIndex(int nodeID) {
+int getOrAssignColId(int nodeID) {
+    
+    if (nodeID < 0 || nodeID >= 99) {
+        printf("Error: Node ID %d is out of range.\n", nodeID);
+        return -1;
+    }
+
+    if (mapCols[nodeID] != -1) { // If already assigned, return the existing index
+        return mapCols[nodeID];
+    } else {
+        int tfull = 1;
+        for (int i = 0; i < MAX_CLIENTS; i++) {
+            if (invCols[i] == -1) {
+                invCols[i] = nodeID;
+                mapCols[nodeID] = i;
+                tfull = 0;
+                return i;
+            }
+		}
+        if (tfull == 1){
+            printf("Error: No available index to assign for Node ID %d.\n", nodeID);
+            return -1;
+
+        }
+
+    } 
+}
+
+// Remove Collumn of a NODE from RT and Cols lists
+void removeNodeCol(int nodeID) {
+    int spupdate = 0;
+
     if (nodeID >= 0 && nodeID < 100) {
-        invIndices[mapIndices[nodeID]] = -1;
-        mapIndices[nodeID] = -1;
+        for (int i = 0; i < MAX_CLIENTS - 1; i++) {
+            if (sptable[i].route == routingTable[i][mapCols[nodeID]].route) { //check if we removed the SP
+                spupdate = 1; 
+                sptable[i] = initPath();  
+            }
+            routingTable[i][mapCols[nodeID]]=initPath();
+            if (spupdate == 1){
+                
+                for (int j = 0; j < MAX_CLIENTS - 1; j++) { //if we removed SP find new SP
+                    if (sptable[i].size == 0 || routingTable[i][j].size < sptable[i].size)
+                    sptable[i] = routingTable[i][j];
+
+                }
+                expeditiontable[i] = source(sptable[i]); //update EXP
+                adj_route(sptable[i]);//send update to adj
+            } 
+            
+        }
+        invCols[mapCols[nodeID]] = -1;
+        mapCols[nodeID] = -1;
+        
     } else {
         printf("Error: Node ID %d is out of range.\n", nodeID);
     }
 }
+
+// Remove Row of a NODE from RT and Rows lists (notice quando tiramos a row, e porque deixa de estar no nó)
+void removeNodeRow(int nodeID) {
+    if (nodeID >= 0 && nodeID < 100) {
+        for (int i = 0; i < MAX_CLIENTS - 1; i++) {
+            routingTable[mapRows[nodeID]][i]=initPath();  
+        }
+        invRows[mapCols[nodeID]] = -1;
+        mapRows[nodeID] = -1;
+        sptable[mapRows[nodeID]] = initPath();
+        expeditiontable[nodeID] = -1;
+        adj_route(initPath());
+
+        
+    } else {
+        printf("Error: Node ID %d is out of range.\n", nodeID);
+    }
+}
+
 void updateRT(struct Path path) { 
     int sourceID = source(path);  // Get the source ID from the path
     int destinationID = dest(path);  // Get the destination ID from the path
@@ -125,8 +195,8 @@ void updateRT(struct Path path) {
     }
 
     // Find or assign indices in the RT
-    int rowIndex = getOrAssignIndex(destinationID);
-    int colIndex = getOrAssignIndex(sourceID);
+    int rowIndex = getOrAssignRowId(destinationID);
+    int colIndex = getOrAssignColId(sourceID);
 
     if (rowIndex == -1 || colIndex == -1) {
         printf("Error: Unable to find or assign RT index for Node IDs %d -> %d.\n", sourceID, destinationID);
@@ -139,7 +209,7 @@ void updateRT(struct Path path) {
     if (sptable[rowIndex].size == 0 || path.size < sptable[rowIndex].size) {
         sptable[rowIndex] = path; // Update the SPT with the new shorter path
         expeditiontable[rowIndex] = sourceID; //update EXP
-		adj_route(path);
+		adj_route(path);//send update to adj
      }
 }
 void send_route(struct Path path, int fd){
