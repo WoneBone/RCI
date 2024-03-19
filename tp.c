@@ -148,7 +148,7 @@ void removeNodeCol(int nodeID) {
 
     if (nodeID >= 0 && nodeID < 100) {
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
-            if (patheq(sptable[i],routingTable[i][mapCols[nodeID]]) == 1) { //check if we removed the SP (FAZER BOOLEANO com ints PARA PATH)
+            if ((patheq(sptable[i],routingTable[i][mapCols[nodeID]]) == 1) && (routingTable[i][mapCols[nodeID]].size>0)) { //check if we removed the SP (FAZER BOOLEANO com ints PARA PATH)
                 updateSP(i);
             }
             routingTable[i][mapCols[nodeID]].route[1] = dest( routingTable[i][mapCols[nodeID]]);
