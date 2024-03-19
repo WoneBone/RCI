@@ -143,20 +143,35 @@ void removeNodeCol(int nodeID) {
 
     if (nodeID >= 0 && nodeID < 100) {
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
-            if (sptable[i].route == routingTable[i][mapCols[nodeID]].route) { //check if we removed the SP
+            if (patheq(sptable[i],routingTable[i][mapCols[nodeID]]) == 1) { //check if we removed the SP (FAZER BOOLEANO com ints PARA PATH)
                 spupdate = 1; 
-                sptable[i] = initPath();  
+                sptable[i].route[1] = dest(sptable[i]);
+                sptable[i].size = 0;  
             }
-            routingTable[i][mapCols[nodeID]]=initPath();
+            routingTable[i][mapCols[nodeID]].route[1] = dest( routingTable[i][mapCols[nodeID]]);
+            routingTable[i][mapCols[nodeID]].size = 0;
             if (spupdate == 1){
                 
                 for (int j = 0; j < MAX_CLIENTS - 1; j++) { //if we removed SP find new SP
-                    if (sptable[i].size == 0 || routingTable[i][j].size < sptable[i].size)
-                    sptable[i] = routingTable[i][j];
+                    if(routingTable[i][j].size>0){
+                        if (sptable[i].size == 0 || routingTable[i][j].size < sptable[i].size)
+                            sptable[i] = routingTable[i][j];
+                    }
 
                 }
-                expeditiontable[i] = source(sptable[i]); //update EXP
+                if (sptable[i].size > 0) {
+                    expeditiontable[i] = source(sptable[i]); //update EXP
+                    
+                }
+                else {
+                    expeditiontable[i] = -1;
+                    invRows[mapRows[nodeID]] = -1;
+                    mapRows[nodeID] = -1;
+                
+                }
+
                 adj_route(sptable[i]);//send update to adj
+                spupdate = 0;
             } 
             
         }
@@ -186,6 +201,22 @@ void removeNodeRow(int nodeID) {
     }
 }
 
+int patheq(struct Path path1, struct Path path2) {
+    int size1 = path1.size;
+    int size2 = path2.size;
+    int butt = 0; //butt is butt no questions asked
+    if (size1 == size2 && size1 > 0) {
+        for (int i=0; i<= size1; i++) {
+            if (path1.route[i] != path2.route[i]) {
+                return 0;
+            }
+
+        }
+        
+    }
+    return 1;
+}
+
 void updateRT(struct Path path) { 
     int sourceID = source(path);  // Get the source ID from the path
     int destinationID = dest(path);  // Get the destination ID from the path
@@ -202,16 +233,46 @@ void updateRT(struct Path path) {
         printf("Error: Unable to find or assign RT index for Node IDs %d -> %d.\n", sourceID, destinationID);
         return;
     }
-
+    int bruh = 2;
     routingTable[rowIndex][colIndex] = path;
-        
-    // Check if the SPT needs updating
-    if (sptable[rowIndex].size == 0 || path.size < sptable[rowIndex].size) {
-        sptable[rowIndex] = path; // Update the SPT with the new shorter path
-        expeditiontable[rowIndex] = sourceID; //update EXP
-		adj_route(path);//send update to adj
+    if (path.size == 0) {
+        int bruh = 0;
+        for ( int i = 0; i <= MAX_CLIENTS - 1; i++){
+            if (routingTable[rowIndex][i].size != 0){
+                bruh = 1;
+                if (sptable[rowIndex].size == 0 || routingTable[rowIndex][i].size < sptable[rowIndex].size) {
+                    sptable[rowIndex] = routingTable[rowIndex][i]; // Update the SPT with the new shorter path
+                    expeditiontable[rowIndex] = i; //update EXP
+		            adj_route(routingTable[rowIndex][i]);//send update to adj
      }
+            }
+
+        }
+
+
+    }
+    else {
+         // Check if the SPT needs updating
+        if (sptable[rowIndex].size == 0 || path.size < sptable[rowIndex].size) {
+            sptable[rowIndex] = path; // Update the SPT with the new shorter path
+            expeditiontable[rowIndex] = sourceID; //update EXP
+            adj_route(path);//send update to adj
+        }
+    }
+
+    if (bruh == 0) {
+        sptable[rowIndex].size = 0; 
+        expeditiontable[rowIndex] = -1;
+        invRows[mapRows[nodeID]] = -1;
+        mapRows[nodeID] = -1;
+
+    }
+        
+   
 }
+
+
+
 void send_route(struct Path path, int fd){
     int dst=dest(path),i,n;
     char send[500];
@@ -260,7 +321,7 @@ void prtRoute(){
 	for(int i = 0; i < (MAX_CLIENTS-1); i++){
 		for (int j = 0; j < (MAX_CLIENTS -1); j++){
 			if((routingTable[i][j].size == -1) || (routingTable[i][j].size == 0)) continue;
-			printf("dest:%d pass-through:%d", source(routingTable[i][j]),dest(routingTable[i][j]));
+			printf("dest:%d pass-through:%d", dest(routingTable[i][j]),source(routingTable[i][j]));
 			for(int k = 0; k < routingTable[i][j].size; k++)
 				printf("%d - ", routingTable[i][j].route[k]);
 			printf("\n");
