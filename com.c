@@ -110,7 +110,7 @@ void leave(int id, struct addrinfo *res){
 	puts(s);
 	
 	//close succ
-	if(succ.id > 0){
+	if(succ.id != -1){
 		close(succ.fd);
 		succ.id = -1;
 	}

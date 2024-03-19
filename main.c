@@ -82,14 +82,16 @@ int main(int argc, char *argv[]){
 		FD_ZERO(&filhas); //reset filhas
 		FD_SET(0,&filhas);
 		FD_SET(sTCP, &filhas); //filhas inicializado com stdin e sTCP
-
-		if(succ.id!=-1){ //atualizar filhas com fd's adjacentes
-			FD_SET(succ.fd,&filhas);
-			maxfd = MAX(maxfd,succ.fd); 
-		}
-		if (pred.id != -1){
-			FD_SET(pred.fd,&filhas);
-			maxfd = MAX(maxfd,pred.fd);
+		
+		if(succ.id > 0 || pred.id > 0){
+			if(succ.id > 0){ //atualizar filhas com fd's adjacentes
+				FD_SET(succ.fd,&filhas);
+				maxfd = MAX(maxfd,succ.fd); 
+			}
+			if (pred.id != -1){
+				FD_SET(pred.fd,&filhas);
+				maxfd = MAX(maxfd,pred.fd);
+			}
 		}else{
 			maxfd = sTCP;}
 		
@@ -105,7 +107,7 @@ int main(int argc, char *argv[]){
 			{
 				FD_CLR(succ.fd, &filhas);
 				close(succ.fd);
-				if (succ.id != mid) //IF IM NOT ALONE
+				if (sucsuc.id != mid) //IF IM NOT ALONE
 				{
 				succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
 				succ.id = sucsuc.id;
@@ -121,6 +123,7 @@ int main(int argc, char *argv[]){
 
 				}else{
 					succ.id=-1;
+					sucsuc.id = -1;
 				}
 			
 			}
@@ -132,7 +135,6 @@ int main(int argc, char *argv[]){
 				else{
 					aux = tcp_clit;
 				 	do{
-						*(tok++) = '\0';
 
 						n=what_clit(succ.fd,aux); //interpreta msg recebida
 						if (n==0){
@@ -141,7 +143,7 @@ int main(int argc, char *argv[]){
 						else{
 							printf("%s - cannot identifie message meaning\n",aux);
 						}
-
+						*(tok++) = '\0';
 						aux = tok;
 						tok = strchr(aux, '\n');
 					}while(tok != NULL);
@@ -165,13 +167,13 @@ int main(int argc, char *argv[]){
 				else{
 					aux = tcp_rec;
 					do{
-						*(tok++) = '\0';
 						n=what_serv(pred.fd,aux); 
 						if (n==0){
 							printf("%s - message meaning identified\n",aux);
 						}else{
 							printf("%s - cannot identifie message meaning\n",aux);
 						}
+						*(tok++) = '\0';
 						aux = tok;
 						tok = strchr(aux , '\n');
 
@@ -196,7 +198,6 @@ int main(int argc, char *argv[]){
 			else{
 				aux = tcp_rec;
 				do{
-					*(tok++) = '\0';
 
 					n=what_serv(newfd, aux); //meu server TCP interpreta
 					if (n==0){
@@ -204,6 +205,7 @@ int main(int argc, char *argv[]){
 					}else{
 						printf("%s - cannot identifie message meaning\n",aux);
 					}
+					*(tok++) = '\0';
 					aux = tok;
 					tok = strchr(aux, '\n');
 
