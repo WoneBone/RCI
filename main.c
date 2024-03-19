@@ -136,6 +136,7 @@ int main(int argc, char *argv[]){
 					aux = tcp_clit;
 				 	do{
 
+						*(tok++) = '\0';
 						n=what_clit(succ.fd,aux); //interpreta msg recebida
 						if (n==0){
 							printf("%s - message meaning identified\n",aux);
@@ -143,7 +144,6 @@ int main(int argc, char *argv[]){
 						else{
 							printf("%s - cannot identifie message meaning\n",aux);
 						}
-						*(tok++) = '\0';
 						aux = tok;
 						tok = strchr(aux, '\n');
 					}while(tok != NULL);
@@ -167,13 +167,13 @@ int main(int argc, char *argv[]){
 				else{
 					aux = tcp_rec;
 					do{
+						*(tok++) = '\0';
 						n=what_serv(pred.fd,aux); 
 						if (n==0){
 							printf("%s - message meaning identified\n",aux);
 						}else{
 							printf("%s - cannot identifie message meaning\n",aux);
 						}
-						*(tok++) = '\0';
 						aux = tok;
 						tok = strchr(aux , '\n');
 
@@ -198,14 +198,13 @@ int main(int argc, char *argv[]){
 			else{
 				aux = tcp_rec;
 				do{
-
+					*(tok++) = '\0';
 					n=what_serv(newfd, aux); //meu server TCP interpreta
 					if (n==0){
 						printf("%s - message meaning identified\n",aux);
 					}else{
 						printf("%s - cannot identifie message meaning\n",aux);
 					}
-					*(tok++) = '\0';
 					aux = tok;
 					tok = strchr(aux, '\n');
 
