@@ -216,20 +216,33 @@ void send_route(struct Path path, int fd){
     int dst=dest(path),i,n;
     char send[500];
 
-	if(dst == -1) dst = mid;
+	if(dst == -1) dst = path.route[0];
 
-    sprintf(send,"ROUTE %d %d %d", mid, dst, mid);
-    for ( i = 0; i <= path.size; i++){
-        n=strlen(send);
-        if (i==path.size){
-           send[n]='\n';
-           send[n+1]='\0';
-        }else{
-            send[n]= '-';
-            send[n+1]=(path.route[i]/10)+'0';
-            send[n+2]=(path.route[i]%10)+'0';
-            send[n+3]='\0';
-        }
+    sprintf(send,"ROUTE %d %d", mid, dst);
+	if(path.size <= 0){
+		send[strlen(send) + 1] = '\0';
+		send[strlen(send)] = '\n';
+	}
+	else{
+		n=strlen(send);
+		send[n]= ' ';
+		send[n+1]=(mid/10)+'0';
+		send[n+2]=(mid%10)+'0';
+		send[n+3]='\0';
+			
+
+    	for ( i = 0; i <= path.size; i++){
+        	n=strlen(send);
+        	if (i==path.size){
+           		send[n]='\n';
+           		send[n+1]='\0';
+        	}else{
+            	send[n]= '-';
+				send[n+1]=(path.route[i]/10)+'0';
+				send[n+2]=(path.route[i]%10)+'0';
+				send[n+3]='\0';
+			}
+		}
     }
     n=write(fd,send,strlen(send));
     if(n==-1)/*error*/ exit(1);
