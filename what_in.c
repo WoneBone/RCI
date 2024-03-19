@@ -104,6 +104,7 @@ int what_clit(int fd, char *mess){
 
         sscanf(mess,"%s %d %s %s",code_word,&succ.id,succ.ip,succ.port);
         close(succ.fd);
+        removeNodeCol(succ.id);
         succ.fd = tcp_client(succ.ip, succ.port);
 
         sprintf(pred_mess,"PRED %d\n",mid);
