@@ -248,14 +248,16 @@ void updateRT(struct Path path) {
                 if (sptable[rowIndex].size == 0 || routingTable[rowIndex][i].size < sptable[rowIndex].size) {
                     sptable[rowIndex] = routingTable[rowIndex][i]; // Update the SPT with the new shorter path
                     expeditiontable[rowIndex] = i; //update EXP
-		            adj_route(routingTable[rowIndex][i]);//send update to adj
+		            
      }
             }
 
         }
+        adj_route(sptable[rowIndex]);//send update to adj
 
 
     }
+    
     else {
          // Check if the SPT needs updating
         if (sptable[rowIndex].size == 0 || path.size < sptable[rowIndex].size) {
@@ -270,8 +272,10 @@ void updateRT(struct Path path) {
         expeditiontable[rowIndex] = -1;
         invRows[rowIndex] = -1;
         mapRows[destinationID] = -1;
+        adj_route(sptable[rowIndex]);//send update to adj
 
     }
+    
         
    
 }
