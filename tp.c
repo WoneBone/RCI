@@ -149,35 +149,12 @@ void removeNodeCol(int nodeID) {
     if (nodeID >= 0 && nodeID < 100) {
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
             if (patheq(sptable[i],routingTable[i][mapCols[nodeID]]) == 1) { //check if we removed the SP (FAZER BOOLEANO com ints PARA PATH)
-                spupdate = 1; 
-                sptable[i].route[1] = dest(sptable[i]);
-                sptable[i].size = 0;  
+                updateSP(i);
             }
             routingTable[i][mapCols[nodeID]].route[1] = dest( routingTable[i][mapCols[nodeID]]);
             routingTable[i][mapCols[nodeID]].size = 0;
-            if (spupdate == 1){
-                
-                for (int j = 0; j < MAX_CLIENTS - 1; j++) { //if we removed SP find new SP
-                    if(routingTable[i][j].size>0){
-                        if (sptable[i].size == 0 || routingTable[i][j].size < sptable[i].size)
-                            sptable[i] = routingTable[i][j];
-                    }
-
-                }
-                if (sptable[i].size > 0) {
-                    expeditiontable[i] = source(sptable[i]); //update EXP
-                    
-                }
-                else {
-                    expeditiontable[i] = -1;
-                    invRows[mapRows[nodeID]] = -1;
-                    mapRows[nodeID] = -1;
-                
-                }
-
-                adj_route(sptable[i]);//send update to adj
-                spupdate = 0;
-            } 
+            
+          
             
         }
         invCols[mapCols[nodeID]] = -1;
@@ -252,6 +229,7 @@ void updateRT(struct Path path) {
 }
 
 void updateSP(int index){
+    sptable[index].route[1] = dest(sptable[index]);
     sptable[index].size=0;
     for(int i = 0; i < MAX_CLIENTS; i++ ){
         if(routingTable[index][i].size != 0 && sptable[index].size == 0){
