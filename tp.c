@@ -238,46 +238,33 @@ void updateRT(struct Path path) {
         printf("Error: Unable to find or assign RT index for Node IDs %d -> %d.\n", sourceID, destinationID);
         return;
     }
-    int bruh = 2;
+
     routingTable[rowIndex][colIndex] = path;
-    if (path.size == 0) {
-        int bruh = 0;
-        for ( int i = 0; i <= MAX_CLIENTS - 1; i++){
-            if (routingTable[rowIndex][i].size != 0){
-                bruh = 1;
-                if (sptable[rowIndex].size == 0 || routingTable[rowIndex][i].size < sptable[rowIndex].size) {
-                    sptable[rowIndex] = routingTable[rowIndex][i]; // Update the SPT with the new shorter path
-                    expeditiontable[rowIndex] = i; //update EXP
-		            
-     }
-            }
-
-        }
-        adj_route(sptable[rowIndex]);//send update to adj
-
-
+    if (source(sptable[rowIndex]) == sourceID) {
+       updateSP(rowIndex);
     }
-    
-    else {
-         // Check if the SPT needs updating
-        if (sptable[rowIndex].size == 0 || path.size < sptable[rowIndex].size) {
-            sptable[rowIndex] = path; // Update the SPT with the new shorter path
-            expeditiontable[rowIndex] = sourceID; //update EXP
-            adj_route(path);//send update to adj
+
+   if(sptable[rowIndex].size == 0){
+    invRows[rowIndex] = -1;
+    mapRows[destinationID] = -1;
+    expeditiontable[rowIndex] = -1;
+   }
+}
+
+void updateSP(int index){
+    sptable[index].size=0;
+    for(int i = 0; i < MAX_CLIENTS; i++ ){
+        if(routingTable[index][i].size != 0 && sptable[index].size == 0){
+            sptable[index] = routingTable[index][i];
+        }
+        else if(routingTable[index][i].size != 0 && sptable[index].size < routingTable[index][i].size){
+            sptable[index] = routingTable[index][i];
         }
     }
 
-    if (bruh == 0) {
-        sptable[rowIndex].size = 0; 
-        expeditiontable[rowIndex] = -1;
-        invRows[rowIndex] = -1;
-        mapRows[destinationID] = -1;
-        adj_route(sptable[rowIndex]);//send update to adj
+    expeditiontable[index] = source(sptable[index]);
 
-    }
-    
-        
-   
+    adj_route(sptable[index]);
 }
 
 
