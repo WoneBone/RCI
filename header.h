@@ -129,4 +129,5 @@ void routall(int fd);
 void adj_route(struct Path path);
 void prtRoute();
 int patheq(struct Path path1, struct Path path2);
+void updateSP(int index);
 #endif

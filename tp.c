@@ -240,7 +240,7 @@ void updateRT(struct Path path) {
     }
 
     routingTable[rowIndex][colIndex] = path;
-    if (source(sptable[rowIndex]) == sourceID) {
+    if (source(sptable[rowIndex]) == sourceID && (sptable[rowIndex].size !=0 || path.size != 0)) {
        updateSP(rowIndex);
     }
 
