@@ -107,10 +107,11 @@ int main(int argc, char *argv[]){
 			{
 				FD_CLR(succ.fd, &filhas);
 				close(succ.fd);
-				removeNodeCol(succ.id);
+				
 				if (sucsuc.id != mid) //IF IM NOT ALONE
 				{
 				succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
+				removeNodeCol(succ.id);
 				succ.id = sucsuc.id;
 				strcpy(succ.ip, sucsuc.ip);
 				strcpy(succ.port, sucsuc.port);
@@ -158,7 +159,7 @@ int main(int argc, char *argv[]){
 			{
 				FD_CLR(pred.fd, &filhas);
 				close(pred.fd);
-				removeNodeCol(pred.id);
+				
 				pred.id = -1;
 			}
 			else {

@@ -13,6 +13,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         if (pred.id==-1){ //ME ALONE
             sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
             pred.fd=fd; //U MY PRED NOW
+            
             sucsuc.id=mid; // ME SUCSUC ME CAUSE ME WAS ALONE :'(
             strcpy(sucsuc.ip,mIP);
             strcpy(sucsuc.port,mTCP);
@@ -23,6 +24,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
             if(n==-1)/*error*/ exit(1);
             sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
             pred.fd=fd;
+            removeNodeCol(pred.id);
         }
         
         if (succ.id==-1){ //IF ALONE, NEW SUC IS NEW PRED and I TCP conect to his server as a client
@@ -104,8 +106,9 @@ int what_clit(int fd, char *mess){
 
         sscanf(mess,"%s %d %s %s",code_word,&succ.id,succ.ip,succ.port);
         close(succ.fd);
-        removeNodeCol(succ.id);
+        
         succ.fd = tcp_client(succ.ip, succ.port);
+        removeNodeCol(succ.id);
 
         sprintf(pred_mess,"PRED %d\n",mid);
         n=write(succ.fd,pred_mess,strlen(pred_mess));//I TELL NEW GUY IM BEHIND HIM
