@@ -24,8 +24,9 @@ int dest(struct Path path) {
     if (path.size > 0) {
         return path.route[path.size - 1]; 
     }
-	else if(path.size == 0)
+	else if(path.size == 0){
 		return path.route[1];
+	}
     return -1; 
 }
 
@@ -267,8 +268,8 @@ void updateRT(struct Path path) {
     if (bruh == 0) {
         sptable[rowIndex].size = 0; 
         expeditiontable[rowIndex] = -1;
-        invRows[mapRows[nodeID]] = -1;
-        mapRows[nodeID] = -1;
+        invRows[rowIndex] = -1;
+        mapRows[destinationID] = -1;
 
     }
         

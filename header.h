@@ -128,4 +128,5 @@ void send_route(struct Path path, int fd);
 void routall(int fd);
 void adj_route(struct Path path);
 void prtRoute();
+int patheq(struct Path path1, struct Path path2);
 #endif

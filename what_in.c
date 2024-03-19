@@ -59,13 +59,13 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     }
     if(strcmp(code_word,"ROUTE")==0){
        int dst,org,i=0,j=0,sscan=0;
-        char caminho[500],t[2]="-";
+        char caminho[500];
         char *token;
         struct Path new_path;
         
         sscan=sscanf(mess,"%s %d %d %s",code_word,&org,&dst,caminho);
         if (sscan==4){
-            token=strtok(caminho,t);
+            token=strtok(caminho,"-");
             if (token==NULL){
                 new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
             }else{
@@ -75,11 +75,11 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
                          printf("Caminho ciclico\n");
                         return 0;
                     } 
-                    token=strtok(NULL,t);
+                    token=strtok(NULL,"-");
                     i++;
                 }
             }
-            new_path.size=i+1;
+            new_path.size=i;
         }else if (sscan==3){
             new_path.size=0;
             new_path.route[0]=org;
@@ -160,15 +160,16 @@ int what_clit(int fd, char *mess){
 
 int what_std(char *std_in,struct addrinfo *res){
     char code_word[100],succIP[100],succTCP[100],show[100];
-    int ring,id,succid;
+    int ring,id,succid,  n;
     sscanf(std_in,"%s",code_word);
     if (strcmp(code_word,"join")==0 || strcmp(code_word,"j")==0){
         sscanf(std_in,"%s %d %d",code_word,&ring,&id);
         mid=join(ring,id,res);
-		if(succ.id > 0)
+		if(succ.id > 0){
 			sprintf(code_word, "ROUTE %d %d %d\n", mid, mid, mid);
-			n=write(succ.fd, code_word, strlen(code_word));
+			n = write(succ.fd, code_word, strlen(code_word));
 			if(n < 0) exit(-1);
+		}
         return 0;
     }
     if (strcmp(code_word,"direct")==0 || strcmp(code_word,"dj")==0){
