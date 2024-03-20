@@ -127,7 +127,7 @@ int what_clit(int fd, char *mess){
         
         succ.fd = tcp_client(succ.ip, succ.port);
         if (pred.id != sucsuc.id) {
-            removeNodeCol(succ.id);
+            removeNodeCol(sucsuc.id);
         }
         
 
