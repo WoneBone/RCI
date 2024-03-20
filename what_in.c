@@ -22,9 +22,14 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
 			trash[strlen(trash)]='\n';
             n=write(pred.fd,trash,strlen(trash) ); //REPLAY ENTRY MSG TO MY PRED
             if(n==-1)/*error*/ exit(1);
-            sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
+           
             pred.fd=fd;
-            removeNodeCol(pred.id);
+            if (sucsuc.id != mid ) { //repara que o meu sucsuc so da update quando eu receber o pred portanto por agora sou eu se eu estivesse sozinho com outro node
+              removeNodeCol(pred.id);   
+            }
+            
+            sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
+            
         }
         
         if (succ.id==-1){ //IF ALONE, NEW SUC IS NEW PRED and I TCP conect to his server as a client
@@ -108,7 +113,10 @@ int what_clit(int fd, char *mess){
         close(succ.fd);
         
         succ.fd = tcp_client(succ.ip, succ.port);
-        removeNodeCol(succ.id);
+        if (pred.id != sucsuc.id) {
+            removeNodeCol(succ.id);
+        }
+        
 
         sprintf(pred_mess,"PRED %d\n",mid);
         n=write(succ.fd,pred_mess,strlen(pred_mess));//I TELL NEW GUY IM BEHIND HIM

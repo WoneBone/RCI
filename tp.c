@@ -148,21 +148,25 @@ void removeNodeCol(int nodeID) {
 
     if (nodeID >= 0 && nodeID < 100) {
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
-            if ((patheq(sptable[i],routingTable[i][mapCols[nodeID]]) == 1) && (routingTable[i][mapCols[nodeID]].size>0)) { //check if we removed the SP (FAZER BOOLEANO com ints PARA PATH)
-                updateSP(i);
+            if ((patheq(sptable[i],routingTable[i][mapCols[nodeID]]) == 1) && (routingTable[i][mapCols[nodeID]].size>0)) { //se estou a tirar algo que esta na sptable
+                sptable[i].size = 0;
+                spupdate = 1;          
             }
             routingTable[i][mapCols[nodeID]].route[1] = dest( routingTable[i][mapCols[nodeID]]);
             routingTable[i][mapCols[nodeID]].size = 0;
-            
-          
-            
-        }
+            if (spupdate ==1) {
+                updateSP(i); //se tirei algo da sptable vou agora ver o proximo melhor caminho
+                spupdate = 0;
+            }
+       
+        
+        } 
         invCols[mapCols[nodeID]] = -1;
         mapCols[nodeID] = -1;
-        
-    } else {
-        printf("Error: Node ID %d is out of range.\n", nodeID);
     }
+    else {
+        printf("Error: Node ID %d is out of range.\n", nodeID);
+        }
 }
 
 // Remove Row of a NODE from RT and Rows lists (notice quando tiramos a row, e porque deixa de estar no nó)
@@ -217,32 +221,37 @@ void updateRT(struct Path path) {
     }
 
     routingTable[rowIndex][colIndex] = path;
-    if (source(sptable[rowIndex]) == sourceID && (sptable[rowIndex].size !=0 || path.size != 0)) {
-       updateSP(rowIndex);
-    }
+    updateSP(rowIndex);
+    
 
-   if(sptable[rowIndex].size == 0){
-    invRows[rowIndex] = -1;
-    mapRows[destinationID] = -1;
-    expeditiontable[rowIndex] = -1;
-   }
+   
 }
 
 void updateSP(int index){
-    sptable[index].route[1] = dest(sptable[index]);
-    sptable[index].size=0;
+    int updated = 0;
     for(int i = 0; i < MAX_CLIENTS; i++ ){
         if(routingTable[index][i].size != 0 && sptable[index].size == 0){
             sptable[index] = routingTable[index][i];
+            updated = 1;
         }
-        else if(routingTable[index][i].size != 0 && sptable[index].size < routingTable[index][i].size){
+         else if(routingTable[index][i].size != 0 && sptable[index].size > routingTable[index][i].size){
             sptable[index] = routingTable[index][i];
+            updated = 1;
         }
     }
 
     expeditiontable[index] = source(sptable[index]);
-
-    adj_route(sptable[index]);
+    
+    if(sptable[index].size == 0){
+        mapRows[invRows[index]] = -1;
+        invRows[index] = -1;
+        expeditiontable[index] = -1;
+        adj_route(sptable[index]); //nao ha mais caminhos para o destino logo mando para os adj LF
+   }
+    if(updated == 1){
+      adj_route(sptable[index]);  //mando o que mudou na sptable
+    }
+    
 }
 
 
