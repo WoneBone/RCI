@@ -149,7 +149,8 @@ void removeNodeCol(int nodeID) {
     if (nodeID >= 0 && nodeID < 100) {
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
             if ((patheq(sptable[i],routingTable[i][mapCols[nodeID]]) == 1) && (routingTable[i][mapCols[nodeID]].size>0)) { //se estou a tirar algo que esta na sptable
-                sptable[i].size = 0;
+                sptable[i].route[1] = dest(sptable[i]);
+				sptable[i].size = 0;
                 spupdate = 1;          
             }
             routingTable[i][mapCols[nodeID]].route[1] = dest( routingTable[i][mapCols[nodeID]]);
@@ -307,9 +308,9 @@ void routall(int fd){
 }
 
 void adj_route(struct Path path){
-	if (succ.fd > 0)
+	if (succ.id > 0)
 		send_route(path, succ.fd);
-	if(pred.fd > 0)
+	if(pred.id > 0)
 		send_route(path, pred.fd);
 }
 

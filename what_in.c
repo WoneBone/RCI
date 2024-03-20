@@ -49,6 +49,10 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         return 0;
     }
     if (strcmp(code_word,"PRED")==0){ //SOMEONE TOLD ME THEY ARE MY PRED
+		if(pred.id != -1){
+			close(pred.fd);
+			removeNodeCol(pred.id);
+		}
         sscanf(mess,"%s %d",code_word,&pred.id);
         pred.fd=fd;
         if (sucsuc.fd != -1){

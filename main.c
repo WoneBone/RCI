@@ -16,6 +16,7 @@ int main(int argc, char *argv[]){
 	sucsuc.id=-1;
 	pred.id=-1;
 	int sTCP, sUDP, fd_ret, cTCP,maxfd=0,client_fds[MAX_CLIENTS],i,newfd;
+	int p_ = 0; 
 	ssize_t n,nw;
 	socklen_t addrlen;
 	fd_set filhas;
@@ -124,8 +125,10 @@ int main(int argc, char *argv[]){
 				if(n==-1)/*error*/ exit(1);
 
 				}else{
+					p_=succ.id;
 					succ.id=-1;
 					sucsuc.id = -1;
+					removeNodeCol(p_);
 				}
 			
 			}
@@ -157,10 +160,11 @@ int main(int argc, char *argv[]){
 			n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
 			if (n==0) //if conection with succ broken (succ left)
 			{
+				p_ = pred.id;
+				pred.id = -1;
 				FD_CLR(pred.fd, &filhas);
 				close(pred.fd);
-				
-				pred.id = -1;
+				removeNodeCol(p_);
 			}
 			else {
 				if(n==-1)/*error*/ exit(1);
