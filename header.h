@@ -121,7 +121,6 @@ int getOrAssignColId(int nodeID);//given a nodeID returns its RT  Col index if i
 void removeNodeCol(int nodeID);// Remove Collumn of a NODE from RT and Cols lists
 void removeNodeRow(int nodeID);// Remove Row of a NODE from RT and Rows lists
 void updateRT(struct Path path);//given a path, puts it in the correct place of the RT and if shorter than the one on SPT, puts it on SPT
-void updateSPT();
 void updateEXP();
 
 void send_route(struct Path path, int fd);
@@ -129,5 +128,5 @@ void routall(int fd);
 void adj_route(struct Path path);
 void prtRoute();
 int patheq(struct Path path1, struct Path path2);
-void updateSP(int index);
+void updateSP(int index, struct Path path);
 #endif

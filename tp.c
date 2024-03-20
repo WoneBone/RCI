@@ -145,18 +145,19 @@ int getOrAssignColId(int nodeID) {
 // Remove Collumn of a NODE from RT and Cols lists
 void removeNodeCol(int nodeID) {
     int spupdate = 0;
-
+	struct Path lastpass;
     if (nodeID >= 0 && nodeID < 100) {
         for (int i = 0; i < MAX_CLIENTS - 1; i++) {
             if ((patheq(sptable[i],routingTable[i][mapCols[nodeID]]) == 1) && (routingTable[i][mapCols[nodeID]].size>0)) { //se estou a tirar algo que esta na sptable
-                sptable[i].route[1] = dest(sptable[i]);
+                lastpass = sptable[i];
+				sptable[i].route[1] = dest(sptable[i]);
 				sptable[i].size = 0;
                 spupdate = 1;          
             }
             routingTable[i][mapCols[nodeID]].route[1] = dest( routingTable[i][mapCols[nodeID]]);
             routingTable[i][mapCols[nodeID]].size = 0;
             if (spupdate ==1) {
-                updateSP(i); //se tirei algo da sptable vou agora ver o proximo melhor caminho
+                updateSP(i, lastpass); //se tirei algo da sptable vou agora ver o proximo melhor caminho
                 spupdate = 0;
             }
        
@@ -207,8 +208,8 @@ int patheq(struct Path path1, struct Path path2) {
 void updateRT(struct Path path) { 
     int sourceID = source(path);  // Get the source ID from the path
     int destinationID = dest(path);  // Get the destination ID from the path
-	
-	if(path.size ==0 && (mapCols[sourceID] == -1)) return;
+	struct Path lastpass;
+	if(path.size == 0 && (mapCols[sourceID] == -1)) return;
 
     if (sourceID == -1 || destinationID == -1) {
         printf("Error: Invalid path source or destination.\n");
@@ -223,15 +224,20 @@ void updateRT(struct Path path) {
         printf("Error: Unable to find or assign RT index for Node IDs %d -> %d.\n", sourceID, destinationID);
         return;
     }
-
+	
     routingTable[rowIndex][colIndex] = path;
-    updateSP(rowIndex);   
+	lastpass = sptable[rowIndex];
+
+	if(source(sptable[rowIndex]) == sourceID)
+		sptable[rowIndex].size = 0;
+	
+    updateSP(rowIndex, lastpass);   
 }
 
-void updateSP(int index){
+void updateSP(int index, struct Path path){
     int updated = 0;
     for(int i = 0; i < MAX_CLIENTS; i++ ){
-        if(routingTable[index][i].size != 0 && sptable[index].size == 0){
+        if(routingTable[index][i].size > 0 && sptable[index].size == 0){
             sptable[index] = routingTable[index][i];
             updated = 1;
         }
@@ -243,13 +249,13 @@ void updateSP(int index){
 
     expeditiontable[index] = source(sptable[index]);
     
-    if(sptable[index].size == 0){
+    if(sptable[index].size == 0 &&  path.size != 0){
         mapRows[invRows[index]] = -1;
         invRows[index] = -1;
         expeditiontable[index] = -1;
-        adj_route(sptable[index]); //nao ha mais caminhos para o destino logo mando para os adj LF
+		adj_route(sptable[index]); //nao ha mais caminhos para o destino logo mando para os adj LF
    }
-    if(updated == 1){
+	else if(updated == 1){
       adj_route(sptable[index]);  //mando o que mudou na sptable
     }
     

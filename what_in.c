@@ -86,7 +86,13 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
                 while (token!=NULL){
                     new_path.route[i]=((token[0]-'0')*10)+(token[1]-'0');
                     if (new_path.route[i] == mid){
-                         printf("Caminho ciclico\n");
+						if(dst != mid){
+							new_path.size = 0;	
+							new_path.route[0] = org;
+							new_path.route[1] = dst;
+							updateRT(new_path);
+							printf("Caminho ciclico\n");
+						}
                         return 0;
                     } 
                     token=strtok(NULL,"-");
@@ -159,7 +165,13 @@ int what_clit(int fd, char *mess){
                 while (token!=NULL){
                     new_path.route[i]=((token[0]-'0')*10)+(token[1]-'0');
                     if (new_path.route[i] == mid){
-                         printf("Caminho ciclico\n");
+						if(dst != mid){
+							new_path.size = 0;
+							new_path.route[0] = org;
+							new_path.route[1] = dst;
+							updateRT(new_path);
+							printf("Caminho ciclico\n");
+						}
                         return 0;
                     } 
                     token=strtok(NULL,t);
