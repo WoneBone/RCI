@@ -303,7 +303,7 @@ void routall(int fd){
 	if(n == -1) /*eror*/ exit(1);
 
 	for(int i = 0; i < MAX_CLIENTS; i++){
-		if(sptable[i].size == 0)
+		if(sptable[i].size <= 0)
 			continue;//If not path die
 		else send_route(sptable[i], fd);//send path
 	}

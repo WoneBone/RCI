@@ -166,7 +166,7 @@ int what_clit(int fd, char *mess){
                     i++;
                 }
             }
-            new_path.size=i+1;
+            new_path.size=i;
         }else if (sscan==3){
             new_path.size=0;
             new_path.route[0]=org;

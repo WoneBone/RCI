@@ -121,4 +121,10 @@ void leave(int id, struct addrinfo *res){
 	}
 	sucsuc.id = -1; 
 
+	initEXP();
+	initRT();
+	initSPT();
+	initinvIndices();
+	initmapIndices();
+
 }
