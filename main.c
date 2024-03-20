@@ -113,6 +113,7 @@ int main(int argc, char *argv[]){
 				{
 				succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
 				removeNodeCol(succ.id);
+				routall(succ.fd);
 				succ.id = sucsuc.id;
 				strcpy(succ.ip, sucsuc.ip);
 				strcpy(succ.port, sucsuc.port);

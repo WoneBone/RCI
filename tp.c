@@ -207,6 +207,9 @@ int patheq(struct Path path1, struct Path path2) {
 void updateRT(struct Path path) { 
     int sourceID = source(path);  // Get the source ID from the path
     int destinationID = dest(path);  // Get the destination ID from the path
+	
+	if(path.size ==0 && (mapCols[sourceID] == -1)) return;
+
     if (sourceID == -1 || destinationID == -1) {
         printf("Error: Invalid path source or destination.\n");
         return;
@@ -222,10 +225,7 @@ void updateRT(struct Path path) {
     }
 
     routingTable[rowIndex][colIndex] = path;
-    updateSP(rowIndex);
-    
-
-   
+    updateSP(rowIndex);   
 }
 
 void updateSP(int index){
@@ -296,9 +296,11 @@ void send_route(struct Path path, int fd){
 }
 
 void routall(int fd){
-	struct Path empty;
-	empty.size = 0;
-	send_route(empty, fd); //Route mid mid mid
+	char mess[100];
+	int n;
+	sprintf(mess, "ROUTE %d %d %d\n", mid, mid, mid);
+	n = write(fd, mess, strlen(mess));
+	if(n == -1) /*eror*/ exit(1);
 
 	for(int i = 0; i < MAX_CLIENTS; i++){
 		if(sptable[i].size == 0)

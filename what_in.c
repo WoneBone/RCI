@@ -45,7 +45,8 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         
         n=write(fd,trash,strlen(trash));
         if(n==-1)/*error*/ exit(1);
-        
+        routall(pred.fd);
+
         return 0;
     }
     if (strcmp(code_word,"PRED")==0){ //SOMEONE TOLD ME THEY ARE MY PRED
@@ -62,10 +63,12 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
             if(n==-1)/*error*/ exit(1);
 
         }
+		routall(pred.fd);
         return 0;
     }
     if (strcmp(code_word,"CHORD")==0){
         printf("tie the knot well");
+		//routall missing
         return 0;
     }
     if(strcmp(code_word,"ROUTE")==0){
@@ -128,6 +131,8 @@ int what_clit(int fd, char *mess){
         sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port); //aviso o meu pred do seu novo SUCSUC
         n=write(pred.fd,trash,sizeof(trash));
         if(n==-1)/*error*/ exit(1);
+
+		routall(succ.fd);
         return 0;
     }
     if (strcmp(code_word,"SUCC")==0){
