@@ -156,7 +156,7 @@ void removeNodeCol(int nodeID) {
             }
             routingTable[i][mapCols[nodeID]].route[1] = dest( routingTable[i][mapCols[nodeID]]);
             routingTable[i][mapCols[nodeID]].size = 0;
-            if (spupdate ==1) {
+            if (spupdate == 1) {
                 updateSP(i, lastpass); //se tirei algo da sptable vou agora ver o proximo melhor caminho
                 spupdate = 0;
             }
@@ -209,7 +209,7 @@ void updateRT(struct Path path) {
     int sourceID = source(path);  // Get the source ID from the path
     int destinationID = dest(path);  // Get the destination ID from the path
 	struct Path lastpass;
-	if(path.size == 0 && (mapCols[sourceID] == -1)) return;
+	//if(path.size == 0 && (mapCols[sourceID] == -1)) return;
 
     if (sourceID == -1 || destinationID == -1) {
         printf("Error: Invalid path source or destination.\n");

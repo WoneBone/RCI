@@ -111,19 +111,24 @@ int main(int argc, char *argv[]){
 				
 				if (sucsuc.id != mid) //IF IM NOT ALONE
 				{
-				succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
-				removeNodeCol(succ.id);
-				routall(succ.fd);
-				succ.id = sucsuc.id;
-				strcpy(succ.ip, sucsuc.ip);
-				strcpy(succ.port, sucsuc.port);
-				
-				sprintf(trash,"PRED %d\n",mid);
-				n=write(succ.fd,trash,strlen(trash));//I TELL NEXT GUY IM BEHIND HIM
-				if(n==-1)/*error*/ exit(1);
-				sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
-				n=write(pred.fd,trash,strlen(trash));//I TELL MY PRED HIS NEW SUCCSUCC
-				if(n==-1)/*error*/ exit(1);
+					p_ = succ.id;
+					succ.id = -1;
+					succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
+					removeNodeCol(p_);
+					succ.id = sucsuc.id;
+					strcpy(succ.ip, sucsuc.ip);
+					strcpy(succ.port, sucsuc.port);
+					
+					sprintf(trash,"PRED %d\n",mid);
+					n=write(succ.fd,trash,strlen(trash));//I TELL NEXT GUY IM BEHIND HIM
+					if(n==-1)/*error*/ exit(1);
+
+					sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port);
+            
+					n=write(pred.fd,trash,strlen(trash));//I TELL MY PRED HIS NEW SUCCSUCC
+					if(n==-1)/*error*/ exit(1);
+
+					routall(succ.fd);
 
 				}else{
 					p_=succ.id;
