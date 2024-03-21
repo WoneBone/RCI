@@ -209,7 +209,18 @@ void updateRT(struct Path path) {
     int sourceID = source(path);  // Get the source ID from the path
     int destinationID = dest(path);  // Get the destination ID from the path
 	struct Path lastpass;
-	//if(path.size == 0 && (mapCols[sourceID] == -1)) return;
+    struct Path badpath;
+    if(path.size == 1 && destinationID != pred.id && destinationID != succ.id){
+        
+        badpath.size = 0;
+        badpath.route[0] = sourceID;
+        badpath.route[1] = destinationID;
+        updateRT(badpath);
+        adj_route(badpath);
+        return;  
+    }
+	if(path.size == 0 && (mapCols[sourceID] == -1)) return;
+
 
     if (sourceID == -1 || destinationID == -1) {
         printf("Error: Invalid path source or destination.\n");

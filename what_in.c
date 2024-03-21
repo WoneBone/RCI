@@ -92,6 +92,9 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
 							new_path.route[1] = dst;
 							updateRT(new_path);
 							printf("Caminho ciclico\n");
+                            if (dst != pred.id && dst != succ.id){
+                                adj_route(new_path);
+                            }
 						}
                         return 0;
                     } 
@@ -170,6 +173,9 @@ int what_clit(int fd, char *mess){
 							new_path.route[0] = org;
 							new_path.route[1] = dst;
 							updateRT(new_path);
+                            if (dst != pred.id && dst != succ.id){
+                                adj_route(new_path);
+                            }
 							printf("Caminho ciclico\n");
 						}
                         return 0;
