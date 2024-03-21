@@ -33,8 +33,7 @@ int dest(struct Path path) {
 int source(struct Path path) {
     if (path.size > 0) {
         return path.route[0]; 
-    }
-	else if(path.size == 0)
+    }else if(path.size == 0)
 		return path.route[0];
     return -1;
 }
@@ -228,8 +227,10 @@ void updateRT(struct Path path) {
     routingTable[rowIndex][colIndex] = path;
 	lastpass = sptable[rowIndex];
 
-	if(source(sptable[rowIndex]) == sourceID)
+	if(source(sptable[rowIndex]) == sourceID){
+		sptable[rowIndex].route[1] = dest(sptable[rowIndex]);
 		sptable[rowIndex].size = 0;
+	}
 	
     updateSP(rowIndex, lastpass);   
 }
@@ -251,6 +252,7 @@ void updateSP(int index, struct Path path){
     
     if(sptable[index].size == 0 &&  path.size != 0){
         mapRows[invRows[index]] = -1;
+					routall(succ.fd);
         invRows[index] = -1;
         expeditiontable[index] = -1;
 		adj_route(sptable[index]); //nao ha mais caminhos para o destino logo mando para os adj LF

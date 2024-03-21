@@ -22,7 +22,9 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
 			trash[strlen(trash)]='\n';
             n=write(pred.fd,trash,strlen(trash) ); //REPLAY ENTRY MSG TO MY PRED
             if(n==-1)/*error*/ exit(1);
-           
+           	
+			//Delay mb here??
+			close(pred.fd);
             pred.fd=fd;
             if (sucsuc.id != mid ) { //repara que o meu sucsuc so da update quando eu receber o pred portanto por agora sou eu se eu estivesse sozinho com outro node
               removeNodeCol(pred.id);   

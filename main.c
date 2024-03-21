@@ -22,6 +22,7 @@ int main(int argc, char *argv[]){
 	fd_set filhas;
 	FD_ZERO(&filhas);
 	mid=-1;
+	struct Path path;
 
 	struct addrinfo *resUDP;
 	struct sockaddr_in addr;
@@ -80,7 +81,7 @@ int main(int argc, char *argv[]){
 }
 	//cTCP = tcp_client(mIP,mTCP);
 	while (1) {
-		FD_ZERO(&filhas); //reset filhas
+		FD_ZERO(&filhas); //reset zOfilhas
 		FD_SET(0,&filhas);
 		FD_SET(sTCP, &filhas); //filhas inicializado com stdin e sTCP
 		
@@ -97,6 +98,8 @@ int main(int argc, char *argv[]){
 			maxfd = sTCP;}
 		
 		errcode = select(maxfd+1 , &filhas, NULL, NULL, NULL);
+		usleep(1000);
+
 		if ( errcode <= 0) exit(errno); // error
 		
 		
@@ -114,7 +117,6 @@ int main(int argc, char *argv[]){
 					p_ = succ.id;
 					succ.id = -1;
 					succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
-					removeNodeCol(p_);
 					succ.id = sucsuc.id;
 					strcpy(succ.ip, sucsuc.ip);
 					strcpy(succ.port, sucsuc.port);
@@ -127,8 +129,9 @@ int main(int argc, char *argv[]){
             
 					n=write(pred.fd,trash,strlen(trash));//I TELL MY PRED HIS NEW SUCCSUCC
 					if(n==-1)/*error*/ exit(1);
-
+					
 					routall(succ.fd);
+					removeNodeCol(p_);
 
 				}else{
 					p_=succ.id;
@@ -166,11 +169,16 @@ int main(int argc, char *argv[]){
 			n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
 			if (n==0) //if conection with succ broken (succ left)
 			{
+				path.size = 0;
+				path.route[1] = pred.id;
 				p_ = pred.id;
 				pred.id = -1;
 				FD_CLR(pred.fd, &filhas);
 				close(pred.fd);
+				if(sucsuc.id != mid)
+					adj_route(path);
 				removeNodeCol(p_);
+
 			}
 			else {
 				if(n==-1)/*error*/ exit(1);
