@@ -395,6 +395,6 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     return 0;
-    }
 }
+
 
