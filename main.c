@@ -6,7 +6,8 @@ int errcode,mid;
 int mRing;
 char *mIP;
 char *mTCP;
-struct node succ, sucsuc, pred;
+struct node succ, sucsuc, pred,my_chord;
+LinkedList *Fire_Link;
 
 int main(int argc, char *argv[]){
 	char std_in[500],tcp_rec[500],tcp_clit[500],trash[500];
@@ -15,6 +16,7 @@ int main(int argc, char *argv[]){
 	succ.id=-1;
 	sucsuc.id=-1;
 	pred.id=-1;
+	my_chord.id=-1;
 	int sTCP, sUDP, fd_ret, cTCP,maxfd=0,client_fds[MAX_CLIENTS],i,newfd;
 	int p_ = 0; 
 	ssize_t n,nw;
@@ -23,6 +25,7 @@ int main(int argc, char *argv[]){
 	FD_ZERO(&filhas);
 	mid=-1;
 	path p;
+	Fire_Link=initLinkedList();
 
 	struct addrinfo *resUDP;
 	struct sockaddr_in addr;
@@ -76,10 +79,10 @@ int main(int argc, char *argv[]){
 			printf("The number of arguments inputed are invalid");
 			exit(1);
 			break;
-}
+    }
 	//cTCP = tcp_client(mIP,mTCP);
 	while (1) {
-		FD_ZERO(&filhas); //reset zOfilhas
+		FD_ZERO(&filhas); //reset filhas
 		FD_SET(0,&filhas);
 		FD_SET(sTCP, &filhas); //filhas inicializado com stdin e sTCP
 		
@@ -96,8 +99,6 @@ int main(int argc, char *argv[]){
 			maxfd = sTCP;}
 		
 		errcode = select(maxfd+1 , &filhas, NULL, NULL, NULL);
-		usleep(1000);
-
 		if ( errcode <= 0) exit(errno); // error
 		
 		
@@ -117,6 +118,7 @@ int main(int argc, char *argv[]){
 					removeCol(p_);
 
 					succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
+					removeCol(p_);
 					succ.id = sucsuc.id;
 					strcpy(succ.ip, sucsuc.ip);
 					strcpy(succ.port, sucsuc.port);
@@ -129,7 +131,7 @@ int main(int argc, char *argv[]){
             
 					n=write(pred.fd,trash,strlen(trash));//I TELL MY PRED HIS NEW SUCCSUCC
 					if(n==-1)/*error*/ exit(1);
-					
+
 					routall(succ.fd);
 
 				}else{

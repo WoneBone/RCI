@@ -3,11 +3,13 @@
 #include "tp.h"
 extern int errcode,mid,n;
 extern char *mIP, *mTCP;
-extern struct node succ, sucsuc, pred;
+extern struct node succ, sucsuc, pred,my_chord;
 
 int what_serv(int fd, char *mess){ //TCP SERVER SIDE
-    char code_word[100],trash[500],trashp[500];
-    int n, p_;
+    char code_word[100],trash[500],trashp[500],carta[500];
+    char *ret,*ret2;
+    int n,org,dst,i,new_chordid, p_;
+    struct node new_chord; 
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){ //ENTRY RECEIVED FROM OUTSIDE
@@ -73,7 +75,11 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         return 0;
     }
     if (strcmp(code_word,"CHORD")==0){
-        printf("tie the knot well");
+        n=sscanf(mess,"%s %d",code_word,new_chordid);
+        if (n!=2){
+            return 1;
+        }
+        
 		//routall missing
         return 0;
     }
@@ -118,12 +124,36 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         updateRT(new_path);
         return 0;
     }
+    if (strcmp(code_word,"CHAT")==0 ){
+        sscanf(mess,"%s %d %d %s",code_word,&org,&dst,carta);
+        ret=strchr(mess,' ');
+        if (ret==NULL){
+                return 1;
+        }
+        ret++;
+        for(i=0;i<2;i++){
+            ret=strchr(ret,' ');
+            if (ret==NULL){
+                return 1;
+            }
+            ret++;
+            strcpy(carta,ret);
+        }
+        if(dst==mid){
+            printf("Mensagem de chat recebida do nó %02d-%s\n",org,carta);
+            return 0;
+        }
+        n=ctt(org,dst,succ.fd,carta);
+        
+        return 0;
+    }
     return 1;
 }
 
 int what_clit(int fd, char *mess){
-    char code_word[100],trash[500],pred_mess[500];
-    int n, p_;
+    char code_word[100],trash[500],pred_mess[500],carta[500];
+    char *ret,*ret2;
+    int n,org,dst,i, p_;
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){ //NEW GUY IN FRONT OF ME
@@ -202,13 +232,38 @@ int what_clit(int fd, char *mess){
         updateRT(new_path);
         return 0;
     }
-    
+    if (strcmp(code_word,"CHAT")==0 ){
+        sscanf(mess,"%s %d %d %s",code_word,&org,&dst,carta);
+        ret=strchr(mess,' ');
+        if (ret==NULL){
+                return 1;
+            }
+        ret++;
+        for(i=0;i<2;i++){
+            ret=strchr(ret,' ');
+            if (ret==NULL){
+                return 1;
+            }
+            ret++;
+            strcpy(carta,ret);
+        }
+        if(dst==mid){
+            printf("Mensagem de chat recebida de %02d-%s\n",dst,carta);
+            return 0;
+        }
+        n=ctt(org,dst,succ.fd,carta);
+
+        return 0;
+    }
     return 1;
 }
 
 int what_std(char *std_in,struct addrinfo *res){
-    char code_word[100],succIP[100],succTCP[100],show[100];
-    int ring,id,succid,  n;
+    char code_word[100],succIP[100],succTCP[100],show[100],chat[500];
+    char *ret,*ret2;
+    int ring,id,succid,n,dst,org,i;
+    struct node new_chord;
+    
     sscanf(std_in,"%s",code_word);
     if (strcmp(code_word,"join")==0 || strcmp(code_word,"j")==0){
         sscanf(std_in,"%s %d %d",code_word,&ring,&id);
@@ -223,7 +278,34 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     if (strcmp(code_word,"chord")==0 || strcmp(code_word,"c")==0){
-       printf("tie the knot well");
+        n=sscanf(std_in,"%s %d",code_word,&id);
+        if (n=!2){
+            printf("Comando para criar corda com formato errado\n");
+            return 1;
+        }
+        if (mid==id){
+            printf("Não é possivel criar corda para mim próprio\n");
+        }
+        if(id==succ.id && succ.id>0){
+            printf("Não é possivel criar corda para o meu sucessor\n");
+            return 1;
+        }
+        if(id==pred.id && succ.id>0){
+            printf("Não é possivel criar corda com o meu predecessor\n");
+            return 1;
+        }
+        n=check_serv(res,id,new_chord);
+        if(n==1){
+            return 1;
+        }
+        my_chord.fd=tcp_client(new_chord.ip,new_chord.port);
+        my_chord.id=new_chord.id;
+        strcpy(my_chord.ip,new_chord.ip);
+        strcpy(my_chord.port,new_chord.port);
+        sprintf(code_word,"CHORD %d\n",mid);
+        n=write(my_chord.fd,code_word,strlen(code_word));
+        if(n < 0) exit(-1);
+
         return 0;
     }
     if (strcmp(code_word,"remove")==0 || strcmp(code_word,"rc")==0){
@@ -257,6 +339,13 @@ int what_std(char *std_in,struct addrinfo *res){
             printf("\tIP-%s\n",sucsuc.ip);
             printf("\tPort-%s\n",sucsuc.port);
         }
+        if (my_chord.id==-1){
+            printf("Corda ainda não definida\n");
+        }else{
+            printf("Corda:\n");//conmo vou ter id dos outros 
+            printf("\tId: %d\n",my_chord.id);
+            printf("\tIP-%s\n",my_chord.ip);
+            printf("\tPort-%s\n",my_chord.port);
         //falta corda
         return 0;
     }
@@ -275,7 +364,22 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     if (strcmp(code_word,"message")==0 || strcmp(code_word,"m")==0){
-       
+        if (succ.id<0){
+            printf("Não existe nó de destino possivel para enviar a mensagem\n");
+        }
+        sscanf(std_in,"%s %d %s ",code_word,&dst,chat);
+        ret=strchr(std_in,' ');
+        ret++;
+        for(i=0;i<1;i++){
+            ret=strchr(ret,' ');
+            if (ret==NULL){
+                return 1;
+            }
+            ret++;
+            strcpy(chat,ret);
+        }
+        n=ctt(mid,dst,succ.fd,chat);
+
         return 0;
     }
     if (strcmp(code_word,"leave")==0 || strcmp(code_word,"l")==0){
@@ -291,5 +395,6 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     return 0;
+    }
 }
 

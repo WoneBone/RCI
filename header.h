@@ -11,6 +11,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/select.h>
+#include "defs.h"
+#include "LinkedList.h"
 #define MAX_CLIENTS 17
 #define REGIP "193.136.138.142"
 #define REGUDP "59000"
@@ -23,7 +25,7 @@ struct node{
 extern int errcode,mid;
 extern int mRing;
 extern char *mIP, *mTCP;
-extern struct node succ, sucsuc, pred;
+extern struct node succ, sucsuc, pred,my_chord;
 /*******************************************************************
  * Função de inicialização de servidor TCP
  *
@@ -77,6 +79,13 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP);
 void leave(int id, struct addrinfo *res);
 
 /******************************************************************
+ * Função que manda mensagem 
+ *
+ * 
+ * ****************************************************************/
+int ctt(int org, int dst,int fd,char *carta);
+
+/******************************************************************
  * Função de identificação de comunicação feita a este servidor TCP
  * ****************************************************************/
 int what_serv(int fd, char *mess);
@@ -91,4 +100,5 @@ int what_std(char *std_in,struct addrinfo *res);
  * ****************************************************************/
 int what_clit(int fd, char *mess);
 
+int check_serv(struct addrinfo *res,int id,struct node chord);
 #endif
