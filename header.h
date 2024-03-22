@@ -15,12 +15,18 @@
 #define MAX_CLIENTS 17
 #define REGIP "193.136.138.142"
 #define REGUDP "59000"
+
 struct node{
 	int id ;
 	char ip[100];
 	char port[100];
 	int fd;	
 };
+#ifndef ITEM
+#define ITEM 
+typedef struct nodes *Item;
+#endif
+
 extern int errcode,mid;
 extern int mRing;
 extern char *mIP, *mTCP;
@@ -103,6 +109,10 @@ int what_clit(int fd, char *mess);
 int what_noose(int fd, char *mess);
 
 int check_serv(struct addrinfo *res,int id,struct node chord);
+
+void printSP();
+void printRT();
+void printET();
 
 void dummieFunc(Item); //This function does not concern you. Look away. These are not the funcs you're looking for
 #endif

@@ -201,6 +201,32 @@ void prtRoute(){
 			printf("\t%d\n", ETable[i]);
 	}
 }
+void printRT(){
+	for(int i = 0; i < 100; i++){
+		for(int j = 0; j < 100; j++){
+			for(int k = 0; k < (signed char) RTable[i][j].size; k++){
+				printf("%d-", RTable[i][j].route[k]);
+			}
+
+			if((signed char) RTable[i][j].size > 0)
+				putchar('\t');
+
+		}
+	}
+}
+void printSP(){
+		for(int i = 0; i < 100; i++){
+			for(int k = 0; k < (signed char) SPTable[i].size; k++){
+				printf("%d-", SPTable[i].route[k]);
+			}
+		}
+}
+void printET{
+		for(int i = 0; i < 100; i++){
+			if((signed char) SPTable[i].size > 0)
+				printf("%d\n", ETable[i]);
+		}
+}
 int findFd(unsigned char dst){
 	struct node *no;
 
@@ -218,4 +244,5 @@ int findFd(unsigned char dst){
 		if(no->id == dst)
 			return no->fd;
 	}
+	return -1;
 }
