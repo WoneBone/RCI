@@ -45,7 +45,7 @@ int join(int ring, int id, struct addrinfo *res){
 }
 
 	while(sscanf(t, "%d %s %s", &rID, ip, port) == 3){
-		printf("%d %s %s\n",rID,ip,port);
+		
 		ids[rID] = 1;
 		//nova linha da lista
 		t = strtok(NULL, "\n");
@@ -72,7 +72,7 @@ int join(int ring, int id, struct addrinfo *res){
 
 void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 	ssize_t n;
-	char send[1000],rec[1000],trash[100];
+	char send[1000];
 	//Atribição dos valores de succ
 	strcpy(succ.ip,sucIP);
 	strcpy(succ.port,sucTCP);
@@ -97,7 +97,7 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 void leave(int id, struct addrinfo *res){
 	//UDP for UNREG
 	int fd = socket(AF_INET, SOCK_DGRAM, 0);
-	char s[1000], *t;
+	char s[1000];
 	
 	//verificação de socket
 	if(fd == -1) exit(1); //erro
@@ -134,7 +134,7 @@ void leave(int id, struct addrinfo *res){
 }
 int ctt(int org, int dst,int fd,char *carta){
 	char envelope[500];
-	int n;
+	int n=0;
 	if (strlen(carta)>128){
 		printf("Mensagem não enviada pois tamanho maior que 128\n");
 		return -1;
@@ -150,7 +150,7 @@ int check_serv(struct addrinfo *res,int id,struct node chord){
 	char s[1000], *t;
 	int rID;
 	char ip_serv[50], port_serv[50];
-	int ids[100];
+
 	//verificação de socket
 	if(fd == -1) exit(1); //erro
 	if (mRing<=0){

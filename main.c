@@ -17,14 +17,14 @@ int main(int argc, char *argv[]){
 	sucsuc.id=-1;
 	pred.id=-1;
 	my_chord.id=-1;
-	int sTCP, sUDP, fd_ret, cTCP,maxfd=0,client_fds[MAX_CLIENTS],i,newfd;
+	int sTCP, sUDP,maxfd=0,newfd;
 	int p_ = 0; 
-	ssize_t n,nw;
+	ssize_t n;
 	socklen_t addrlen;
 	fd_set filhas;
 	FD_ZERO(&filhas);
 	mid=-1;
-	path p;
+	
 	Fire_Link=initLinkedList();
 
 	struct addrinfo *resUDP;
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
 			break;
 
 		case 3:
-			printf("There are 3 arguments\n");
+			
 			//Atribuições
 			mIP = argv[1]; 
 			mTCP = argv[2];
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]){
 		
 		
 		if ((FD_ISSET(succ.fd,&filhas))&& succ.id!=-1){ //succ.fd mudou (e existe), entao read
-			printf("Message received from server %s:%s\n", succ.ip, succ.port);
+			
 			n=read(succ.fd,tcp_clit,sizeof(tcp_clit)); //succ.fd = nossa TCP client conectada com o TCP server do succ
 			if (n==0) //if conection with succ broken (succ left)
 			{
@@ -146,7 +146,7 @@ int main(int argc, char *argv[]){
 			else{
 				if(n==-1)/*error*/ exit(1);
 				if((tok = strchr(tcp_clit, '\n')) == NULL){
-					printf("%s - Message does not include <LF>\n",tcp_clit);
+					
 				}
 				else{
 					aux = tcp_clit;
@@ -155,10 +155,10 @@ int main(int argc, char *argv[]){
 						*(tok++) = '\0';
 						n=what_clit(succ.fd,aux); //interpreta msg recebida
 						if (n==0){
-							printf("%s - message meaning identified\n",aux);
+							
 						}
 						else{
-							printf("%s - cannot identifie message meaning\n",aux);
+							
 						}
 						aux = tok;
 						tok = strchr(aux, '\n');
@@ -167,7 +167,7 @@ int main(int argc, char *argv[]){
 			}
 		}
 		if ((FD_ISSET(pred.fd,&filhas))&& pred.id!=-1){ //same for pred
-			printf("Message received from client %s:%s\n", pred.ip, pred.port);
+			
 			n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
 			if (n==0) //if conection with pred broken (pred left)
 			{
@@ -194,7 +194,7 @@ int main(int argc, char *argv[]){
 			else {
 				if(n==-1)/*error*/ exit(1);
 				if((tok = strchr(tcp_rec, '\n')) == NULL){
-						printf("%s - Message does not include <LF>\n",tcp_rec);
+						
 					}
 				else{
 					aux = tcp_rec;
@@ -202,9 +202,9 @@ int main(int argc, char *argv[]){
 						*(tok++) = '\0';
 						n=what_serv(pred.fd,aux); 
 						if (n==0){
-							printf("%s - message meaning identified\n",aux);
+							
 						}else{
-							printf("%s - cannot identifie message meaning\n",aux);
+							
 						}
 						aux = tok;
 						tok = strchr(aux , '\n');
@@ -221,11 +221,11 @@ int main(int argc, char *argv[]){
 
 			char clientIP[INET_ADDRSTRLEN];
 			inet_ntop(AF_INET, &(addr.sin_addr), clientIP, INET_ADDRSTRLEN); //where's the clit?
-			printf("Message received from client %s:%d\n", clientIP, ntohs(addr.sin_port));
+			
 			n=read(newfd,tcp_rec,sizeof(tcp_rec));
 			if(n==-1)/*error*/ exit(1);
 			if((tok = strchr(tcp_rec, '\n')) == NULL){
-				printf("%s - Message does not include <LF>\n",tcp_rec);
+				
 			}
 			else{
 				aux = tcp_rec;
@@ -233,9 +233,9 @@ int main(int argc, char *argv[]){
 					*(tok++) = '\0';
 					n=what_serv(newfd, aux); //meu server TCP interpreta
 					if (n==0){
-						printf("%s - message meaning identified\n",aux);
+						
 					}else{
-						printf("%s - cannot identifie message meaning\n",aux);
+						
 					}
 					aux = tok;
 					tok = strchr(aux, '\n');
@@ -248,7 +248,7 @@ int main(int argc, char *argv[]){
 			
 			fgets(std_in,500,stdin);
 			
-			i=what_std(std_in,resUDP);//interpreta consola
+			n=what_std(std_in,resUDP);//interpreta consola
 			
 		}
 	}			

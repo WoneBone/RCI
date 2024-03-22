@@ -7,9 +7,8 @@ extern struct node succ, sucsuc, pred,my_chord;
 
 int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     char code_word[100],trash[500],trashp[500],carta[500];
-    char *ret,*ret2;
-    int n,org,dst,i,new_chordid, p_;
-    struct node new_chord; 
+    char *ret;
+    int n,org,dst,i,new_chordid, p_; 
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){ //ENTRY RECEIVED FROM OUTSIDE
@@ -84,7 +83,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         return 0;
     }
     if(strcmp(code_word,"ROUTE")==0 ){
-        int dst,org,i=0,j=0,sscan=0;
+        int dst,org,i=0,sscan=0;
         char caminho[500],t[2]="-";
         char *token;
         path new_path;
@@ -107,7 +106,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
                             /*if (dst != pred.id && dst != succ.id){
                                 adj_route(new_path);
                             }*/
-							printf("Caminho ciclico\n");
+							
 						}
                         return 0;
                     } 
@@ -155,7 +154,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
 
 int what_clit(int fd, char *mess){
     char code_word[100],trash[500],pred_mess[500],carta[500];
-    char *ret,*ret2;
+    char *ret;
     int n,org,dst,i, p_;
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
@@ -195,7 +194,7 @@ int what_clit(int fd, char *mess){
         return 0;
     }
     if(strcmp(code_word,"ROUTE")==0 ){
-        int dst,org,i=0,j=0,sscan=0;
+        int dst,org,i=0,sscan=0;
         char caminho[500],t[2]="-";
         char *token;
         path new_path;
@@ -218,7 +217,7 @@ int what_clit(int fd, char *mess){
                             /*if (dst != pred.id && dst != succ.id){
                                 adj_route(new_path);
                             }*/
-							printf("Caminho ciclico\n");
+							
 						}
                         return 0;
                     } 
@@ -265,8 +264,8 @@ int what_clit(int fd, char *mess){
 
 int what_std(char *std_in,struct addrinfo *res){
     char code_word[100],succIP[100],succTCP[100],show[100],chat[500];
-    char *ret,*ret2;
-    int ring,id,succid,n,dst,org,i;
+    char *ret;
+    int ring,id,succid,n,dst,i;
     struct node new_chord;
     
     sscanf(std_in,"%s",code_word);
@@ -284,7 +283,7 @@ int what_std(char *std_in,struct addrinfo *res){
     }
     if (strcmp(code_word,"chord")==0 || strcmp(code_word,"c")==0){
         n=sscanf(std_in,"%s %d",code_word,&id);
-        if (n=!2){
+        if ((n=!2)){
             printf("Comando para criar corda com formato errado\n");
             return 1;
         }
