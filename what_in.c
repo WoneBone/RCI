@@ -382,16 +382,16 @@ int what_std(char *std_in,struct addrinfo *res){
         }
     }
     
-    if (strcmp(code_word,"show")==0 || strcmp(code_word,"sr")==0){
-       
+    if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"routing")==0))||(strcmp(code_word,"sr")==0)){
+        printRT();
         return 0;
     }
-    if (strcmp(code_word,"show")==0 || strcmp(code_word,"sp")==0){
-       
+    if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"path")==0))||(strcmp(code_word,"sp")==0)){
+       printSP();
         return 0;
     }
-    if (strcmp(code_word,"show")==0 || strcmp(code_word,"sf")==0){
-       
+    if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"fowarding")==0))||(strcmp(code_word,"sf")==0)){
+       printET();
         return 0;
     }
     if (strcmp(code_word,"message")==0 || strcmp(code_word,"m")==0){
