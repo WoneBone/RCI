@@ -125,6 +125,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     }
     if (strcmp(code_word,"CHAT")==0 ){
         sscanf(mess,"%s %d %d %s",code_word,&org,&dst,carta);
+		puts(mess);
         ret=strchr(mess,' ');
         if (ret==NULL){
                 return 1;
@@ -236,6 +237,7 @@ int what_clit(int fd, char *mess){
     }
     if (strcmp(code_word,"CHAT")==0 ){
         sscanf(mess,"%s %d %d %s",code_word,&org,&dst,carta);
+		puts(mess);
         ret=strchr(mess,' ');
         if (ret==NULL){
                 return 1;

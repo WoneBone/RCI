@@ -25,7 +25,7 @@ extern int errcode,mid;
 extern int mRing;
 extern char *mIP, *mTCP;
 extern struct node succ, sucsuc, pred,my_chord;
-extern LinkedList *Fire_Link;
+extern struct LinkedListStruct *Fire_Link;
 /*******************************************************************
  * Função de inicialização de servidor TCP
  *
