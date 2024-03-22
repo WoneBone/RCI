@@ -104,5 +104,9 @@ int what_noose(int fd, char *mess);
 
 int check_serv(struct addrinfo *res,int id,struct node chord);
 
+void printSP();
+void printRT();
+void printET();
+
 void dummieFunc(Item); //This function does not concern you. Look away. These are not the funcs you're looking for
 #endif
