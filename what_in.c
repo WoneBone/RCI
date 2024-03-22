@@ -378,8 +378,9 @@ int what_std(char *std_in,struct addrinfo *res){
             printf("\tIP-%s\n",my_chord.ip);
             printf("\tPort-%s\n",my_chord.port);
         //falta corda
-        return 0;
+        
         }
+        return 0;
     }
     
     if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"routing")==0))||(strcmp(code_word,"sr")==0)){
