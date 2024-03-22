@@ -75,7 +75,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         return 0;
     }
     if (strcmp(code_word,"CHORD")==0){
-        n=sscanf(mess,"%s %d",code_word,new_chordid);
+        n=sscanf(mess,"%s %d",code_word,&new_chordid);
         if (n!=2){
             return 1;
         }
