@@ -125,7 +125,7 @@ void adj_route(path p){
 }
 
 void sendRoute(path p, int fd){
-	char buffer[200], element[4];
+	char buffer[200], element[5];
 	unsigned char dst = dest(p);
 	int n = 0;
 	if((signed char) p.size <= 0){
@@ -221,7 +221,7 @@ void printSP(){
 			}
 		}
 }
-void printET{
+void printET(){
 		for(int i = 0; i < 100; i++){
 			if((signed char) SPTable[i].size > 0)
 				printf("%d\n", ETable[i]);
