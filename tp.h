@@ -1,5 +1,6 @@
 #ifndef tp_header
 #define tp_header
+#include "header.h"
 
 typedef struct PATH{
 	unsigned char size;
@@ -11,9 +12,6 @@ extern path SPTable[100];
 extern unsigned char ETable[100];
 
 
-#endif
-#include "header.h"
-#include "tp.h"
 
 extern path RTable[100][100];
 extern path SPTable[100];
@@ -55,3 +53,7 @@ void sendRoute(path p, int fd);
 void updateRT_empty(path);
 /*Função de remoção de coluna*/
 void removeCol(unsigned char id);
+//Envia todos os caminhos da SPTable de tamanho > 0
+void routall(int fd);
+void prtRoute();
+#endif

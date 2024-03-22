@@ -7,7 +7,7 @@ extern struct node succ, sucsuc, pred;
 
 int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     char code_word[100],trash[500],trashp[500];
-    int n;
+    int n, p_;
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){ //ENTRY RECEIVED FROM OUTSIDE
@@ -19,20 +19,20 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
             strcpy(sucsuc.ip,mIP);
             strcpy(sucsuc.port,mTCP);
         }else{ //NOT ALONE! :D life is good...
-			trash[strlen(trash)+1]='\0';
-			trash[strlen(trash)]='\n';
+			strcat(trash, "\n");
             n=write(pred.fd,trash,strlen(trash) ); //REPLAY ENTRY MSG TO MY PRED
             if(n==-1)/*error*/ exit(1);
            	
 			//Delay mb here??
+			p_ = pred.id;
+			pred.id = -1;
 			close(pred.fd);
-            pred.fd=fd;
-            if (sucsuc.id != mid ) { //repara que o meu sucsuc so da update quando eu receber o pred portanto por agora sou eu se eu estivesse sozinho com outro node
-              removeCol(pred.id);   
+            if (succ.id != p_ ) { //Se succ.id == pred.id eu não perco efetivamente uma adjacencia
+              removeCol(p_);   
             }
             
             sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
-            
+            pred.fd=fd;
         }
         
         if (succ.id==-1){ //IF ALONE, NEW SUC IS NEW PRED and I TCP conect to his server as a client
@@ -54,19 +54,22 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     }
     if (strcmp(code_word,"PRED")==0){ //SOMEONE TOLD ME THEY ARE MY PRED
 		if(pred.id != -1){
+			p_ = pred.id;
+			pred.id = -1;
 			close(pred.fd);
-			removeCol(pred.id);
+			removeCol(p_);
 		}
         sscanf(mess,"%s %d",code_word,&pred.id);
         pred.fd=fd;
         if (sucsuc.fd != -1){
-             sprintf(trash,"SUCC %02d %s %s\n",succ.id,succ.ip,succ.port); // I TELL my new pred his new sucsuc
+            sprintf(trash,"SUCC %02d %s %s\n",succ.id,succ.ip,succ.port); // I TELL my new pred his new sucsuc
         
             n=write(fd,trash,strlen(trash));
             if(n==-1)/*error*/ exit(1);
-
         }
-		routall(pred.fd);
+		else sucsuc.fd = 1;
+		if(succ.id != pred.id)
+			routall(pred.fd);
         return 0;
     }
     if (strcmp(code_word,"CHORD")==0){
@@ -120,23 +123,24 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
 
 int what_clit(int fd, char *mess){
     char code_word[100],trash[500],pred_mess[500];
-    int n;
+    int n, p_;
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){ //NEW GUY IN FRONT OF ME
-        sucsuc.fd = succ.fd;
         sucsuc.id = succ.id;
         strcpy(sucsuc.ip, succ.ip);
         strcpy(sucsuc.port, succ.port);
-
-        sscanf(mess,"%s %d %s %s",code_word,&succ.id,succ.ip,succ.port);
+		
+		p_ = succ.id;
+		succ.id =-1;
         close(succ.fd);
-        
-        succ.fd = tcp_client(succ.ip, succ.port);
-        if (pred.id != sucsuc.id) {
-            removeCol(sucsuc.id);
+       
+        if (pred.id != p_) {
+            removeCol(p_);
         }
         
+        sscanf(mess,"%s %d %s %s",code_word,&succ.id,succ.ip,succ.port);
+        succ.fd = tcp_client(succ.ip, succ.port);
 
         sprintf(pred_mess,"PRED %d\n",mid);
         n=write(succ.fd,pred_mess,strlen(pred_mess));//I TELL NEW GUY IM BEHIND HIM
@@ -209,11 +213,7 @@ int what_std(char *std_in,struct addrinfo *res){
     if (strcmp(code_word,"join")==0 || strcmp(code_word,"j")==0){
         sscanf(std_in,"%s %d %d",code_word,&ring,&id);
         mid=join(ring,id,res);
-		if(succ.id > 0){
-			sprintf(code_word, "ROUTE %d %d %d\n", mid, mid, mid);
-			n = write(succ.fd, code_word, strlen(code_word));
-			if(n < 0) exit(-1);
-		}
+		
         return 0;
     }
     if (strcmp(code_word,"direct")==0 || strcmp(code_word,"dj")==0){
@@ -287,7 +287,7 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
 	if (strcmp(code_word,"print")==0 || strcmp(code_word,"p")==0){
-       	//prtRoute();
+       	prtRoute();
         return 0;
     }
     return 0;

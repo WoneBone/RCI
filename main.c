@@ -110,10 +110,12 @@ int main(int argc, char *argv[]){
 				FD_CLR(succ.fd, &filhas);
 				close(succ.fd);
 				
-				if (sucsuc.id != mid) //IF IM NOT ALONE
+				if (succ.id != pred.id) //IF IM NOT ALONE
 				{
 					p_ = succ.id;
 					succ.id = -1;
+					removeCol(p_);
+
 					succ.fd = tcp_client(sucsuc.ip, sucsuc.port);
 					succ.id = sucsuc.id;
 					strcpy(succ.ip, sucsuc.ip);
@@ -129,13 +131,13 @@ int main(int argc, char *argv[]){
 					if(n==-1)/*error*/ exit(1);
 					
 					routall(succ.fd);
-					removeNodeCol(p_);
 
 				}else{
 					p_=succ.id;
 					succ.id=-1;
 					sucsuc.id = -1;
-					removeNodeCol(p_);
+					sucsuc.fd = -1;
+					removeCol(p_);
 				}
 			
 			}
@@ -165,17 +167,26 @@ int main(int argc, char *argv[]){
 		if ((FD_ISSET(pred.fd,&filhas))&& pred.id!=-1){ //same for pred
 			printf("Message received from client %s:%s\n", pred.ip, pred.port);
 			n=read(pred.fd,tcp_rec,sizeof(tcp_rec));
-			if (n==0) //if conection with succ broken (succ left)
+			if (n==0) //if conection with pred broken (pred left)
 			{
-				path.size = 0;
-				path.route[1] = pred.id;
-				p_ = pred.id;
-				pred.id = -1;
-				FD_CLR(pred.fd, &filhas);
-				close(pred.fd);
-				if(sucsuc.id != mid)
-					adj_route(path);
-				removeNodeCol(p_);
+				if(succ.id == pred.id){
+					close(pred.fd);
+					close(succ.fd);
+					p_ = pred.id;
+					pred.id = -1;
+					succ.id = -1;
+					removeCol(p_);
+					sucsuc.id = -1;
+					sucsuc.fd = -1;
+					FD_CLR(succ.fd, &filhas);
+					FD_CLR(pred.fd, &filhas);
+				}else{
+					p_ = pred.id;
+					pred.id = -1;
+					FD_CLR(pred.fd, &filhas);
+					close(pred.fd);
+					removeCol(p_);
+				}
 
 			}
 			else {

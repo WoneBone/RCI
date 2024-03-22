@@ -122,13 +122,13 @@ void sendRoute(path p, int fd){
 	unsigned char dst = dest(p);
 	int n = 0;
 	if((signed char) p.size <= 0){
-		sprintf(buffer, "ROUTE %d %d\n", mid, p.route[1]);
+		sprintf(buffer, "ROUTE %02d %02d\n", mid, p.route[1]);
 		n =  write(fd, buffer, strlen(buffer));
 		if(n == -1)/*error*/ exit(1);
 		return;
 	}
 
-	sprintf(buffer, "ROUTE %d %d %d", mid, dst, mid);
+	sprintf(buffer, "ROUTE %02d %02d %02d", mid, dst, mid);
 	for(int i = 0; i < p.size; i++){
 		sprintf(element, "-%02d", p.route[i]);
 		strcat(buffer, element);
@@ -141,12 +141,13 @@ void sendRoute(path p, int fd){
 void updateRT_empty(path p){
 	
 	RTable[p.route[1]][p.route[0]] = p;
-	if(p.route[0] == source(SPTable[p.route[1]])){
+	if(p.route[0] == (signed char) source(SPTable[p.route[1]])){
 		SPTable[p.route[1]] = p;
 		updateSP(p.route[1]);
 		
 		if((signed char) SPTable[p.route[1]].size <= 0){
 			adj_route(SPTable[p.route[1]]);
+			ETable[p.route[1]] = -1;
 		}
 	}
 }
@@ -165,8 +166,31 @@ void removeCol(unsigned char id){
 
 //Envia todos os caminhos da SPTable de tamanho > 0
 void routall(int fd){
+	char s[500];
+	sprintf(s, "ROUTE %02d %02d %02d\n", mid, mid, mid);
+	int n = write(fd, s, strlen(s));
+	if(n == -1)/*error*/ exit(1);
+	
 	for(int i = 0; i < 100; i++){
 		if((signed char) SPTable[i].size > 0)
 			sendRoute(SPTable[i], fd);
+	}
+}
+void prtRoute(){
+	for(int i = 0; i < 100; i++){
+		for(int j = 0; j < 100; j++){
+			for(int k = 0; k < (signed char) RTable[i][j].size; k++){
+				printf("%d-", RTable[i][j].route[k]);
+			}
+
+			if((signed char) RTable[i][j].size > 0)
+				putchar('\t');
+
+		}
+		for(int k = 0; k < (signed char) SPTable[i].size; k++){
+			printf("%d-", SPTable[i].route[k]);
+	}
+		if((signed char) SPTable[i].size > 0)
+			printf("\t%d\n", ETable[i]);
 	}
 }

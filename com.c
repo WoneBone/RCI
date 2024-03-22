@@ -83,7 +83,9 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 	sprintf(send,"ENTRY %02d %s %s\n",id,mIP,mTCP);
 	n=write(succ.fd,send,strlen(send));
 	if(n==-1)/*error*/ exit(1);
-    
+  	
+	mid = id;
+	routall(succ.fd);
 	/* n=read(fd,rec,strlen(rec));
 	if(n==-1)    exit(1);
 	
@@ -110,6 +112,8 @@ void leave(int id, struct addrinfo *res){
 	if(errcode == -1) exit(-1); /*error*/
 	puts(s);
 	
+	/*insert close chords here*/
+
 	//close succ
 	if(succ.id != -1){
 		close(succ.fd);
@@ -121,6 +125,7 @@ void leave(int id, struct addrinfo *res){
 		pred.id = -1;
 	}
 	sucsuc.id = -1; 
+	sucsuc.fd = -1;
 
 	initET();
 	initRT();
