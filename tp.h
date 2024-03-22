@@ -56,4 +56,5 @@ void removeCol(unsigned char id);
 //Envia todos os caminhos da SPTable de tamanho > 0
 void routall(int fd);
 void prtRoute();
+int findFd(unsigned char dst);
 #endif

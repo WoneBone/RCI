@@ -194,3 +194,21 @@ void prtRoute(){
 			printf("\t%d\n", ETable[i]);
 	}
 }
+int findFd(unsigned char dst){
+	struct node *no;
+
+	if(dst == succ.id)
+		return succ.fd;
+
+	else if(dst == pred.id)
+		return pred.fd;
+
+	else if(dst == my_chord.id)
+		return my_chord.fd;
+
+	for(LinkedList *aux = Fire_Link; aux != NULL; getNextNodeLinkedList(aux)){
+		no = (struct node *) getItemLinkedList(aux);
+		if(no->id == dst)
+			return no->fd;
+	}
+}

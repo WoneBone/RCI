@@ -143,7 +143,10 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
             printf("Mensagem de chat recebida do nó %02d-%s\n",org,carta);
             return 0;
         }
-        n=ctt(org,dst,succ.fd,carta);
+		
+		int send = findFd(ETable[dst]);
+
+        n=ctt(org,dst,send,carta);
         
         return 0;
     }
@@ -251,7 +254,9 @@ int what_clit(int fd, char *mess){
             printf("Mensagem de chat recebida de %02d-%s\n",dst,carta);
             return 0;
         }
-        n=ctt(org,dst,succ.fd,carta);
+		int send = findFd(ETable[dst]);
+
+        n=ctt(org,dst, send,carta);
 
         return 0;
     }
@@ -378,6 +383,8 @@ int what_std(char *std_in,struct addrinfo *res){
             ret++;
             strcpy(chat,ret);
         }
+
+		int send = findFd(ETable[dst]);
         n=ctt(mid,dst,succ.fd,chat);
 
         return 0;
