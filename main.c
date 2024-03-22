@@ -13,6 +13,8 @@ int main(int argc, char *argv[]){
 	char std_in[500],tcp_rec[500],tcp_clit[500],trash[500];
 	char *regIP, *regUDP;
 	char *tok, *aux;
+	struct node *pp;
+	LinkedList *h, *pp2;
 	succ.id=-1;
 	sucsuc.id=-1;
 	pred.id=-1;
@@ -86,8 +88,8 @@ int main(int argc, char *argv[]){
 		FD_SET(0,&filhas);
 		FD_SET(sTCP, &filhas); //filhas inicializado com stdin e sTCP
 		
-		if(succ.id > 0 || pred.id > 0){
-			if(succ.id > 0){ //atualizar filhas com fd's adjacentes
+		if(succ.id >= 0 || pred.id >= 0 || my_chord.id >= 0){
+			if(succ.id >= 0){ //atualizar filhas com fd's adjacentes
 				FD_SET(succ.fd,&filhas);
 				maxfd = MAX(maxfd,succ.fd); 
 			}
@@ -95,9 +97,20 @@ int main(int argc, char *argv[]){
 				FD_SET(pred.fd,&filhas);
 				maxfd = MAX(maxfd,pred.fd);
 			}
+			if (my_chord.id != -1){
+				FD_SET(my_chord.fd,&filhas);
+				maxfd = MAX(maxfd,my_chord.fd);
+			}
 		}else{
 			maxfd = sTCP;}
 		
+		for(h = Fire_Link; h != NULL; h = getNextNodeLinkedList(h)){
+			pp = (struct node *) getItemLinkedList(h);
+			FD_SET(pp->fd, &filhas);
+			maxfd = MAX(maxfd, pp->fd);
+		}
+		
+
 		errcode = select(maxfd+1 , &filhas, NULL, NULL, NULL);
 		if ( errcode <= 0) exit(errno); // error
 		
@@ -250,7 +263,73 @@ int main(int argc, char *argv[]){
 			
 			n=what_std(std_in,resUDP);//interpreta consola
 			
+		if (FD_ISSET(my_chord.fd,&filhas)){
+				n = read(my_chord.fd, tcp_rec, sizeof(tcp_rec));
+				if(n == 0){
+					p_ = my_chord.id;
+					close(my_chord.fd);
+					my_chord.id = -1;
+					removeCol(p_);
+				}
+
+				else{
+					if(n==-1)/*error*/ exit(1);
+					if((tok = strchr(tcp_rec, '\n')) == NULL){
+							
+						}
+					else{
+						aux = tcp_rec;
+						do{
+							*(tok++) = '\0';
+							n=what_noose(my_chord.fd,aux); 
+							if (n==0){
+								
+							}else{
+								
+							}
+							aux = tok;
+							tok = strchr(aux , '\n');
+
+						}while(tok != NULL);
+					}
+				}
+			}
+
+		for(h = Fire_Link, pp2 = Fire_Link; h != NULL; h = getNextNodeLinkedList(h)){
+			pp = (struct node *) getItemLinkedList(h);
+			if (FD_ISSET(pp->fd,&filhas)){
+				n = read(pp->fd, tcp_rec, sizeof(tcp_rec));
+				if(n == 0){
+					p_ = pp->id;
+					close(pp->fd);
+					revoveFromList(pp2, h, dummieFunc());
+					removeCol(p_);
+				}
+
+				else{
+					if(n==-1)/*error*/ exit(1);
+					if((tok = strchr(tcp_rec, '\n')) == NULL){
+							
+						}
+					else{
+						aux = tcp_rec;
+						do{
+							*(tok++) = '\0';
+							n=what_noose(pp->fd,aux); 
+							if (n==0){
+								
+							}else{
+								
+							}
+							aux = tok;
+							tok = strchr(aux , '\n');
+
+						}while(tok != NULL);
+					}
+				}
+			}
 		}
+
 	}			
 	freeaddrinfo(resUDP);
 	close(sUDP);

@@ -205,7 +205,7 @@ int findFd(unsigned char dst){
 	else if(dst == my_chord.id)
 		return my_chord.fd;
 
-	for(LinkedList *aux = Fire_Link; aux != NULL; getNextNodeLinkedList(aux)){
+	for(LinkedList *aux = Fire_Link; aux != NULL; aux = getNextNodeLinkedList(aux)){
 		no = (struct node *) getItemLinkedList(aux);
 		if(no->id == dst)
 			return no->fd;

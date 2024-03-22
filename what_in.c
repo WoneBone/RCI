@@ -9,6 +9,8 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     char code_word[100],trash[500],trashp[500],carta[500];
     char *ret;
     int n,org,dst,i,new_chordid, p_; 
+	struct node *pp;
+	LinkedList *aux;
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){ //ENTRY RECEIVED FROM OUTSIDE
@@ -78,7 +80,9 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         if (n!=2){
             return 1;
         }
-        
+		pp->id = new_chordid;
+		pp->fd = fd;
+        Fire_Link = insertUnsortedLinkedList(Fire_Link, (Item) pp);
 		//routall missing
         return 0;
     }

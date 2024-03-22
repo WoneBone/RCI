@@ -101,4 +101,6 @@ int what_std(char *std_in,struct addrinfo *res);
 int what_clit(int fd, char *mess);
 
 int check_serv(struct addrinfo *res,int id,struct node chord);
+
+void dummieFunc(Item); //This function does not concern you. Look away. These are not the funcs you're looking for
 #endif
