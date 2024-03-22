@@ -267,7 +267,7 @@ int what_clit(int fd, char *mess){
 int what_std(char *std_in,struct addrinfo *res){
     char code_word[100],succIP[100],succTCP[100],show[100],chat[500];
     char *ret;
-    int ring,id,succid,n,dst,i;
+    int ring,id,succid,n,dst,i,p_;
     struct node new_chord;
     
     sscanf(std_in,"%s",code_word);
@@ -315,8 +315,17 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     if (strcmp(code_word,"remove")==0 || strcmp(code_word,"rc")==0){
-       
-        return 0;
+       sscanf(std_in,"%s %d",code_word,&id);
+       if (id==my_chord.id){
+            p_=my_chord.id;
+            my_chord.id=-1;
+            close(my_chord.fd);     
+            removeCol(p_);
+            printf("Corda com o nó %d removida\n",p_);
+            return 0;   
+       }
+       printf("Não existe uma corda com o nó %d",id);
+        return 1;
     }
     if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"topology")==0))||(strcmp(code_word,"st")==0)){
         
@@ -395,7 +404,14 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     if (strcmp(code_word,"exit")==0 || strcmp(code_word,"x")==0){
-       
+        if(mid>0){
+            leave(mid,res);
+        }
+
+        exit (0);
+    }
+    if (strcmp(code_word,"help")==0){
+        printf("Comandos disponiveis:\n \t join (j) ring id\n \t direct join (dj) id succid succIP succTCP\n \t chord (c) i\n \t remove chord (rc)\n \t show topology (st)\n \t show routing (sr) dest\n \t show path (sp) dest\n \t show forwarding (sf)\n \t message (m) dest message\n \t leave (l)\n \t exit (x) \n");
         return 0;
     }
 	if (strcmp(code_word,"print")==0 || strcmp(code_word,"p")==0){

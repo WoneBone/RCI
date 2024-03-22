@@ -126,7 +126,7 @@ void leave(int id, struct addrinfo *res){
 	}
 	sucsuc.id = -1; 
 	sucsuc.fd = -1;
-
+	mid=-1;
 	initET();
 	initRT();
 	initSPT();
