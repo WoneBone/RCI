@@ -118,7 +118,6 @@ void adj_route(path p){
 
 void sendRoute(path p, int fd){
 	char buffer[200], element[4];
-	unsigned char src = source(p);
 	unsigned char dst = dest(p);
 	int n = 0;
 	if((signed char) p.size <= 0){
