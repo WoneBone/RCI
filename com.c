@@ -214,3 +214,5 @@ int check_serv(struct addrinfo *res,int id,struct node chord){
 	return 1;
 
 }
+
+void dummieFunc(Item);
