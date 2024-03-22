@@ -25,6 +25,6 @@
  *
  *  Description: Pointer to void.
  */
-typedef struct nodes *Item;
+
 
 #endif

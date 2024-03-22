@@ -210,4 +210,5 @@ int findFd(unsigned char dst){
 		if(no->id == dst)
 			return no->fd;
 	}
+	return -1;
 }

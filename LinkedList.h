@@ -45,7 +45,11 @@
 #define LinkedListHeader
 
 /* Header file for the definition of the Item type */
-#include "defs.h"
+#include "header.h"
+#ifndef ITEM
+#define ITEM 
+typedef struct nodes *Item;
+#endif
 /*
  *  Data type: LinkedList
  *

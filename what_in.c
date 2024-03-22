@@ -9,8 +9,8 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     char code_word[100],trash[500],trashp[500],carta[500];
     char *ret;
     int n,org,dst,i,new_chordid, p_; 
-	struct node *pp;
-	LinkedList *aux;
+	struct node a;
+    struct node *pp = &a;
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){ //ENTRY RECEIVED FROM OUTSIDE
@@ -149,8 +149,11 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         }
 		
 		int send = findFd(ETable[dst]);
-
-        n=ctt(org,dst,send,carta);
+        if (send==-1){
+            printf("Não consegui encontrar caminho\n");
+        }else{
+            n=ctt(org,dst,send,carta);
+        }
         
         return 0;
     }
@@ -260,8 +263,11 @@ int what_clit(int fd, char *mess){
             return 0;
         }
 		int send = findFd(ETable[dst]);
-
-        n=ctt(org,dst, send,carta);
+        if (send==-1){
+            printf("Não consegui encontrar caminho\n");
+        }else{
+            n=ctt(org,dst,send,carta);
+        }
 
         return 0;
     }
@@ -405,7 +411,12 @@ int what_std(char *std_in,struct addrinfo *res){
         }
 
 		int send = findFd(ETable[dst]);
-        n=ctt(mid,dst,send,chat);
+        if (send==-1){
+            printf("Não consegui encontrar caminho\n");
+        }else{
+            n=ctt(mid,dst,send,chat);
+        }
+        
 
         return 0;
     }
@@ -432,9 +443,9 @@ int what_std(char *std_in,struct addrinfo *res){
 }
 
 int what_noose(int fd, char *mess){  //Receive stuff in CHORD
-    char code_word[100],trash[500],trashp[500],carta[500];
+    char code_word[100],trash[500],carta[500];
     char *ret;
-    int n,org,dst,i,new_chordid, p_; 
+    int org,dst,i; 
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
   
@@ -501,8 +512,11 @@ int what_noose(int fd, char *mess){  //Receive stuff in CHORD
         }
 		
 		int send = findFd(ETable[dst]);
-
-        n=ctt(org,dst,send,carta);
+        if (send==-1){
+            printf("Não consegui encontrar caminho\n");
+        }else{
+            i=ctt(org,dst,send,carta);
+        }
         
         return 0;
     }
