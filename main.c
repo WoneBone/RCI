@@ -1,5 +1,5 @@
 #include "header.h"
-
+#include "tp.h"
 #define MAX_CLIENTS 17
 #define MAX(a,b) ((a)>(b)?(a):(b))
 int errcode,mid;
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
 	fd_set filhas;
 	FD_ZERO(&filhas);
 	mid=-1;
-	struct Path path;
+	path p;
 
 	struct addrinfo *resUDP;
 	struct sockaddr_in addr;
@@ -31,11 +31,9 @@ int main(int argc, char *argv[]){
 	memset(tcp_rec, 0, 500);
 	memset(tcp_clit, 0, 500);
 
-	initEXP();
+	initET();
 	initRT();
 	initSPT();
-	initmapIndices();
-	initinvIndices();
 
 	switch (argc) {
 		//4 argumentos

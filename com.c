@@ -1,5 +1,6 @@
 /*Este ficheiro serve para conter as funções que tratam dos comandos recebidos pelo utilizador*/
 #include "header.h"
+#include "tp.h"
 int join(int ring, int id, struct addrinfo *res){
 	int fd = socket(AF_INET, SOCK_DGRAM, 0);
 	char s[1000], *t;
@@ -121,10 +122,8 @@ void leave(int id, struct addrinfo *res){
 	}
 	sucsuc.id = -1; 
 
-	initEXP();
+	initET();
 	initRT();
 	initSPT();
-	initinvIndices();
-	initmapIndices();
 
 }

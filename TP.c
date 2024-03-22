@@ -32,14 +32,14 @@ void initET(){
 }
 
 unsigned char dest(path p){
-	if (p.size > 0) {
+	if ((signed char) p.size > 0) {
         return p.route[p.size - 1]; 
     }
     return -1; 
 }
 
 unsigned char source(path p){
-	if(p.size >0){
+	if((signed char) p.size >0){
 		return p.route[0];
 	}
 	return -1;
@@ -63,14 +63,14 @@ void updateRT(path p){
 	unsigned char dst = dest(p);
 	unsigned char src = source(p);
 
-	if(p.size <= 0 || dst == (unsigned char) -1 || src == (unsigned char) -1){
+	if((signed char) p.size <= 0 || dst == (unsigned char) -1 || src == (unsigned char) -1){
 		updateRT_empty(p);
 		return;
 	}
 
 	RTable[dst][src] = p;
 
-	if(source(SPTable[dst]) == src || (SPTable[dst].size > 0 && p.size < SPTable[dst].size))
+	if(source(SPTable[dst]) == src || ((signed char)SPTable[dst].size > 0 && p.size < SPTable[dst].size) || ((signed char)SPTable[dst].size <= 0 && (signed char) p.size > 0))
 		updateSP(dst);
 
 }
@@ -88,14 +88,16 @@ void updateSP(unsigned char row){
 			f = 1;
 		}
 		//Caminho Válido na RT e SP com caminho vazio
-		else if (RTable[row][i].size > 0 && SPTable[row].size <= 0) {
+		else if ((signed char) RTable[row][i].size > 0 && (signed char) SPTable[row].size <= 0) {
 			SPTable[row] = RTable[row][i];
+			ETable[row] = i;
 			src = i;
 			f = 1;
 		}
 		//Caminho válido na RT de tamanho inferior ao na RT
-		else if( RTable[row][i].size < SPTable[row].size && RTable[row][i].size > 0){
+		else if( RTable[row][i].size < SPTable[row].size && (signed char) RTable[row][i].size > 0){
 			SPTable[row] = RTable[row][i];
+			ETable[row] = i;
 			src = i;
 			f = 1;
 		}
@@ -119,8 +121,8 @@ void sendRoute(path p, int fd){
 	unsigned char src = source(p);
 	unsigned char dst = dest(p);
 	int n = 0;
-	if(p.size <= 0){
-		sprintf(buffer, "ROUTE %d %d\n", mid, dst);
+	if((signed char) p.size <= 0){
+		sprintf(buffer, "ROUTE %d %d\n", mid, p.route[1]);
 		n =  write(fd, buffer, strlen(buffer));
 		if(n == -1)/*error*/ exit(1);
 		return;
@@ -143,7 +145,7 @@ void updateRT_empty(path p){
 		SPTable[p.route[1]] = p;
 		updateSP(p.route[1]);
 		
-		if(SPTable[p.route[1]].size <= 0){
+		if((signed char) SPTable[p.route[1]].size <= 0){
 			adj_route(SPTable[p.route[1]]);
 		}
 	}
@@ -158,5 +160,13 @@ void removeCol(unsigned char id){
 		p.route[1] = i;
 		//Põe na tabela
 		updateRT_empty(p);
+	}
+}
+
+//Envia todos os caminhos da SPTable de tamanho > 0
+void routall(int fd){
+	for(int i = 0; i < 100; i++){
+		if((signed char) SPTable[i].size > 0)
+			sendRoute(SPTable[i], fd);
 	}
 }

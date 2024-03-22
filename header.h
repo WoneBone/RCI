@@ -20,15 +20,6 @@ struct node{
 	char port[100];
 	int fd;	
 };
-struct Path {                        
-    int route[MAX_CLIENTS];         // The list of node IDs representing the path
-    int size;                       // The current number of nodes in the route
-};
-extern struct Path sptable[MAX_CLIENTS];
-extern int expeditiontable[MAX_CLIENTS];
-extern int mapIndices[100];
-extern int invIndices[MAX_CLIENTS];
-extern struct Path routingTable[MAX_CLIENTS-1][MAX_CLIENTS-1];
 extern int errcode,mid;
 extern int mRing;
 extern char *mIP, *mTCP;
@@ -100,33 +91,4 @@ int what_std(char *std_in,struct addrinfo *res);
  * ****************************************************************/
 int what_clit(int fd, char *mess);
 
-
-/*Useless struct Path initPath();*/
-
-int dest(struct Path path);
-
-int source(struct Path path);
-
-/* WHAT THIS DO struct Path addNode*/
-
-void initRT(); //init RT with paths of size 0
-void initSPT(); //init SPT same way as RT
-void initEXP(); //init Expedition table with -1
-void initmapIndices(); //vetors of size 100 which maps all 100 possible NODE ids to their RT index value (Row or Col) ex: mapRows(70) = 3
-void initinvIndices(); //inverse vetors of the above: maps RT index value(Row or Col) to its respective NODE ID x: invRows(3) = 70
-
-void getIndexLists();
-int getOrAssignRowId(int nodeID);//given a nodeID returns its RT  Row index if it exists. If it doesnt, creates one from the first avaible one in invRows, updates mapRows vetor with it and returns the index.
-int getOrAssignColId(int nodeID);//given a nodeID returns its RT  Col index if it exists. If it doesnt, creates one from the first avaible one in invCols, updates mapCols vetor with it and returns the index.
-void removeNodeCol(int nodeID);// Remove Collumn of a NODE from RT and Cols lists
-void removeNodeRow(int nodeID);// Remove Row of a NODE from RT and Rows lists
-void updateRT(struct Path path);//given a path, puts it in the correct place of the RT and if shorter than the one on SPT, puts it on SPT
-void updateEXP();
-
-void send_route(struct Path path, int fd);
-void routall(int fd);
-void adj_route(struct Path path);
-void prtRoute();
-int patheq(struct Path path1, struct Path path2);
-void updateSP(int index, struct Path path);
 #endif

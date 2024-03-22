@@ -1,5 +1,6 @@
 //Este ficheiro serve para funçoes de identificação de comandos 
 #include "header.h"
+#include "tp.h"
 extern int errcode,mid,n;
 extern char *mIP, *mTCP;
 extern struct node succ, sucsuc, pred;
@@ -27,7 +28,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
 			close(pred.fd);
             pred.fd=fd;
             if (sucsuc.id != mid ) { //repara que o meu sucsuc so da update quando eu receber o pred portanto por agora sou eu se eu estivesse sozinho com outro node
-              removeNodeCol(pred.id);   
+              removeCol(pred.id);   
             }
             
             sscanf(mess,"%s %d %s %s",code_word,&pred.id,pred.ip,pred.port);
@@ -54,7 +55,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     if (strcmp(code_word,"PRED")==0){ //SOMEONE TOLD ME THEY ARE MY PRED
 		if(pred.id != -1){
 			close(pred.fd);
-			removeNodeCol(pred.id);
+			removeCol(pred.id);
 		}
         sscanf(mess,"%s %d",code_word,&pred.id);
         pred.fd=fd;
@@ -73,34 +74,35 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
 		//routall missing
         return 0;
     }
-    if(strcmp(code_word,"ROUTE")==0){
-       int dst,org,i=0,j=0,sscan=0;
-        char caminho[500];
+    if(strcmp(code_word,"ROUTE")==0 ){
+        int dst,org,i=0,j=0,sscan=0;
+        char caminho[500],t[2]="-";
         char *token;
-        struct Path new_path;
+        path new_path;
         
         sscan=sscanf(mess,"%s %d %d %s",code_word,&org,&dst,caminho);
         if (sscan==4){
-            token=strtok(caminho,"-");
+            token=strtok(caminho,t);
             if (token==NULL){
-                new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
+                new_path.route[0]=atoi(caminho);
+				i++;
             }else{
                 while (token!=NULL){
-                    new_path.route[i]=((token[0]-'0')*10)+(token[1]-'0');
+                    new_path.route[i]=atoi(token);
                     if (new_path.route[i] == mid){
 						if(dst != mid){
-							new_path.size = 0;	
+							new_path.size = 0;
 							new_path.route[0] = org;
 							new_path.route[1] = dst;
 							updateRT(new_path);
-							printf("Caminho ciclico\n");
-                            if (dst != pred.id && dst != succ.id){
+                            /*if (dst != pred.id && dst != succ.id){
                                 adj_route(new_path);
-                            }
+                            }*/
+							printf("Caminho ciclico\n");
 						}
                         return 0;
                     } 
-                    token=strtok(NULL,"-");
+                    token=strtok(NULL,t);
                     i++;
                 }
             }
@@ -132,7 +134,7 @@ int what_clit(int fd, char *mess){
         
         succ.fd = tcp_client(succ.ip, succ.port);
         if (pred.id != sucsuc.id) {
-            removeNodeCol(sucsuc.id);
+            removeCol(sucsuc.id);
         }
         
 
@@ -159,25 +161,26 @@ int what_clit(int fd, char *mess){
         int dst,org,i=0,j=0,sscan=0;
         char caminho[500],t[2]="-";
         char *token;
-        struct Path new_path;
+        path new_path;
         
         sscan=sscanf(mess,"%s %d %d %s",code_word,&org,&dst,caminho);
         if (sscan==4){
             token=strtok(caminho,t);
             if (token==NULL){
-                new_path.route[0]=((caminho[0]-'0')*10)+(caminho[1]-'0');
+                new_path.route[0]=atoi(caminho);
+				i++;
             }else{
                 while (token!=NULL){
-                    new_path.route[i]=((token[0]-'0')*10)+(token[1]-'0');
+                    new_path.route[i]=atoi(token);
                     if (new_path.route[i] == mid){
 						if(dst != mid){
 							new_path.size = 0;
 							new_path.route[0] = org;
 							new_path.route[1] = dst;
 							updateRT(new_path);
-                            if (dst != pred.id && dst != succ.id){
+                            /*if (dst != pred.id && dst != succ.id){
                                 adj_route(new_path);
-                            }
+                            }*/
 							printf("Caminho ciclico\n");
 						}
                         return 0;
@@ -284,7 +287,7 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
 	if (strcmp(code_word,"print")==0 || strcmp(code_word,"p")==0){
-       	prtRoute();
+       	//prtRoute();
         return 0;
     }
     return 0;
