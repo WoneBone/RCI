@@ -11,7 +11,6 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/select.h>
-#include "defs.h"
 #include "LinkedList.h"
 #define MAX_CLIENTS 17
 #define REGIP "193.136.138.142"
@@ -26,6 +25,7 @@ extern int errcode,mid;
 extern int mRing;
 extern char *mIP, *mTCP;
 extern struct node succ, sucsuc, pred,my_chord;
+extern LinkedList *Fire_Link;
 /*******************************************************************
  * Função de inicialização de servidor TCP
  *

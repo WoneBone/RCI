@@ -384,7 +384,7 @@ int what_std(char *std_in,struct addrinfo *res){
         }
 
 		int send = findFd(ETable[dst]);
-        n=ctt(mid,dst,succ.fd,chat);
+        n=ctt(mid,dst,send,chat);
 
         return 0;
     }
