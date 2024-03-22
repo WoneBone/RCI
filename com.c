@@ -128,3 +128,63 @@ void leave(int id, struct addrinfo *res){
 	initmapIndices();
 
 }
+int ctt(int org, int dst,int fd,char *carta){
+	char envelope[500];
+	int n;
+	if (strlen(carta)>128){
+		printf("Mensagem não enviada pois tamanho maior que 128\n");
+		return -1;
+	}
+	
+	sprintf(envelope,"CHAT %02d %02d %s\n",org,dst,carta);
+	write(fd,envelope,strlen(envelope));
+	if(n==-1)/*error*/ exit(1);
+	return 0;
+}
+int check_serv(struct addrinfo *res,int id,struct node chord){
+	int fd = socket(AF_INET, SOCK_DGRAM, 0);
+	char s[1000], *t;
+	int rID;
+	char ip_serv[50], port_serv[50];
+	int ids[100];
+	//verificação de socket
+	if(fd == -1) exit(1); //erro
+	if (mRing<=0){
+		printf("Não me encontro dentro de um anel\n");
+		return 1;
+	}
+	sprintf(s,"NODES %03d\n", mRing);
+	errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
+	if(errcode == -1) exit(1);//error
+					
+	//receber NODES LIST
+	errcode = recvfrom(fd, s, 1000,0, NULL, NULL);
+	if(errcode == -1) exit(1); /*error*/
+
+	puts(s);
+	t = strtok(s, "\n");
+	
+	//ERRO, Não recebi NODESLIST<LF>
+	if(t == NULL) return -1;
+	
+	t = strtok(NULL, "\n");
+	if(t==NULL){
+		printf("Anel vazio não é possivel formar corda\n");
+		return 1;
+	}
+	while(sscanf(t, "%d %s %s", &rID, ip_serv, port_serv) == 3){
+		printf("%d %s %s\n",rID,ip_serv,port_serv);
+		if(rID==id){
+			chord.id=id;
+			strcpy(chord.ip,ip_serv);
+			strcpy(chord.port,port_serv);
+			return 0;
+		}
+		//nova linha da lista
+		t = strtok(NULL, "\n");
+		if(t == NULL) break;
+	}
+	printf("Não foi possivel encontrar o nó dentro do anel\n");
+	return 1;
+
+}
