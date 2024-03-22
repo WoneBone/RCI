@@ -108,11 +108,19 @@ void updateSP(unsigned char row){
 }
 
 void adj_route(path p){
+	struct node *p_;
 	if(succ.id >= 0){
 		sendRoute(p, succ.fd);
 	}
 	if(pred.id >= 0){
 		sendRoute(p, pred.fd);
+	}
+	if(my_chord.id >= 0){
+		sendRoute(p, my_chord.fd);
+	}
+	for(LinkedList *pp = Fire_Link; pp != NULL; pp = getNextNodeLinkedList(pp)){
+		p_ =(struct node *) getItemLinkedList(pp);
+		sendRoute(p, p_->fd);
 	}
 }
 
