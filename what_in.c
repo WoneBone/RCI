@@ -304,6 +304,11 @@ int what_std(char *std_in,struct addrinfo *res){
             printf("Não é possivel criar corda com o meu predecessor\n");
             return 1;
         }
+        if(id==my_chord.id && my_chord.id>0){
+            printf("Já possui uma corda, remova antes\n");
+            return 1;
+        }
+
         n=check_serv(res,id,new_chord);
         if(n==1){
             return 1;
@@ -323,8 +328,9 @@ int what_std(char *std_in,struct addrinfo *res){
         if (id==my_chord.id){
             p_=my_chord.id;
             my_chord.id=-1;
-            close(my_chord.fd);     
-            removeCol(p_);
+            close(my_chord.fd);
+            if (p_ != succ.fd && p_ != pred.fd) {     
+            removeCol(p_); }
             printf("Corda com o nó %d removida\n",p_);
             return 0;   
         }
