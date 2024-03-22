@@ -201,9 +201,9 @@ int check_serv(struct addrinfo *res,int id,struct node chord){
 	while(sscanf(t, "%d %s %s", &rID, ip_serv, port_serv) == 3){
 		printf("%d %s %s\n",rID,ip_serv,port_serv);
 		if(rID==id){
-			chord.id=id;
-			strcpy(chord.ip,ip_serv);
-			strcpy(chord.port,port_serv);
+			my_chord.id=id;
+			strcpy(my_chord.ip,ip_serv);
+			strcpy(my_chord.port,port_serv);
 			return 0;
 		}
 		//nova linha da lista
