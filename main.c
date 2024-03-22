@@ -3,10 +3,11 @@
 #define MAX_CLIENTS 17
 #define MAX(a,b) ((a)>(b)?(a):(b))
 int errcode,mid;
-int mRing=0;
+int mRing;
 char *mIP;
 char *mTCP;
 struct node succ, sucsuc, pred,my_chord;
+LinkedList *Fire_Link;
 
 int main(int argc, char *argv[]){
 	char std_in[500],tcp_rec[500],tcp_clit[500],trash[500];
@@ -23,6 +24,7 @@ int main(int argc, char *argv[]){
 	fd_set filhas;
 	FD_ZERO(&filhas);
 	mid=-1;
+	Fire_Link=initLinkedList();
 
 	struct addrinfo *resUDP;
 	struct sockaddr_in addr;
@@ -78,7 +80,7 @@ int main(int argc, char *argv[]){
 			printf("The number of arguments inputed are invalid");
 			exit(1);
 			break;
-}
+    }
 	//cTCP = tcp_client(mIP,mTCP);
 	while (1) {
 		FD_ZERO(&filhas); //reset filhas

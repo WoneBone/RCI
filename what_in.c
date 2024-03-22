@@ -7,7 +7,8 @@ extern struct node succ, sucsuc, pred,my_chord;
 int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     char code_word[100],trash[500],trashp[500],carta[500];
     char *ret,*ret2;
-    int n,org,dst,i;
+    int n,org,dst,i,new_chordid;
+    struct node new_chord; 
     strcpy(trash,mess);
     sscanf(mess,"%s",code_word);
     if (strcmp(code_word,"ENTRY")==0){ //ENTRY RECEIVED FROM OUTSIDE
@@ -70,7 +71,11 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
         return 0;
     }
     if (strcmp(code_word,"CHORD")==0){
-        printf("tie the knot well");
+        n=sscanf(mess,"%s %d",code_word,new_chordid);
+        if (n!=2){
+            return 1;
+        }
+        
 		//routall missing
         return 0;
     }
@@ -290,6 +295,13 @@ int what_std(char *std_in,struct addrinfo *res){
         if(n==1){
             return 1;
         }
+        my_chord.fd=tcp_client(new_chord.ip,new_chord.port);
+        my_chord.id=new_chord.id;
+        strcpy(my_chord.ip,new_chord.ip);
+        strcpy(my_chord.port,new_chord.port);
+        sprintf(code_word,"CHORD %d\n",mid);
+        n=write(my_chord.fd,code_word,strlen(code_word));
+        if(n < 0) exit(-1);
 
         return 0;
     }
@@ -380,5 +392,6 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     return 0;
+    }
 }
 

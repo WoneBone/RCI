@@ -138,5 +138,5 @@ void adj_route(struct Path path);
 void prtRoute();
 int patheq(struct Path path1, struct Path path2);
 void updateSP(int index, struct Path path);
-int check_serv(struct addrinfo *res,int id, struct node chord);
+int check_serv(struct addrinfo *res,int id,struct node chord);
 #endif
