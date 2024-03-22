@@ -100,5 +100,7 @@ int what_std(char *std_in,struct addrinfo *res);
  * ****************************************************************/
 int what_clit(int fd, char *mess);
 
+int what_noose(int fd, char *mess);
+
 int check_serv(struct addrinfo *res,int id,struct node chord);
 #endif

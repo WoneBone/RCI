@@ -421,4 +421,83 @@ int what_std(char *std_in,struct addrinfo *res){
     return 0;
 }
 
+int what_noose(int fd, char *mess){  //Receive stuff in CHORD
+    char code_word[100],trash[500],trashp[500],carta[500];
+    char *ret;
+    int n,org,dst,i,new_chordid, p_; 
+    strcpy(trash,mess);
+    sscanf(mess,"%s",code_word);
+  
+    if(strcmp(code_word,"ROUTE")==0 ){
+        int dst,org,i=0,sscan=0;
+        char caminho[500],t[2]="-";
+        char *token;
+        path new_path;
+        
+        sscan=sscanf(mess,"%s %d %d %s",code_word,&org,&dst,caminho);
+        if (sscan==4){
+            token=strtok(caminho,t);
+            if (token==NULL){
+                new_path.route[0]=atoi(caminho);
+				i++;
+            }else{
+                while (token!=NULL){
+                    new_path.route[i]=atoi(token);
+                    if (new_path.route[i] == mid){
+						if(dst != mid){
+							new_path.size = 0;
+							new_path.route[0] = org;
+							new_path.route[1] = dst;
+							updateRT(new_path);
+                            /*if (dst != pred.id && dst != succ.id){
+                                adj_route(new_path);
+                            }*/
+							
+						}
+                        return 0;
+                    } 
+                    token=strtok(NULL,t);
+                    i++;
+                }
+            }
+            new_path.size=i;
+        }else if (sscan==3){
+            new_path.size=0;
+            new_path.route[0]=org;
+            new_path.route[1]=dst;
+        }
+        updateRT(new_path);
+        return 0;
+    }
+    if (strcmp(code_word,"CHAT")==0 ){
+        sscanf(mess,"%s %d %d %s",code_word,&org,&dst,carta);
+		puts(mess);
+        ret=strchr(mess,' ');
+        if (ret==NULL){
+                return 1;
+        }
+        ret++;
+        for(i=0;i<2;i++){
+            ret=strchr(ret,' ');
+            if (ret==NULL){
+                return 1;
+            }
+            ret++;
+            strcpy(carta,ret);
+        }
+        if(dst==mid){
+            printf("Mensagem de chat recebida do nó %02d-%s\n",org,carta);
+            return 0;
+        }
+		
+		int send = findFd(ETable[dst]);
+
+        n=ctt(org,dst,send,carta);
+        
+        return 0;
+    }
+    return 1;
+}
+
+
 
