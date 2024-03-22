@@ -348,8 +348,8 @@ int what_std(char *std_in,struct addrinfo *res){
             printf("\tPort-%s\n",my_chord.port);
         //falta corda
         return 0;
+        }
     }
-    
     
     if (strcmp(code_word,"show")==0 || strcmp(code_word,"sr")==0){
        
