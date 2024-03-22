@@ -266,6 +266,7 @@ int main(int argc, char *argv[]){
 			if (n==2){
 				printf("Comando inválido\n");
 			}
+		}
 			
 		if (FD_ISSET(my_chord.fd,&filhas)){
 				n = read(my_chord.fd, tcp_rec, sizeof(tcp_rec));
@@ -299,15 +300,52 @@ int main(int argc, char *argv[]){
 				}
 			}
 
-		for(h = Fire_Link, pp2 = Fire_Link; h != NULL; h = getNextNodeLinkedList(h)){
+		for(h = getNextNodeLinkedList(Fire_Link), pp2 = Fire_Link; h != NULL; h = getNextNodeLinkedList(h)){
 			pp = (struct node *) getItemLinkedList(h);
 			if (FD_ISSET(pp->fd,&filhas)){
 				n = read(pp->fd, tcp_rec, sizeof(tcp_rec));
 				if(n == 0){
 					p_ = pp->id;
 					close(pp->fd);
-					revoveFromList(pp2, h, dummieFunc());
-					removeCol(p_);
+					revoveFromList(pp2, h, dummieFunc);
+					if(p_ != succ.id && p_ != pred.id && p_ != my_chord.id )
+						removeCol(p_);
+					h = pp2;
+				}
+
+				else{
+					if(n==-1)/*error*/ exit(1);
+					if((tok = strchr(tcp_rec, '\n')) == NULL){
+							
+						}
+					else{
+						aux = tcp_rec;
+						do{
+							*(tok++) = '\0';
+							n=what_noose(pp->fd,aux); 
+							if (n==0){
+								
+							}else{
+								
+							}
+							aux = tok;
+							tok = strchr(aux , '\n');
+
+						}while(tok != NULL);
+					}
+					pp2 = h;
+				}
+			}
+		}
+		if((pp = (struct node *) getItemLinkedList(Fire_Link)) != NULL){
+			if (FD_ISSET(pp->fd,&filhas)){
+				n = read(pp->fd, tcp_rec, sizeof(tcp_rec));
+				if(n == 0){
+					p_ = pp->id;
+					close(pp->fd);
+					revoveFromList(Fire_Link, h, dummieFunc);
+					if(p_ != succ.id && p_ != pred.id && p_ != my_chord.id )
+						removeCol(p_);
 				}
 
 				else{
@@ -332,6 +370,7 @@ int main(int argc, char *argv[]){
 					}
 				}
 			}
+
 		}
 
 	}			

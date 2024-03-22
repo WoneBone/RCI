@@ -97,10 +97,10 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 
 void leave(int id, struct addrinfo *res){
 	//UDP for UNREG
-	int fd = socket(AF_INET, SOCK_DGRAM, 0),p_;
+	int fd = socket(AF_INET, SOCK_DGRAM, 0);
 	char s[1000];
-	struct node *temp_chord;
-	
+	LinkedList *temp_chord, *pp2;
+	struct node *pp;	
 	
 	//verificação de socket
 	if(fd == -1) exit(1); //erro
@@ -130,20 +130,20 @@ void leave(int id, struct addrinfo *res){
 	if (my_chord.id!= -1){
 		close(my_chord.fd);
 	}
-	if((temp_chord=(struct node *) getItemLinkedList(Fire_Link))!=NULL){
-		close(temp_chord->fd);
-		p_=temp_chord->id;
-		temp_chord->id=-1;
-		removeCol(p_);
-		while((temp_chord=getNextNodeLinkedList(Fire_Link))!=NULL){
-			close(temp_chord->fd);
-			p_=temp_chord->id;
-			temp_chord->id=-1;
-			removeCol(p_);
-			revoveFromList(Fire_Link,temp_chord,dummieFunc());
+	for(temp_chord = getNextNodeLinkedList(Fire_Link), pp2 = Fire_Link; temp_chord != NULL; temp_chord = getNextNodeLinkedList(temp_chord)){
+		if((pp=(struct node *) getItemLinkedList(temp_chord))!=NULL){
+			close(pp->fd);
+			pp->id=-1;
+			revoveFromList(pp2,temp_chord, dummieFunc);
+			temp_chord = pp2;
 		}
-		
+		else pp2 = temp_chord;
 	}
+	if((pp=(struct node *) getItemLinkedList(Fire_Link)) != NULL){
+			close(pp->fd);
+			pp->id=-1;
+			revoveFromList(pp2,temp_chord, dummieFunc);
+		}
 	
 	
 	sucsuc.id = -1; 
@@ -215,4 +215,4 @@ int check_serv(struct addrinfo *res,int id,struct node chord){
 
 }
 
-void dummieFunc(Item);
+void dummieFunc(Item){return;}
