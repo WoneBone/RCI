@@ -1,6 +1,7 @@
 /*Este ficheiro serve para conter as funções que tratam dos comandos recebidos pelo utilizador*/
 #include "header.h"
 #include "tp.h"
+
 int join(int ring, int id, struct addrinfo *res){
 	int fd = socket(AF_INET, SOCK_DGRAM, 0);
 	char s[1000], *t;
@@ -96,8 +97,10 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 
 void leave(int id, struct addrinfo *res){
 	//UDP for UNREG
-	int fd = socket(AF_INET, SOCK_DGRAM, 0);
+	int fd = socket(AF_INET, SOCK_DGRAM, 0),p_;
 	char s[1000];
+	struct node *temp_chord;
+	
 	
 	//verificação de socket
 	if(fd == -1) exit(1); //erro
@@ -124,6 +127,25 @@ void leave(int id, struct addrinfo *res){
 		close(pred.fd);
 		pred.id = -1;
 	}
+	if (my_chord.id!= -1){
+		close(my_chord.fd);
+	}
+	if((temp_chord=(struct node *) getItemLinkedList(Fire_Link))!=NULL){
+		close(temp_chord->fd);
+		p_=temp_chord->id;
+		temp_chord->id=-1;
+		removeCol(p_);
+		while((temp_chord=getNextNodeLinkedList(Fire_Link))!=NULL){
+			close(temp_chord->fd);
+			p_=temp_chord->id;
+			temp_chord->id=-1;
+			removeCol(p_);
+			revoveFromList(Fire_Link,temp_chord,dummieFunc());
+		}
+		
+	}
+	
+	
 	sucsuc.id = -1; 
 	sucsuc.fd = -1;
 	mid=-1;

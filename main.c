@@ -250,6 +250,9 @@ int main(int argc, char *argv[]){
 			fgets(std_in,500,stdin);
 			
 			n=what_std(std_in,resUDP);//interpreta consola
+			if (n==2){
+				printf("Comando inválido\n");
+			}
 			
 		}
 	}			

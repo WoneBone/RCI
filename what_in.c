@@ -315,16 +315,16 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     if (strcmp(code_word,"remove")==0 || strcmp(code_word,"rc")==0){
-       sscanf(std_in,"%s %d",code_word,&id);
-       if (id==my_chord.id){
+        sscanf(std_in,"%s %d",code_word,&id);
+        if (id==my_chord.id){
             p_=my_chord.id;
             my_chord.id=-1;
             close(my_chord.fd);     
             removeCol(p_);
             printf("Corda com o nó %d removida\n",p_);
             return 0;   
-       }
-       printf("Não existe uma corda com o nó %d",id);
+        }
+        printf("Não existe uma corda com o nó %d",id);
         return 1;
     }
     if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"topology")==0))||(strcmp(code_word,"st")==0)){
@@ -418,7 +418,7 @@ int what_std(char *std_in,struct addrinfo *res){
        	prtRoute();
         return 0;
     }
-    return 0;
+    return 2;
 }
 
 
