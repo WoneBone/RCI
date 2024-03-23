@@ -83,8 +83,8 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
 		pp->id = new_chordid;
 		pp->fd = fd;
         Fire_Link = insertUnsortedLinkedList(Fire_Link, (Item) pp);
-		//routall missing
-        return 0;
+        routall(pp->fd);
+		return 0;
     }
     if(strcmp(code_word,"ROUTE")==0 ){
         int dst,org,i=0,sscan=0;
@@ -319,13 +319,11 @@ int what_std(char *std_in,struct addrinfo *res){
         if(n==1){
             return 1;
         }
-        my_chord.fd=tcp_client(new_chord.ip,new_chord.port);
-        my_chord.id=new_chord.id;
-        strcpy(my_chord.ip,new_chord.ip);
-        strcpy(my_chord.port,new_chord.port);
+        my_chord.fd=tcp_client(my_chord.ip,my_chord.port);
         sprintf(code_word,"CHORD %d\n",mid);
         n=write(my_chord.fd,code_word,strlen(code_word));
         if(n < 0) exit(-1);
+		routall(my_chord.fd);
 
         return 0;
     }

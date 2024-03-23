@@ -268,7 +268,7 @@ int main(int argc, char *argv[]){
 			}
 		}
 			
-		if (FD_ISSET(my_chord.fd,&filhas)){
+		if (FD_ISSET(my_chord.fd,&filhas) && my_chord.id != -1){
 				n = read(my_chord.fd, tcp_rec, sizeof(tcp_rec));
 				if(n == 0){
 					p_ = my_chord.id;
