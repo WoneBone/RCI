@@ -200,6 +200,7 @@ void prtRoute(){
 		if((signed char) SPTable[i].size > 0)
 			printf("\t%d\n", ETable[i]);
 	}
+	return;
 }
 void printRT(){
 	for(int i = 0; i < 100; i++){
@@ -212,20 +213,27 @@ void printRT(){
 				putchar('\t');
 
 		}
+
 	}
+	printf("\n");
+	return;
 }
 void printSP(){
 		for(int i = 0; i < 100; i++){
 			for(int k = 0; k < (signed char) SPTable[i].size; k++){
 				printf("%d-", SPTable[i].route[k]);
 			}
+			
 		}
+		printf("\n");
+		return;
 }
 void printET(){
 		for(int i = 0; i < 100; i++){
 			if((signed char) SPTable[i].size > 0)
 				printf("%d\n", ETable[i]);
 		}
+		return;
 }
 int findFd(unsigned char dst){
 	struct node *no;

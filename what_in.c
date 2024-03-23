@@ -129,7 +129,7 @@ int what_serv(int fd, char *mess){ //TCP SERVER SIDE
     }
     if (strcmp(code_word,"CHAT")==0 ){
         sscanf(mess,"%s %d %d %s",code_word,&org,&dst,carta);
-		puts(mess);
+		
         ret=strchr(mess,' ');
         if (ret==NULL){
                 return 1;
@@ -244,7 +244,7 @@ int what_clit(int fd, char *mess){
     }
     if (strcmp(code_word,"CHAT")==0 ){
         sscanf(mess,"%s %d %d %s",code_word,&org,&dst,carta);
-		puts(mess);
+		
         ret=strchr(mess,' ');
         if (ret==NULL){
                 return 1;
@@ -259,7 +259,7 @@ int what_clit(int fd, char *mess){
             strcpy(carta,ret);
         }
         if(dst==mid){
-            printf("Mensagem de chat recebida de %02d-%s\n",dst,carta);
+            printf("Mensagem de chat recebida de %02d-%s\n",org,carta);
             return 0;
         }
 		int send = findFd(ETable[dst]);
@@ -383,14 +383,17 @@ int what_std(char *std_in,struct addrinfo *res){
     
     if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"routing")==0))||(strcmp(code_word,"sr")==0)){
         printRT();
+        fflush(stdout);
         return 0;
     }
     if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"path")==0))||(strcmp(code_word,"sp")==0)){
-       printSP();
+        printSP();
+        fflush(stdout);
         return 0;
     }
     if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"fowarding")==0))||(strcmp(code_word,"sf")==0)){
-       printET();
+        printET();
+        fflush(stdout);
         return 0;
     }
     if (strcmp(code_word,"message")==0 || strcmp(code_word,"m")==0){
