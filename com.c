@@ -264,5 +264,28 @@ int check_serv(struct addrinfo *res,int id,struct node chord){
 	return 1;
 
 }
+void noInt(){
+	printf("Sem ligação a internet tente outra vez mais tarde\n");
+	printf("─────────────────────\n");
+    printf("───────────████████──\n");
+    printf("──────────███▄███████\n");
+    printf("──────────███████████\n");
+    printf("──────────███████████\n");
+    printf("──────────██████─────\n");
+    printf("──────────█████████──\n");
+    printf("█───────███████──────\n");
+    printf("██────████████████───\n");
+    printf("███──██████████──█───\n");
+    printf("███████████████──────\n");
+    printf("███████████████──────\n");
+    printf("─█████████████───────\n");
+    printf("──███████████────────\n");
+    printf("────████████─────────\n");
+    printf("─────███──██─────────\n");
+    printf("─────██────█─────────\n");
+    printf("─────█─────█─────────\n");
+    printf("─────██────██────────\n");
+	fflush(stdout);
+}
 
 void dummieFunc(Item p){return;}
