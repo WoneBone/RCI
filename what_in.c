@@ -525,6 +525,11 @@ int what_std(char *std_in,struct addrinfo *res){
        	prtRoute();
         return 0;
     }
+    
+    if(strcmp(code_word,"Dungeater")==0){
+        Zezinho_Elden_Lord();
+        return 0;
+    }
     return 2;
 }
 

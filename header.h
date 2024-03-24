@@ -115,6 +115,7 @@ void printRT(int dst);
 void printET();
 
 void chamaZezinho();
+void Zezinho_Elden_Lord();
 
 void dummieFunc(Item); //This function does not concern you. Look away. These are not the funcs you're looking for
 #endif
