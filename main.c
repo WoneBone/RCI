@@ -85,6 +85,7 @@ int main(int argc, char *argv[]){
 	//cTCP = tcp_client(mIP,mTCP);
 	printf("Bem vindo a Chat sobre Anel indique um comando ou escreva help para saber os comandos:\n");
 	while (w==1) {
+		fflush(stdout);
 		FD_ZERO(&filhas); //reset filhas
 		FD_SET(0,&filhas);
 		FD_SET(sTCP, &filhas); //filhas inicializado com stdin e sTCP
