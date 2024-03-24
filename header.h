@@ -114,7 +114,7 @@ void printSP();
 void printRT();
 void printET();
 
-void noInt();
+void chamaZezinho();
 
 void dummieFunc(Item); //This function does not concern you. Look away. These are not the funcs you're looking for
 #endif
