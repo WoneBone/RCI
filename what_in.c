@@ -186,7 +186,7 @@ int what_clit(int fd, char *mess){
         n=write(succ.fd,pred_mess,strlen(pred_mess));//I TELL NEW GUY IM BEHIND HIM
         if(n==-1)/*error*/ exit(1);
         sprintf(trash,"SUCC %d %s %s\n",succ.id,succ.ip,succ.port); //aviso o meu pred do seu novo SUCSUC
-        n=write(pred.fd,trash,sizeof(trash));
+        n=write(pred.fd,trash,strlen(trash));
         if(n==-1)/*error*/ exit(1);
 
 		routall(succ.fd);
