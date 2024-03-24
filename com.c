@@ -176,7 +176,6 @@ void leave(int id, struct addrinfo *res){
 
 	else if(FD_ISSET(fd, &tooSmol) == 0){
 		chamaZezinho();
-		return;
 	}
 
 
@@ -186,6 +185,7 @@ void leave(int id, struct addrinfo *res){
 		errcode = recvfrom(fd, s, 1000, 0, NULL, NULL);
 		if(errcode == -1) exit(-1); /*error*/
 		puts(s);
+		mid=-1;
 	}
 	
 	/*insert close chords here*/
@@ -215,13 +215,12 @@ void leave(int id, struct addrinfo *res){
 	if((pp=(struct node *) getItemLinkedList(Fire_Link)) != NULL){
 			close(pp->fd);
 			pp->id=-1;
-			revoveFromList(pp2,temp_chord, dummieFunc);
+			freeLinkedList(Fire_Link, dummieFunc);
 		}
 	
 	
 	sucsuc.id = -1; 
 	sucsuc.fd = -1;
-	mid=-1;
 	initET();
 	initRT();
 	initSPT();
@@ -236,7 +235,7 @@ int ctt(int org, int dst,int fd,char *carta){
 	}
 	
 	sprintf(envelope,"CHAT %02d %02d %s\n",org,dst,carta);
-	write(fd,envelope,strlen(envelope));
+	n =  write(fd,envelope,strlen(envelope));
 	if(n==-1)/*error*/ exit(1);
 	return 0;
 }
