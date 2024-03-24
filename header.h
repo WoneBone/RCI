@@ -110,8 +110,8 @@ int what_noose(int fd, char *mess);
 
 int check_serv(struct addrinfo *res,int id,struct node chord);
 
-void printSP();
-void printRT();
+void printSP(int dst);
+void printRT(int dst);
 void printET();
 
 void chamaZezinho();

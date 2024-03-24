@@ -342,7 +342,7 @@ int what_std(char *std_in,struct addrinfo *res){
         printf("Não existe uma corda com o nó %d",id);
         return 1;
     }
-    if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"topology")==0))||(strcmp(code_word,"st")==0)){
+    if ((sscanf(std_in,"%s %s",code_word,show)==2)&&((((strcmp(code_word, "show") == 0) && (strcmp(show,"topology")==0)))||(strcmp(code_word,"st")==0))){
         
         printf("Estado do protocolo topologico:\n");
         printf("Utilizador:\n");
@@ -382,13 +382,32 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     
-    if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"routing")==0))||(strcmp(code_word,"sr")==0)){
-        printRT();
+    if (((sscanf(std_in,"%s %s",code_word,show)==2)&&((((strcmp(code_word, "show") == 0) && (strcmp(show,"routing")==0)))||(strcmp(code_word,"sr")==0)))){
+		if(strcmp(code_word, "show") == 0){
+			if (sscanf(std_in, "%s %s %d",code_word, show, &dst) != 3)
+				return 2;
+		}
+		else if(strcmp(code_word, "sr") == 0){
+			if (sscanf(std_in, "%s %d",code_word, &dst) != 2)
+				return 2;
+		}
+
+        printRT(dst);
         fflush(stdout);
         return 0;
     }
     if (((sscanf(std_in,"%s %s",code_word,show)==2)&&(strcmp(show,"path")==0))||(strcmp(code_word,"sp")==0)){
-        printSP();
+		if(strcmp(code_word, "show") == 0){
+			if (sscanf(std_in, "%s %s %d",code_word, show, &dst) != 3)
+				return 2;
+		}
+		else if(strcmp(code_word, "sp") == 0){
+			if (sscanf(std_in, "%s %d",code_word, &dst) != 2)
+				return 2;
+		}
+
+
+        printSP(dst);
         fflush(stdout);
         return 0;
     }

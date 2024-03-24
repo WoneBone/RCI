@@ -202,30 +202,26 @@ void prtRoute(){
 	}
 	return;
 }
-void printRT(){
-	for(int i = 0; i < 100; i++){
+void printRT(int dst){
 		for(int j = 0; j < 100; j++){
-			for(int k = 0; k < (signed char) RTable[i][j].size; k++){
-				printf("%d-", RTable[i][j].route[k]);
+			for(int k = 0; k < (signed char) RTable[dst][j].size; k++){
+				printf("%d-", RTable[dst][j].route[k]);
 			}
 
-			if((signed char) RTable[i][j].size > 0)
+			if((signed char) RTable[dst][j].size > 0)
 				putchar('\t');
 
 		}
 
-	}
 	printf("\n");
 	return;
 }
-void printSP(){
-		for(int i = 0; i < 100; i++){
-			for(int k = 0; k < (signed char) SPTable[i].size; k++){
-				printf("%d-", SPTable[i].route[k]);
+void printSP(int dst){
+		for(int k = 0; k < (signed char) SPTable[dst].size; k++){
+				printf("%d-", SPTable[dst].route[k]);
 			}
-			if((signed char) SPTable[i].size > 0)	
+			if((signed char) SPTable[dst].size > 0)	
 				printf("\n");
-		}
 		return;
 }
 void printET(){
