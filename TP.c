@@ -231,7 +231,7 @@ void printSP(){
 void printET(){
 		for(int i = 0; i < 100; i++){
 			if((signed char) SPTable[i].size > 0)
-				printf("%d\n", ETable[i]);
+				printf("%d:==>%d\n",i, ETable[i]);
 		}
 		return;
 }
