@@ -1,13 +1,17 @@
 /*Este ficheiro serve para conter as funções que tratam dos comandos recebidos pelo utilizador*/
 #include "header.h"
 #include "tp.h"
+#include <sys/time.h>
 
 int join(int ring, int id, struct addrinfo *res){
-	int fd = socket(AF_INET, SOCK_DGRAM, 0);
+	int fd = socket(AF_INET, SOCK_DGRAM, 0), n = 0;
+	struct timeval tooLong;
 	char s[1000], *t;
 	int rID;
 	char ip[50], port[50];
 	int ids[100];
+	fd_set tooSmol;
+	FD_ZERO(&tooSmol);
 	//verificação de socket
 	if(fd == -1) exit(1); //erro
 				
@@ -19,6 +23,23 @@ int join(int ring, int id, struct addrinfo *res){
 	errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
 	if(errcode == -1) exit(1);//error
 					
+	tooLong.tv_sec = 1;
+	tooLong.tv_usec = 5000;
+	
+	FD_SET(fd, &tooSmol);
+	n = select(fd + 1, &tooSmol, NULL, NULL, &tooLong);
+	if(n < 0) exit(3);
+
+	if(n == 0){
+		noInt();
+		return -1;
+	}
+
+	else if(FD_ISSET(fd, &tooSmol) == 0){
+		noInt();
+		return -1;
+	}
+
 	//receber NODES LIST
 	errcode = recvfrom(fd, s, 1000,0, NULL, NULL);
 	if(errcode == -1) exit(1); /*error*/
@@ -34,16 +55,30 @@ int join(int ring, int id, struct addrinfo *res){
 
 	//Anel vazio
 	if(t == NULL){	
-		sprintf(s,"REG %03d %02d %s %s\n", ring, id, mIP, mTCP);					  
-		errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
-		if(errcode == -1) exit(1);//error
-								  
-		errcode = recvfrom(fd, s, 1000, 0, NULL, NULL);
-		if(errcode == -1) exit(-1); /*error*/
-		puts(s);
-		mRing = ring;
-		return id;
-}
+	sprintf(s,"REG %03d %02d %s %s\n", ring, id, mIP, mTCP);					  
+	errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
+	if(errcode == -1) exit(1);//error
+							  //
+	n = select(fd + 1, &tooSmol, NULL, NULL, &tooLong);
+	if(n < 0) exit(3);
+
+	if(n == 0){
+		noInt();
+		printf("Could not verefy Registration. Proceding anyway");
+	}
+
+	else if(FD_ISSET(fd, &tooSmol) == 0){
+		noInt();
+		printf("Could not verefy Registration. Proceding anyway");
+	}
+
+						  
+	errcode = recvfrom(fd, s, 1000, 0, NULL, NULL);
+	if(errcode == -1) exit(-1); /*error*/
+	puts(s);
+	mRing = ring;
+	return id;
+	}
 
 	while(sscanf(t, "%d %s %s", &rID, ip, port) == 3){
 		
@@ -56,10 +91,25 @@ int join(int ring, int id, struct addrinfo *res){
 	while(ids[id] == 1) id = (id+1)%100;
 	
 	//REG
-	sprintf(s,"REG %03d %02d %s %s\n", ring, id, mIP, mTCP);					  
+	sprintf(s,"REG %03d %02d %s %s\n", ring, id, mIP, mTCP);
+
 	errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
 	if(errcode == -1) exit(1);//error
-	
+							  
+	n = select(fd + 1, &tooSmol, NULL, NULL, &tooLong);
+	if(n < 0) exit(3);
+
+	if(n == 0){
+		noInt();
+		printf("Could not verefy Registration. Proceding anyway");
+	}
+
+	else if(FD_ISSET(fd, &tooSmol) == 0){
+		noInt();
+		printf("Could not verefy Registration. Proceding anyway");
+	}
+
+
 	//OKREG
 	errcode = recvfrom(fd, s, 1000, 0, NULL, NULL);
 	if(errcode == -1) exit(-1); /*error*/
