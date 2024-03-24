@@ -329,8 +329,7 @@ int what_std(char *std_in,struct addrinfo *res){
         return 0;
     }
     if (strcmp(code_word,"remove")==0 || strcmp(code_word,"rc")==0){
-        sscanf(std_in,"%s %d",code_word,&id);
-        if (id==my_chord.id){
+        if (my_chord.id > 0){
             p_=my_chord.id;
             my_chord.id=-1;
             close(my_chord.fd);
