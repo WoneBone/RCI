@@ -3,7 +3,7 @@
 #define MAX_CLIENTS 17
 #define MAX(a,b) ((a)>(b)?(a):(b))
 int errcode,mid;
-int mRing;
+int mRing,w;
 char *mIP;
 char *mTCP;
 struct node succ, sucsuc, pred,my_chord;
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
 	fd_set filhas;
 	FD_ZERO(&filhas);
 	mid=-1;
-	
+	w=1;
 	Fire_Link=initLinkedList();
 
 	struct addrinfo *resUDP;
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]){
     }
 	//cTCP = tcp_client(mIP,mTCP);
 	printf("Bem vindo a Chat sobre Anel indique um comando ou escreva help para saber os comandos:\n");
-	while (1) {
+	while (w=1) {
 		FD_ZERO(&filhas); //reset filhas
 		FD_SET(0,&filhas);
 		FD_SET(sTCP, &filhas); //filhas inicializado com stdin e sTCP
@@ -376,5 +376,6 @@ int main(int argc, char *argv[]){
 	}			
 	freeaddrinfo(resUDP);
 	close(sUDP);
+	close(sTCP);
 }
 

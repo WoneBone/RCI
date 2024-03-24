@@ -429,8 +429,8 @@ int what_std(char *std_in,struct addrinfo *res){
         if(mid>0){
             leave(mid,res);
         }
-
-        exit (0);
+        w=0;
+        return 0;
     }
     if (strcmp(code_word,"help")==0){
         printf("Comandos disponiveis:\n \t join (j) ring id\n \t direct join (dj) id succid succIP succTCP\n \t chord (c) i\n \t remove chord (rc)\n \t show topology (st)\n \t show routing (sr) dest\n \t show path (sp) dest\n \t show forwarding (sf)\n \t message (m) dest message\n \t leave (l)\n \t exit (x) \n");
