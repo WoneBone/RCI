@@ -304,10 +304,13 @@ LinkedList * insertSortedLinkedList(LinkedList *first,
  *  Return value:
  *    Returns the pointer to the first node of the sorted linked list.
  */
-void revoveFromList(LinkedList *befor, LinkedList *del,  void (* freeItemFnt)(Item)){
-    befor->next = del->next;
+LinkedList * revoveFromList(LinkedList *befor, LinkedList *del,  void (* freeItemFnt)(Item)){
+    LinkedList *ret = del->next;
+	befor->next = del->next;
 
     freeItemFnt(del->this);
     free(del);
+
+	return ret;
 
 }

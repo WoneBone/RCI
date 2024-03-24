@@ -234,7 +234,7 @@ LinkedList * insertSortedLinkedList(LinkedList * first,
  *  Return value:
  *    Returns the pointer to the first node of the sorted linked list.
  */
-void revoveFromList(LinkedList *befor, LinkedList *del,  void (* freeItemFnt)(Item));
+LinkedList * revoveFromList(LinkedList *befor, LinkedList *del,  void (* freeItemFnt)(Item));
 
 
 /* End of: Protect multiple inclusions                              */
