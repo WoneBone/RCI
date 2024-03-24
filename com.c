@@ -204,6 +204,7 @@ void leave(int id, struct addrinfo *res){
 	}
 	if (my_chord.id!= -1){
 		close(my_chord.fd);
+		my_chord.id = -1;
 	}
 	for(temp_chord = getNextNodeLinkedList(Fire_Link), pp2 = Fire_Link; temp_chord != NULL; temp_chord = getNextNodeLinkedList(temp_chord)){
 		if((pp=(struct node *) getItemLinkedList(temp_chord))!=NULL){
