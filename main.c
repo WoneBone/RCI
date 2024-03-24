@@ -343,7 +343,7 @@ int main(int argc, char *argv[]){
 				if(n == 0){
 					p_ = pp->id;
 					close(pp->fd);
-					revoveFromList(Fire_Link, h, dummieFunc);
+					revoveFromList(Fire_Link, Fire_Link, dummieFunc);
 					if(p_ != succ.id && p_ != pred.id && p_ != my_chord.id )
 						removeCol(p_);
 				}
