@@ -258,15 +258,7 @@ int main(int argc, char *argv[]){
 			}
 		}
 		
-		if (FD_ISSET(0,&filhas)){ //escrevemos algo no terminal
-			
-			fgets(std_in,500,stdin);
-			
-			n=what_std(std_in,resUDP);//interpreta consola
-			if (n==2){
-				printf("Comando inválido\n");
-			}
-		}
+		
 			
 		if (FD_ISSET(my_chord.fd,&filhas) && my_chord.id != -1){
 				n = read(my_chord.fd, tcp_rec, sizeof(tcp_rec));
@@ -343,7 +335,7 @@ int main(int argc, char *argv[]){
 				if(n == 0){
 					p_ = pp->id;
 					close(pp->fd);
-					revoveFromList(Fire_Link, h, dummieFunc);
+					revoveFromList(Fire_Link, Fire_Link, dummieFunc);
 					if(p_ != succ.id && p_ != pred.id && p_ != my_chord.id )
 						removeCol(p_);
 				}
@@ -371,6 +363,15 @@ int main(int argc, char *argv[]){
 				}
 			}
 
+		}
+		if (FD_ISSET(0,&filhas)){ //escrevemos algo no terminal
+			
+			fgets(std_in,500,stdin);
+			
+			n=what_std(std_in,resUDP);//interpreta consola
+			if (n==2){
+				printf("Comando inválido\n");
+			}
 		}
 
 	}			
