@@ -380,10 +380,7 @@ int what_std(char *std_in,struct addrinfo *res){
     if (strcmp(code_word,"remove")==0 || strcmp(code_word,"rc")==0){
 
         n = sscanf(std_in,"%s %d",code_word,&id);
-        if (n!= 3) {  
-            printf("Sintax Errada \n");
-            return 2;
-        }
+       
 
         if (my_chord.id > 0){
 
