@@ -282,7 +282,7 @@ int check_serv(struct addrinfo *res,int id,struct node chord){
 	errcode = recvfrom(fd, s, 1000,0, NULL, NULL);
 	if(errcode == -1) exit(1); /*error*/
 
-	puts(s);
+	
 	t = strtok(s, "\n");
 	
 	//ERRO, Não recebi NODESLIST<LF>
@@ -294,7 +294,7 @@ int check_serv(struct addrinfo *res,int id,struct node chord){
 		return 1;
 	}
 	while(sscanf(t, "%d %s %s", &rID, ip_serv, port_serv) == 3){
-		printf("%d %s %s\n",rID,ip_serv,port_serv);
+		
 		if(rID==id){
 			my_chord.id=id;
 			strcpy(my_chord.ip,ip_serv);

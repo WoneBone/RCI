@@ -27,6 +27,7 @@ int main(int argc, char *argv[]){
 	FD_ZERO(&filhas);
 	mid=-1;
 	w=1;
+	mRing=-1;
 	Fire_Link=initLinkedList();
 
 	struct addrinfo *resUDP;
