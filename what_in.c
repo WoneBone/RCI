@@ -334,8 +334,9 @@ int what_std(char *std_in,struct addrinfo *res){
             p_=my_chord.id;
             my_chord.id=-1;
             close(my_chord.fd);
-            if (p_ != succ.fd && p_ != pred.fd) {     
-            removeCol(p_); }
+			n = findFd(p_);
+            if ( n == -1) {     
+            	removeCol(p_); }
             printf("Corda com o nó %d removida\n",p_);
             return 0;   
         }
