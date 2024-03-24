@@ -28,7 +28,7 @@ typedef struct nodes *Item;
 #endif
 
 extern int errcode,mid;
-extern int mRing;
+extern int mRing,w;
 extern char *mIP, *mTCP;
 extern struct node succ, sucsuc, pred,my_chord;
 extern struct LinkedListStruct *Fire_Link;
