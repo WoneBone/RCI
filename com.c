@@ -158,34 +158,36 @@ void leave(int id, struct addrinfo *res){
 	//verificação de socket
 	if(fd == -1) exit(1); //erro
 
-	//UNREG
-	sprintf(s,"UNREG %03d %02d\n", mRing, id);					  
-	errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
-	if(errcode == -1) exit(1);//error
+	if(mRing != -1){
+		//UNREG
+		sprintf(s,"UNREG %03d %02d\n", mRing, id);					  
+		errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
+		if(errcode == -1) exit(1);//error
 
-	tooLong.tv_sec = 1;
-	tooLong.tv_usec = 5000;
-	
-	FD_SET(fd, &tooSmol);
-	n = select(fd + 1, &tooSmol, NULL, NULL, &tooLong);
-	if(n < 0) exit(3);
+		tooLong.tv_sec = 1;
+		tooLong.tv_usec = 5000;
+		
+		FD_SET(fd, &tooSmol);
+		n = select(fd + 1, &tooSmol, NULL, NULL, &tooLong);
+		if(n < 0) exit(3);
 
-	if(n == 0){
-		chamaZezinho();
-	}
+		if(n == 0){
+			chamaZezinho();
+		}
 
-	else if(FD_ISSET(fd, &tooSmol) == 0){
-		chamaZezinho();
-	}
+		else if(FD_ISSET(fd, &tooSmol) == 0){
+			chamaZezinho();
+		}
 
 
 
-	//OKUNREG
-	else{
-		errcode = recvfrom(fd, s, 1000, 0, NULL, NULL);
-		if(errcode == -1) exit(-1); /*error*/
-		puts(s);
-		mid=-1;
+		//OKUNREG
+		else{
+			errcode = recvfrom(fd, s, 1000, 0, NULL, NULL);
+			if(errcode == -1) exit(-1); /*error*/
+			puts(s);
+			mid=-1;
+		}
 	}
 	
 	/*insert close chords here*/
