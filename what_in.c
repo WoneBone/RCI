@@ -284,7 +284,7 @@ int what_std(char *std_in,struct addrinfo *res){
     
     sscanf(std_in,"%s",code_word);
     if (strcmp(code_word,"join")==0 || strcmp(code_word,"j")==0){
-<<<<<<< Updated upstream
+
         
         n = sscanf(std_in,"%s %d %d",code_word,&ring,&id);
         if (n!= 3) {  
@@ -299,33 +299,6 @@ int what_std(char *std_in,struct addrinfo *res){
            printf("ID Inválido \n");
            return 2; 
         }
-        mid=join(ring,id,res);	
-        return 0;
-    }
-    if (sscanf(std_in, "%s %s", code_word, show) == 2){
-        if(strcmp(code_word, "dj") == 0){
-            n = sscanf(std_in,"%s %d %d %s %s",code_word,&id,&succid,succIP,succTCP);
-            if (n!= 5) {  
-                printf("Sintax Errada \n");
-                return 2;}
-        }else if ((strcmp(code_word, "direct") == 0) && strcmp(show, "join") == 0){
-             n = sscanf(std_in,"%s %s %d %d %s %s",code_word, show, &id,&succid,succIP,succTCP);
-            if (n!= 6) {  
-                printf("Sintax Errada \n");
-                return 2;}
-        }
-        if (id < 000 || ring > 999) {
-        printf("Ring Inválido \n");
-        return 2; 
-        }
-        
-        if (id < 0 || id > 99) {
-        printf("ID Inválido \n");
-        return 2; 
-        }
-        mid = id;
-=======
-        sscanf(std_in,"%s %d %d",code_word,&ring,&id);
         if (mRing>0){
             printf("Já dentro de um anel\n");
             return 0;
@@ -334,16 +307,40 @@ int what_std(char *std_in,struct addrinfo *res){
         mid=join(ring,id,res);	
         return 0;
     }
-    if (strcmp(code_word,"direct")==0 || strcmp(code_word,"dj")==0){
-        sscanf(std_in,"%s %d %d %s %s",code_word,&id,&succid,succIP,succTCP);
-		mid = id;
-        if(mRing>0){
-            printf("Já dentro de um anel\n");
+    
+    if (sscanf(std_in, "%s %s", code_word, show) == 2){
+        if((strcmp(code_word, "dj") == 0)|| ((strcmp(code_word, "direct") == 0) && strcmp(show, "join"))){
+            if(strcmp(code_word, "dj") == 0){
+                n = sscanf(std_in,"%s %d %d %s %s",code_word,&id,&succid,succIP,succTCP);
+                if (n!= 5) {  
+                    printf("Sintax Errada \n");
+                    return 2;}
+            }else if ((strcmp(code_word, "direct") == 0) && strcmp(show, "join") == 0){
+                n = sscanf(std_in,"%s %s %d %d %s %s",code_word, show, &id,&succid,succIP,succTCP);
+                if (n!= 6) {  
+                    printf("Sintax Errada \n");
+                    return 2;}
+            }
+
+            if (id < 000 || ring > 999) {
+            printf("Ring Inválido \n");
+            return 2; 
+            }
+            
+            if (id < 0 || id > 99) {
+            printf("ID Inválido \n");
+            return 2; 
+            }
+            mid = id;
+
+            if(mRing > 0){
+                printf("Já dentro de um anel\n");
+                return 0;
+            }
+
+            d_join(id,succid,succIP,succTCP);
             return 0;
         }
->>>>>>> Stashed changes
-        d_join(id,succid,succIP,succTCP);
-        return 0;
     }
     if (strcmp(code_word,"chord")==0 || strcmp(code_word,"c")==0){
         n=sscanf(std_in,"%s %d",code_word,&id);
