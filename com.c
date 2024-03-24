@@ -331,6 +331,6 @@ void chamaZezinho(){
 }
 
 void dummieFunc(Item p){
-	close(((struct node *) p)->fd)
+	close(((struct node *) p)->fd);
 	free((struct node *) p);
 }
