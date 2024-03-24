@@ -477,7 +477,7 @@ int what_std(char *std_in,struct addrinfo *res){
         if (succ.id<0){
             printf("Não existe nó de destino possivel para enviar a mensagem\n");
         }
-        n=sscanf(std_in,"%s %d %s ",code_word,&dst,chat);
+        n=sscanf(std_in,"%s %d %499s ",code_word,&dst,chat);
         if(n!=3){
             return 2;
         }
