@@ -267,12 +267,12 @@ int check_serv(struct addrinfo *res,int id,struct node chord){
 
 	if(n == 0){
 		chamaZezinho();
-		return -1;
+		return 1;
 	}
 
 	else if(FD_ISSET(fd, &tooSmol) == 0){
 		chamaZezinho();
-		return -1;
+		return 1;
 	}
 
 			
@@ -331,4 +331,6 @@ void chamaZezinho(){
 	fflush(stdout);
 }
 
-void dummieFunc(Item p){return;}
+void dummieFunc(Item p){
+	free((struct node *) p);
+}
