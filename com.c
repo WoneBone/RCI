@@ -214,11 +214,8 @@ void leave(int id, struct addrinfo *res){
 		}
 		else pp2 = temp_chord;
 	}
-	if((pp=(struct node *) getItemLinkedList(Fire_Link)) != NULL){
-			close(pp->fd);
-			pp->id=-1;
-			freeLinkedList(Fire_Link, dummieFunc);
-		}
+	freeLinkedList(Fire_Link, dummieFunc);
+	Fire_Link = NULL;
 	
 	
 	sucsuc.id = -1; 
@@ -334,5 +331,6 @@ void chamaZezinho(){
 }
 
 void dummieFunc(Item p){
+	close(((struct node *) p)->fd)
 	free((struct node *) p);
 }
