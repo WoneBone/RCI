@@ -405,6 +405,11 @@ int what_std(char *std_in,struct addrinfo *res){
         if(n!=3){
             return 2;
         }
+        if (dst==mid){
+            printf("Mensagem da minha conciência: %s",chat);
+            return 0;
+        }
+        
         ret=strchr(std_in,' ');
         ret++;
         for(i=0;i<1;i++){
