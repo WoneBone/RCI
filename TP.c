@@ -223,9 +223,9 @@ void printSP(){
 			for(int k = 0; k < (signed char) SPTable[i].size; k++){
 				printf("%d-", SPTable[i].route[k]);
 			}
-			
+			if((signed char) SPTable[i].size > 0)	
+				printf("\n");
 		}
-		printf("\n");
 		return;
 }
 void printET(){

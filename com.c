@@ -31,12 +31,12 @@ int join(int ring, int id, struct addrinfo *res){
 	if(n < 0) exit(3);
 
 	if(n == 0){
-		noInt();
+		chamaZezinho();
 		return -1;
 	}
 
 	else if(FD_ISSET(fd, &tooSmol) == 0){
-		noInt();
+		chamaZezinho();
 		return -1;
 	}
 
@@ -63,12 +63,12 @@ int join(int ring, int id, struct addrinfo *res){
 	if(n < 0) exit(3);
 
 	if(n == 0){
-		noInt();
+		chamaZezinho();
 		printf("Could not verefy Registration. Proceding anyway");
 	}
 
 	else if(FD_ISSET(fd, &tooSmol) == 0){
-		noInt();
+		chamaZezinho();
 		printf("Could not verefy Registration. Proceding anyway");
 	}
 
@@ -100,12 +100,12 @@ int join(int ring, int id, struct addrinfo *res){
 	if(n < 0) exit(3);
 
 	if(n == 0){
-		noInt();
+		chamaZezinho();
 		printf("Could not verefy Registration. Proceding anyway");
 	}
 
 	else if(FD_ISSET(fd, &tooSmol) == 0){
-		noInt();
+		chamaZezinho();
 		printf("Could not verefy Registration. Proceding anyway");
 	}
 
@@ -147,10 +147,13 @@ void d_join(int id,int sucid,char * sucIP, char *sucTCP){
 
 void leave(int id, struct addrinfo *res){
 	//UDP for UNREG
-	int fd = socket(AF_INET, SOCK_DGRAM, 0);
+	int fd = socket(AF_INET, SOCK_DGRAM, 0), n=0;
 	char s[1000];
+	struct timeval tooLong;
 	LinkedList *temp_chord, *pp2;
 	struct node *pp;	
+	fd_set tooSmol;
+	FD_ZERO(&tooSmol);
 	
 	//verificação de socket
 	if(fd == -1) exit(1); //erro
@@ -159,11 +162,31 @@ void leave(int id, struct addrinfo *res){
 	sprintf(s,"UNREG %03d %02d\n", mRing, id);					  
 	errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
 	if(errcode == -1) exit(1);//error
+
+	tooLong.tv_sec = 1;
+	tooLong.tv_usec = 5000;
 	
+	FD_SET(fd, &tooSmol);
+	n = select(fd + 1, &tooSmol, NULL, NULL, &tooLong);
+	if(n < 0) exit(3);
+
+	if(n == 0){
+		chamaZezinho();
+	}
+
+	else if(FD_ISSET(fd, &tooSmol) == 0){
+		chamaZezinho();
+		return;
+	}
+
+
+
 	//OKUNREG
-	errcode = recvfrom(fd, s, 1000, 0, NULL, NULL);
-	if(errcode == -1) exit(-1); /*error*/
-	puts(s);
+	else{
+		errcode = recvfrom(fd, s, 1000, 0, NULL, NULL);
+		if(errcode == -1) exit(-1); /*error*/
+		puts(s);
+	}
 	
 	/*insert close chords here*/
 
@@ -218,10 +241,13 @@ int ctt(int org, int dst,int fd,char *carta){
 	return 0;
 }
 int check_serv(struct addrinfo *res,int id,struct node chord){
-	int fd = socket(AF_INET, SOCK_DGRAM, 0);
+	int fd = socket(AF_INET, SOCK_DGRAM, 0), n = 0;
 	char s[1000], *t;
 	int rID;
 	char ip_serv[50], port_serv[50];
+	struct timeval tooLong;
+	fd_set tooSmol;
+	FD_ZERO(&tooSmol);
 
 	//verificação de socket
 	if(fd == -1) exit(1); //erro
@@ -232,7 +258,25 @@ int check_serv(struct addrinfo *res,int id,struct node chord){
 	sprintf(s,"NODES %03d\n", mRing);
 	errcode = sendto(fd, s, strlen(s),0, res->ai_addr, res->ai_addrlen);
 	if(errcode == -1) exit(1);//error
-					
+
+	tooLong.tv_sec = 1;
+	tooLong.tv_usec = 5000;
+	
+	FD_SET(fd, &tooSmol);
+	n = select(fd + 1, &tooSmol, NULL, NULL, &tooLong);
+	if(n < 0) exit(3);
+
+	if(n == 0){
+		chamaZezinho();
+		return -1;
+	}
+
+	else if(FD_ISSET(fd, &tooSmol) == 0){
+		chamaZezinho();
+		return -1;
+	}
+
+			
 	//receber NODES LIST
 	errcode = recvfrom(fd, s, 1000,0, NULL, NULL);
 	if(errcode == -1) exit(1); /*error*/
@@ -264,7 +308,7 @@ int check_serv(struct addrinfo *res,int id,struct node chord){
 	return 1;
 
 }
-void noInt(){
+void chamaZezinho(){
 	printf("Sem ligação a internet tente outra vez mais tarde\n");
 	printf("─────────────────────\n");
     printf("───────────████████──\n");
